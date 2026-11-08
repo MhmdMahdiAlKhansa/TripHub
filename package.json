@@ -1,0 +1,22 @@
+{
+  "name": "triphub",
+  "private": true,
+  "packageManager": "pnpm@12.18.0",
+  "engines": { "node": ">=22" },
+  "scripts": {
+    "build": "turbo run build",
+    "typecheck": "turbo run typecheck",
+    "lint": "turbo run lint",
+    "test": "turbo run test",
+    "verify": "turbo run typecheck lint test build",
+    "infra:up": "docker compose -f infrastructure/docker-compose.yml up -d",
+    "infra:down": "docker compose -f infrastructure/docker-compose.yml down",
+    "db:migrate": "pnpm --filter @triphub/database migrate",
+    "db:seed": "pnpm --filter @triphub/database seed"
+  },
+  "devDependencies": {
+    "turbo": "2.11.10",
+    "typescript": "5.9.3",
+    "prettier": "3.6.2"
+  }
+}

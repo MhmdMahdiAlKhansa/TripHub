@@ -1,0 +1,17 @@
+{
+  "name": "@triphub/e2e",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "e2e": "playwright test",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@axe-core/playwright": "4.10.2",
+    "@playwright/test": "1.54.2",
+    "@types/node": "24.0.0",
+    "typescript": "5.9.3",
+    "otpauth": "^9.6.0"
+  }
+}

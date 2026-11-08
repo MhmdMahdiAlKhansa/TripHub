@@ -1,0 +1,13 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+allowBuilds:
+  '@prisma/engines': true
+  '@scarf/scarf': false
+  '@swc/core': true
+  esbuild: true
+  prisma: true
+  sharp: true
+  msgpackr-extract: false
+minimumReleaseAgeExclude:
+  - supertest@7.3.2

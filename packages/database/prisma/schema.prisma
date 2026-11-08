@@ -1,0 +1,931 @@
+generator client {
+  provider     = "prisma-client"
+  output       = "../src/generated"
+  moduleFormat = "cjs"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum PlatformRole {
+  NONE
+  SUPPORT
+  VERIFIER
+  FINANCE
+  ADMIN
+}
+
+enum UserStatus {
+  ACTIVE
+  SUSPENDED
+  DELETED
+}
+
+model User {
+  id              String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  email           String     @unique
+  emailVerifiedAt DateTime?  @db.Timestamptz(6)
+  passwordHash    String?
+  displayName     String?
+  locale          String     @default("en")
+  status          UserStatus @default(ACTIVE)
+  platformRole    PlatformRole @default(NONE)
+  mfaSecretEnc    String?
+  mfaEnabledAt    DateTime?  @db.Timestamptz(6)
+  mfaLastStep     Int?
+  failedLogins    Int        @default(0)
+  lockedUntil     DateTime?  @db.Timestamptz(6)
+  createdAt       DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt       DateTime   @updatedAt @db.Timestamptz(6)
+
+  sessions    Session[]
+  tokens      UserToken[]
+  memberships Membership[]
+  recoveryCodes MfaRecoveryCode[]
+  bookings      Booking[]
+  payments      Payment[]
+  waitlist      WaitlistEntry[]
+  favorites     Favorite[]
+  reviews       Review[]
+  notifications Notification[]
+
+  @@map("user")
+}
+
+model Session {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String    @db.Uuid
+  tokenHash    String    @unique
+  userAgent    String?
+  ipHash       String?
+  createdAt    DateTime  @default(now()) @db.Timestamptz(6)
+  lastSeenAt   DateTime  @default(now()) @db.Timestamptz(6)
+  expiresAt    DateTime  @db.Timestamptz(6)
+  revokedAt    DateTime? @db.Timestamptz(6)
+  mfaVerifiedAt DateTime? @db.Timestamptz(6)
+  stepUpAt     DateTime? @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@map("session")
+}
+
+model MfaRecoveryCode {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @db.Uuid
+  codeHash  String
+  usedAt    DateTime? @db.Timestamptz(6)
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId])
+  @@map("mfa_recovery_code")
+}
+
+enum CompanyStatus {
+  DRAFT
+  PENDING_REVIEW
+  CHANGES_REQUESTED
+  APPROVED
+  REJECTED
+  SUSPENDED
+}
+
+enum ReviewDecision {
+  APPROVED
+  CHANGES_REQUESTED
+  REJECTED
+}
+
+enum CompanyRole {
+  OWNER
+  MANAGER
+  BOOKING_STAFF
+  FINANCE
+}
+
+enum MembershipStatus {
+  ACTIVE
+  REMOVED
+}
+
+model Company {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  slug      String        @unique
+  name      String
+  status    CompanyStatus @default(DRAFT)
+
+  description  String?
+  contactEmail String?
+  phone        String?
+  website      String?
+  city         String?
+  address      String?
+  latitude     Decimal?      @db.Decimal(9, 6)
+  longitude    Decimal?      @db.Decimal(9, 6)
+  socials      Json          @default("{}")
+  categories   String[]      @default([])
+  languages    String[]      @default([])
+  onboardingStep Int         @default(1)
+  submittedAt  DateTime?     @db.Timestamptz(6)
+  approvedAt   DateTime?     @db.Timestamptz(6)
+  /// Platform commission in basis points, snapshotted onto each booking. 1000 = 10% (initial default).
+  commissionBps Int          @default(1000)
+
+  createdAt DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime      @updatedAt @db.Timestamptz(6)
+
+  memberships Membership[]
+  invitations Invitation[]
+  reviews     CompanyReview[]
+  listings    Listing[]
+  bookings    Booking[]
+  ledgerAccounts LedgerAccount[]
+  subscription   Subscription?
+  subscriptionRequests SubscriptionRequest[]
+  invoices       Invoice[]
+  payouts        Payout[]
+  documents      CompanyDocument[]
+  promoCodes     PromoCode[]
+
+  @@map("company")
+}
+
+/// Platform verification decisions. Append-only history; the company row holds the current status.
+model CompanyReview {
+  id         String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId  String         @db.Uuid
+  reviewerId String         @db.Uuid
+  decision   ReviewDecision
+  reason     String?
+  createdAt  DateTime       @default(now()) @db.Timestamptz(6)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+
+  @@index([companyId, createdAt])
+  @@map("company_review")
+}
+
+enum ListingStatus {
+  DRAFT
+  PUBLISHED
+  PAUSED
+  ARCHIVED
+}
+
+enum BookingMode {
+  DISCOVERY_ONLY
+  FIXED_DATE
+  TIME_SLOT
+  REQUEST_TO_BOOK
+}
+
+/// Unified discovery/bookable offering. Booking data (pricing, availability) attaches in the booking slice.
+model Listing {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId   String        @db.Uuid
+  category    String
+  bookingMode BookingMode   @default(DISCOVERY_ONLY)
+  status      ListingStatus @default(DRAFT)
+
+  city      String?
+  address   String?
+  latitude  Decimal? @db.Decimal(9, 6)
+  longitude Decimal? @db.Decimal(9, 6)
+
+  meetingPoint     String?
+  meetingLatitude  Decimal? @db.Decimal(9, 6)
+  meetingLongitude Decimal? @db.Decimal(9, 6)
+
+  attributes  Json      @default("{}")
+  holdMinutes Int       @default(15)
+  cancellationPolicy CancellationPolicy @default(MODERATE)
+  /// Set by staff to show the listing in the home page's featured section.
+  featuredAt  DateTime?     @db.Timestamptz(6)
+  publishedAt DateTime? @db.Timestamptz(6)
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  updatedAt   DateTime  @updatedAt @db.Timestamptz(6)
+
+  company      Company              @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  translations ListingTranslation[]
+  rates        ListingRate[]
+  slots        Slot[]
+  bookings     Booking[]
+  favorites    Favorite[]
+  reviews      Review[]
+  images       ListingImage[]
+
+  @@index([companyId, status])
+  @@index([status, category])
+  @@map("listing")
+}
+
+enum RateKind {
+  ADULT
+  CHILD
+  GROUP
+}
+
+/// Price card entry. Money is integer minor units (USD cents; LBP whole units).
+model ListingRate {
+  id          String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  listingId   String   @db.Uuid
+  kind        RateKind
+  amountMinor BigInt
+  currency    String
+  /// GROUP rates cover this many participants for one flat price.
+  groupSize   Int?
+  createdAt   DateTime @default(now()) @db.Timestamptz(6)
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, kind])
+  @@map("listing_rate")
+}
+
+enum SlotStatus {
+  OPEN
+  CLOSED
+}
+
+/// A dated/timed occurrence with capacity. `reserved` counts confirmed seats PLUS seats under active holds.
+model Slot {
+  id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  listingId String     @db.Uuid
+  startsAt  DateTime   @db.Timestamptz(6)
+  endsAt    DateTime?  @db.Timestamptz(6)
+  capacity  Int
+  reserved  Int        @default(0)
+  status    SlotStatus @default(OPEN)
+  createdAt DateTime   @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime   @updatedAt @db.Timestamptz(6)
+
+  listing  Listing   @relation(fields: [listingId], references: [id], onDelete: Restrict)
+  bookings Booking[]
+  holds    Hold[]
+  waitlist WaitlistEntry[]
+
+  @@unique([listingId, startsAt])
+  @@index([startsAt])
+  @@map("slot")
+}
+
+enum BookingStatus {
+  REQUESTED
+  DECLINED
+  HELD
+  CONFIRMED
+  CANCELLED
+  EXPIRED
+  COMPLETED
+}
+
+enum HoldStatus {
+  ACTIVE
+  CONSUMED
+  EXPIRED
+  RELEASED
+}
+
+model Booking {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  reference      String        @unique
+  companyId      String        @db.Uuid
+  listingId      String        @db.Uuid
+  slotId         String        @db.Uuid
+  customerId     String        @db.Uuid
+  status         BookingStatus
+  quantity       Int
+  currency       String
+  totalMinor     BigInt
+  /// Server-calculated price lines, listing/slot facts and terms at booking time. Immutable (trigger).
+  snapshot       Json
+  contactName    String?
+  contactPhone   String?
+  version        Int           @default(1)
+  idempotencyKey String
+  requestHash    String
+  cancelledAt    DateTime?     @db.Timestamptz(6)
+  cancelReason   String?
+  /// Who cancelled; decides whether the policy or a full refund applies.
+  cancelledBy    String?
+  /// Request-to-book: when an unanswered request lapses, and the business's decision.
+  requestExpiresAt DateTime?   @db.Timestamptz(6)
+  decidedAt      DateTime?     @db.Timestamptz(6)
+  declineReason  String?
+  checkedInAt    DateTime?     @db.Timestamptz(6)
+  checkedInBy    String?       @db.Uuid
+  createdAt      DateTime      @default(now()) @db.Timestamptz(6)
+  updatedAt      DateTime      @updatedAt @db.Timestamptz(6)
+
+  company  Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  listing  Listing @relation(fields: [listingId], references: [id], onDelete: Restrict)
+  slot     Slot    @relation(fields: [slotId], references: [id], onDelete: Restrict)
+  customer User    @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  hold     Hold?
+  payments Payment[]
+
+  @@unique([customerId, idempotencyKey])
+  @@index([companyId, status])
+  @@index([slotId])
+  @@index([customerId])
+  @@map("booking")
+}
+
+model Hold {
+  id         String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId  String     @unique @db.Uuid
+  slotId     String     @db.Uuid
+  quantity   Int
+  status     HoldStatus @default(ACTIVE)
+  expiresAt  DateTime   @db.Timestamptz(6)
+  resolvedAt DateTime?  @db.Timestamptz(6)
+  createdAt  DateTime   @default(now()) @db.Timestamptz(6)
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  slot    Slot    @relation(fields: [slotId], references: [id], onDelete: Restrict)
+
+  @@index([status, expiresAt])
+  @@index([slotId, status])
+  @@map("hold")
+}
+
+enum PaymentMethod {
+  WHISH
+  OMT
+}
+
+enum PaymentStatus {
+  PROOF_SUBMITTED
+  VERIFIED
+  VERIFIED_UNALLOCATED
+  REJECTED
+}
+
+/// A customer's claim of payment. A proof is UNVERIFIED evidence; only a platform finance actor
+/// verifying actual settlement moves it to VERIFIED.
+model Payment {
+  id             String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId      String        @db.Uuid
+  customerId     String        @db.Uuid
+  method         PaymentMethod
+  amountMinor    BigInt
+  currency       String
+  status         PaymentStatus @default(PROOF_SUBMITTED)
+  reference      String?
+  note           String?
+  decidedBy      String?       @db.Uuid
+  decidedAt      DateTime?     @db.Timestamptz(6)
+  decisionReason String?
+  submittedAt    DateTime      @default(now()) @db.Timestamptz(6)
+
+  booking  Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+  customer User    @relation(fields: [customerId], references: [id], onDelete: Restrict)
+  refund   Refund?
+
+  @@unique([method, reference])
+  @@index([bookingId])
+  @@index([status, submittedAt])
+  @@map("payment")
+}
+
+enum LedgerAccountType {
+  PLATFORM_CASH
+  COMPANY_PAYABLE
+  PLATFORM_COMMISSION
+  REFUND_PAYABLE
+}
+
+model LedgerAccount {
+  id        String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  type      LedgerAccountType
+  companyId String?           @db.Uuid
+  currency  String
+  createdAt DateTime          @default(now()) @db.Timestamptz(6)
+
+  company Company?     @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  lines   LedgerLine[]
+
+  @@map("ledger_account")
+}
+
+/// Immutable journal. Lines are signed (debit positive, credit negative) and each entry sums to zero per currency.
+model JournalEntry {
+  id             String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  kind           String
+  idempotencyKey String   @unique
+  bookingId      String?  @db.Uuid
+  paymentId      String?  @db.Uuid
+  reversesId     String?  @db.Uuid
+  description    String
+  postedBy       String?  @db.Uuid
+  postedAt       DateTime @default(now()) @db.Timestamptz(6)
+
+  lines LedgerLine[]
+
+  @@index([bookingId])
+  @@index([paymentId])
+  @@map("journal_entry")
+}
+
+model LedgerLine {
+  id          String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  entryId     String @db.Uuid
+  accountId   String @db.Uuid
+  amountMinor BigInt
+  currency    String
+
+  entry   JournalEntry  @relation(fields: [entryId], references: [id], onDelete: Restrict)
+  account LedgerAccount @relation(fields: [accountId], references: [id], onDelete: Restrict)
+
+  @@index([entryId])
+  @@index([accountId])
+  @@map("ledger_line")
+}
+
+model ListingTranslation {
+  id          String  @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  listingId   String  @db.Uuid
+  locale      String
+  title       String
+  summary     String?
+  description String?
+  /// Generated in SQL (th_normalize of title+summary+description) for Arabic-aware search; never written by Prisma.
+  searchText  String?  @ignore
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@unique([listingId, locale])
+  @@map("listing_translation")
+}
+
+model Membership {
+  id        String           @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId String           @db.Uuid
+  userId    String           @db.Uuid
+  role      CompanyRole
+  status    MembershipStatus @default(ACTIVE)
+  createdAt DateTime         @default(now()) @db.Timestamptz(6)
+  updatedAt DateTime         @updatedAt @db.Timestamptz(6)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@unique([companyId, userId])
+  @@index([userId])
+  @@map("membership")
+}
+
+model Invitation {
+  id         String      @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId  String      @db.Uuid
+  email      String
+  role       CompanyRole
+  tokenHash  String      @unique
+  invitedBy  String      @db.Uuid
+  expiresAt  DateTime    @db.Timestamptz(6)
+  acceptedAt DateTime?   @db.Timestamptz(6)
+  revokedAt  DateTime?   @db.Timestamptz(6)
+  createdAt  DateTime    @default(now()) @db.Timestamptz(6)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+
+  @@index([companyId])
+  @@map("invitation")
+}
+
+enum UserTokenType {
+  EMAIL_VERIFY
+  PASSWORD_RESET
+}
+
+/// Single-use, expiring tokens. Only the SHA-256 hash of the token is stored.
+model UserToken {
+  id        String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String        @db.Uuid
+  type      UserTokenType
+  tokenHash String        @unique
+  expiresAt DateTime      @db.Timestamptz(6)
+  usedAt    DateTime?     @db.Timestamptz(6)
+  createdAt DateTime      @default(now()) @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Restrict)
+
+  @@index([userId, type])
+  @@map("user_token")
+}
+
+/// Append-only audit trail. UPDATE/DELETE are blocked by trigger (see migration).
+model AuditEvent {
+  id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  at         DateTime @default(now()) @db.Timestamptz(6)
+  actorId    String?  @db.Uuid
+  companyId  String?  @db.Uuid
+  action     String
+  entityType String
+  entityId   String?
+  requestId  String?
+  ipHash     String?
+  meta       Json     @default("{}")
+
+  @@index([companyId, at])
+  @@index([actorId, at])
+  @@index([entityType, entityId])
+  @@map("audit_event")
+}
+
+/// Idempotency for consequential mutations. Same key + different request hash => 409.
+model IdempotencyKey {
+  id           String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  scope        String
+  key          String
+  requestHash  String
+  responseCode Int?
+  responseBody Json?
+  createdAt    DateTime  @default(now()) @db.Timestamptz(6)
+  completedAt  DateTime? @db.Timestamptz(6)
+
+  @@unique([scope, key])
+  @@map("idempotency_key")
+}
+
+enum RefundStatus {
+  REQUESTED
+  APPROVED
+  PAID
+  REJECTED
+}
+
+/// Full refund of one verified payment. REQUESTED -> APPROVED (ledger moves the money into
+/// REFUND_PAYABLE) -> PAID (a finance actor attests the manual transfer was made). Requester,
+/// approver and payer must be different people.
+model Refund {
+  id             String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  paymentId      String       @unique @db.Uuid
+  bookingId      String       @db.Uuid
+  amountMinor    BigInt
+  currency       String
+  status         RefundStatus @default(REQUESTED)
+  reason         String
+  requestedBy    String       @db.Uuid
+  requestedAt    DateTime     @default(now()) @db.Timestamptz(6)
+  decidedBy      String?      @db.Uuid
+  decidedAt      DateTime?    @db.Timestamptz(6)
+  decisionReason String?
+  paidBy         String?      @db.Uuid
+  paidAt         DateTime?    @db.Timestamptz(6)
+  payoutReference String?
+
+  payment Payment @relation(fields: [paymentId], references: [id], onDelete: Restrict)
+
+  @@index([status, requestedAt])
+  @@map("refund")
+}
+
+enum WaitlistStatus {
+  WAITING
+  OFFERED
+  CONVERTED
+  CANCELLED
+  EXPIRED
+}
+
+/// Strict first-come-first-served queue per slot (ordered by seq). An OFFERED entry already holds its
+/// seats in slot.reserved until the offer is converted into a booking, cancelled or lapses.
+model WaitlistEntry {
+  id             String         @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  seq            Int            @default(autoincrement())
+  slotId         String         @db.Uuid
+  customerId     String         @db.Uuid
+  seats          Int
+  status         WaitlistStatus @default(WAITING)
+  offeredAt      DateTime?      @db.Timestamptz(6)
+  offerExpiresAt DateTime?      @db.Timestamptz(6)
+  resolvedAt     DateTime?      @db.Timestamptz(6)
+  createdAt      DateTime       @default(now()) @db.Timestamptz(6)
+
+  slot     Slot @relation(fields: [slotId], references: [id], onDelete: Restrict)
+  customer User @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  @@index([slotId, status, seq])
+  @@index([customerId])
+  @@map("waitlist_entry")
+}
+
+enum SubscriptionStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  SUSPENDED
+  CANCELLED
+  EXPIRED
+}
+
+enum BillingCycle {
+  MONTHLY
+  ANNUAL
+}
+
+enum SubscriptionRequestStatus {
+  OPEN
+  FULFILLED
+  CANCELLED
+}
+
+/// Effective-dated, append-only price rows. A subscription snapshots the row it was sold at.
+model PlanPrice {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  planCode      String
+  monthlyMinor  BigInt
+  commissionBps Int
+  currency      String   @default("USD")
+  effectiveFrom DateTime @db.Timestamptz(6)
+  createdBy     String?  @db.Uuid
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+
+  @@unique([planCode, effectiveFrom])
+  @@map("plan_price")
+}
+
+/// One per company. The stored status is a hint refreshed by the worker; the API derives the real
+/// status from the dates (see entitlementsFor in @triphub/shared).
+model Subscription {
+  id                 String             @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId          String             @unique @db.Uuid
+  planCode           String
+  status             SubscriptionStatus
+  cycle              BillingCycle?
+  trialStartedAt     DateTime?          @db.Timestamptz(6)
+  trialEndsAt        DateTime?          @db.Timestamptz(6)
+  trialConsentBy     String?            @db.Uuid
+  currentPeriodStart DateTime?          @db.Timestamptz(6)
+  currentPeriodEnd   DateTime?          @db.Timestamptz(6)
+  cancelAtPeriodEnd  Boolean            @default(false)
+  addOns             Json               @default("{}")
+  /// Price and commission the contract was sold at; later price changes never touch them.
+  monthlyMinor       BigInt             @default(0)
+  commissionBps      Int
+  createdAt          DateTime           @default(now()) @db.Timestamptz(6)
+  updatedAt          DateTime           @updatedAt @db.Timestamptz(6)
+
+  company  Company   @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  invoices Invoice[]
+
+  @@map("subscription")
+}
+
+/// A business's explicit, affirmative request to start or renew a paid plan. Trials never convert
+/// without one; platform finance fulfils it only after recording a verified manual payment.
+model SubscriptionRequest {
+  id          String                    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId   String                    @db.Uuid
+  planCode    String
+  cycle       BillingCycle
+  addOns      Json                      @default("{}")
+  status      SubscriptionRequestStatus @default(OPEN)
+  requestedBy String                    @db.Uuid
+  createdAt   DateTime                  @default(now()) @db.Timestamptz(6)
+  resolvedAt  DateTime?                 @db.Timestamptz(6)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+
+  @@index([companyId, status])
+  @@map("subscription_request")
+}
+
+/// Platform invoice for a verified manual subscription payment. Immutable.
+model Invoice {
+  id               String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  number           String       @unique
+  companyId        String       @db.Uuid
+  subscriptionId   String       @db.Uuid
+  requestId        String?      @unique @db.Uuid
+  planCode         String
+  cycle            BillingCycle
+  periodStart      DateTime     @db.Timestamptz(6)
+  periodEnd        DateTime     @db.Timestamptz(6)
+  lines            Json
+  amountMinor      BigInt
+  currency         String       @default("USD")
+  paymentMethod    String
+  paymentReference String
+  recordedBy       String       @db.Uuid
+  createdAt        DateTime     @default(now()) @db.Timestamptz(6)
+
+  company      Company      @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  subscription Subscription @relation(fields: [subscriptionId], references: [id], onDelete: Restrict)
+
+  @@unique([paymentMethod, paymentReference])
+  @@index([companyId])
+  @@map("invoice")
+}
+
+enum PayoutStatus {
+  REQUESTED
+  APPROVED
+  PAID
+  REJECTED
+}
+
+/// Money owed to a business that platform finance transfers out manually. REQUESTED -> APPROVED -> PAID by
+/// three different people; the ledger moves only when PAID is attested with a transfer reference.
+model Payout {
+  id              String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId       String       @db.Uuid
+  amountMinor     BigInt
+  currency        String
+  status          PayoutStatus @default(REQUESTED)
+  note            String?
+  requestedBy     String       @db.Uuid
+  requestedAt     DateTime     @default(now()) @db.Timestamptz(6)
+  decidedBy       String?      @db.Uuid
+  decidedAt       DateTime?    @db.Timestamptz(6)
+  decisionReason  String?
+  paidBy          String?      @db.Uuid
+  paidAt          DateTime?    @db.Timestamptz(6)
+  payoutReference String?
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+
+  @@unique([payoutReference])
+  @@index([companyId, status])
+  @@index([status, requestedAt])
+  @@map("payout")
+}
+
+enum ReviewStatus {
+  VISIBLE
+  HIDDEN
+}
+
+model Favorite {
+  userId    String   @db.Uuid
+  listingId String   @db.Uuid
+  createdAt DateTime @default(now()) @db.Timestamptz(6)
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@id([userId, listingId])
+  @@index([listingId])
+  @@map("favorite")
+}
+
+/// Only a customer with a COMPLETED booking can review it, once. "Verified" is therefore always true.
+model Review {
+  id               String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId        String       @unique @db.Uuid
+  listingId        String       @db.Uuid
+  companyId        String       @db.Uuid
+  customerId       String       @db.Uuid
+  rating           Int
+  comment          String?
+  status           ReviewStatus @default(VISIBLE)
+  moderationReason String?
+  moderatedBy      String?      @db.Uuid
+  moderatedAt      DateTime?    @db.Timestamptz(6)
+  createdAt        DateTime     @default(now()) @db.Timestamptz(6)
+
+  listing  Listing @relation(fields: [listingId], references: [id], onDelete: Restrict)
+  customer User    @relation(fields: [customerId], references: [id], onDelete: Restrict)
+
+  @@index([listingId, status, createdAt])
+  @@index([companyId])
+  @@map("review")
+}
+
+/// In-app notification. These are genuinely delivered (the user sees them in the app); no email/SMS is implied.
+model Notification {
+  id        String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId    String    @db.Uuid
+  kind      String
+  data      Json      @default("{}")
+  readAt    DateTime? @db.Timestamptz(6)
+  createdAt DateTime  @default(now()) @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, readAt, createdAt])
+  @@map("notification")
+}
+
+enum DocumentKind {
+  BUSINESS_LICENSE
+  OWNER_ID
+  OTHER
+}
+
+enum ScanStatus {
+  PENDING
+  CLEAN
+  INFECTED
+}
+
+/// Verification documents. Private: only the business and platform reviewers can download them.
+/// scanStatus stays PENDING until an antivirus scanner is connected; it is never reported as clean otherwise.
+model CompanyDocument {
+  id           String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId    String       @db.Uuid
+  kind         DocumentKind
+  originalName String
+  contentType  String
+  sizeBytes    Int
+  sha256       String
+  storageKey   String       @unique
+  scanStatus   ScanStatus   @default(PENDING)
+  uploadedBy   String       @db.Uuid
+  createdAt    DateTime     @default(now()) @db.Timestamptz(6)
+  deletedAt    DateTime?    @db.Timestamptz(6)
+
+  company Company @relation(fields: [companyId], references: [id], onDelete: Restrict)
+
+  @@index([companyId, deletedAt])
+  @@map("company_document")
+}
+
+enum CancellationPolicy {
+  FLEXIBLE
+  MODERATE
+  STRICT
+  NON_REFUNDABLE
+}
+
+/// Public gallery image of a listing. Only real images (type sniffed from the bytes) are accepted.
+model ListingImage {
+  id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  listingId   String    @db.Uuid
+  storageKey  String    @unique
+  contentType String
+  sizeBytes   Int
+  sha256      String
+  alt         String?
+  position    Int       @default(0)
+  uploadedBy  String    @db.Uuid
+  createdAt   DateTime  @default(now()) @db.Timestamptz(6)
+  deletedAt   DateTime? @db.Timestamptz(6)
+
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Restrict)
+
+  @@index([listingId, deletedAt, position])
+  @@map("listing_image")
+}
+
+enum PromoKind {
+  PERCENT
+  FIXED
+}
+
+/// A business's discount code (marketing entitlement). Redemption is claimed atomically with the booking.
+model PromoCode {
+  id             String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  companyId      String    @db.Uuid
+  code           String
+  kind           PromoKind
+  percentBps     Int?
+  amountMinor    BigInt?
+  currency       String?
+  listingId      String?   @db.Uuid
+  validFrom      DateTime? @db.Timestamptz(6)
+  validTo        DateTime? @db.Timestamptz(6)
+  maxRedemptions Int?
+  redeemed       Int       @default(0)
+  active         Boolean   @default(true)
+  createdBy      String    @db.Uuid
+  createdAt      DateTime  @default(now()) @db.Timestamptz(6)
+
+  company     Company           @relation(fields: [companyId], references: [id], onDelete: Restrict)
+  redemptions PromoRedemption[]
+
+  @@unique([companyId, code])
+  @@map("promo_code")
+}
+
+/// One per customer per code; released again if the booking lapses or is cancelled unpaid.
+model PromoRedemption {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  promoId       String   @db.Uuid
+  bookingId     String   @unique @db.Uuid
+  customerId    String   @db.Uuid
+  discountMinor BigInt
+  createdAt     DateTime @default(now()) @db.Timestamptz(6)
+
+  promo PromoCode @relation(fields: [promoId], references: [id], onDelete: Restrict)
+
+  @@unique([promoId, customerId])
+  @@map("promo_redemption")
+}
+
+/// Indicative USD to LBP rate set by staff. Display only: bookings and the ledger stay in the booking currency.
+model ExchangeRate {
+  id            String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  lbpPerUsd     Int
+  source        String
+  effectiveFrom DateTime @default(now()) @db.Timestamptz(6)
+  createdBy     String   @db.Uuid
+
+  @@index([effectiveFrom])
+  @@map("exchange_rate")
+}

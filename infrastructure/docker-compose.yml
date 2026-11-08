@@ -1,0 +1,24 @@
+name: triphub
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment: { POSTGRES_USER: triphub, POSTGRES_PASSWORD: triphub, POSTGRES_DB: triphub }
+    ports: ["5442:5432"]
+    volumes: [pgdata:/var/lib/postgresql/data]
+    healthcheck: { test: ["CMD-SHELL", "pg_isready -U triphub"], interval: 5s, retries: 10 }
+  redis:
+    image: redis:7-alpine
+    ports: ["6390:6379"]
+  minio:
+    image: minio/minio
+    command: server /data --console-address ":9001"
+    environment: { MINIO_ROOT_USER: triphub, MINIO_ROOT_PASSWORD: triphub-secret }
+    ports: ["9000:9000", "9001:9001"]
+    volumes: [miniodata:/data]
+  mailpit:
+    image: axllent/mailpit
+    ports: ["1025:1025", "8025:8025"]
+  clamav:
+    image: clamav/clamav:stable
+    ports: ["3310:3310"]
+volumes: { pgdata: {}, miniodata: {} }

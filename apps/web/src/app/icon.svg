@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 400" role="img" aria-label="TripHub">
+  <defs>
+    <clipPath id="disc"><circle cx="200" cy="200" r="130"/></clipPath>
+    <linearGradient id="sea" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#19b4bc"/><stop offset="1" stop-color="#0a97a6"/>
+    </linearGradient>
+  </defs>
+
+  <!-- compass: ring in four arcs, a point in each gap -->
+  <g fill="#0b5d44">
+    <path d="M233.6 42.8 A160 160 0 0 1 357.2 166.4 L337 171.8 A139 139 0 0 0 228.2 63 Z"/>
+    <path d="M357.2 233.6 A160 160 0 0 1 233.6 357.2 L228.2 337 A139 139 0 0 0 337 228.2 Z"/>
+    <path d="M166.4 357.2 A160 160 0 0 1 42.8 233.6 L63 228.2 A139 139 0 0 0 171.8 337 Z"/>
+    <path d="M42.8 166.4 A160 160 0 0 1 166.4 42.8 L171.8 63 A139 139 0 0 0 63 171.8 Z"/>
+    <path d="M200 8 L224 56 L176 56 Z"/>
+    <path d="M392 200 L344 224 L344 176 Z"/>
+    <path d="M200 392 L176 344 L224 344 Z"/>
+    <path d="M8 200 L56 176 L56 224 Z"/>
+  </g>
+
+  <g clip-path="url(#disc)">
+    <rect x="60" y="60" width="280" height="280" fill="#ffffff"/>
+    <g transform="translate(200 206) scale(0.86) translate(-200 -206)">
+      <!-- sun and pin -->
+      <circle cx="288" cy="124" r="20" fill="#f9c74f"/>
+      <path d="M198 140 C 194 136 170 110 170 90 A 28 28 0 1 1 226 90 C 226 110 202 136 198 140 Z" fill="#ec7a30"/>
+      <circle cx="198" cy="90" r="10.5" fill="#ffffff"/>
+
+      <!-- birds -->
+      <path d="M112 118 q 8 -8 16 0 q 8 -8 16 0" fill="none" stroke="#0b5d44" stroke-width="4" stroke-linecap="round"/>
+      <path d="M134 138 q 6 -6 12 0 q 6 -6 12 0" fill="none" stroke="#0b5d44" stroke-width="3.5" stroke-linecap="round"/>
+
+      <!-- mountain -->
+      <path d="M130 256 L190 178 L214 204 L236 184 L312 256 Z" fill="#3d9068"/>
+      <path d="M190 178 L214 204 L203 210 L193 198 L179 212 L172 196 Z" fill="#ffffff"/>
+      <path d="M190 178 L179 212 L158 256 L130 256 Z" fill="#2c7a55"/>
+
+      <!-- ruins -->
+      <g fill="#c9a06b">
+        <rect x="262" y="190" width="70" height="66"/>
+        <rect x="296" y="164" width="24" height="32"/>
+        <rect x="296" y="157" width="6" height="9"/><rect x="307" y="157" width="6" height="9"/><rect x="318" y="157" width="6" height="9"/>
+      </g>
+      <g fill="#ffffff">
+        <path d="M270 256 v-24 a10 10 0 0 1 20 0 v24 z"/>
+        <path d="M296 256 v-24 a10 10 0 0 1 20 0 v24 z"/>
+        <path d="M322 256 v-24 a10 10 0 0 1 20 0 v24 z"/>
+        <path d="M303 190 v-12 a6 6 0 0 1 12 0 v12 z"/>
+      </g>
+
+      <!-- hills, path and water -->
+      <path d="M40 270 C 96 252 160 266 214 306 L214 400 L40 400 Z" fill="#6b8e23"/>
+      <path d="M40 296 C 92 280 148 292 190 324 L166 400 L40 400 Z" fill="#82a331"/>
+      <path d="M214 270 C 252 254 310 252 360 262 L360 400 L226 400 C 246 346 244 306 214 270 Z" fill="url(#sea)"/>
+      <path d="M146 262 C 190 262 232 290 238 322 C 242 344 232 372 216 400 L160 400 C 196 366 204 330 182 300 C 170 284 154 276 132 272 Z" fill="#e8e4cb"/>
+      <path d="M238 292 q 18 -12 36 0 t 36 0 t 40 -2" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+      <path d="M252 316 q 16 -10 32 0 t 32 0" fill="none" stroke="#ffffff" stroke-width="5" stroke-linecap="round"/>
+
+      <!-- cedar -->
+      <rect x="104" y="244" width="11" height="50" fill="#3b5a2d"/>
+      <path d="M110 150 L134 196 L122 196 L148 232 L128 232 L160 266 L60 266 L92 232 L72 232 L98 196 L86 196 Z" fill="#0f5a40"/>
+      <path d="M110 150 L98 196 L86 196 L72 232 L92 232 L60 266 L110 266 Z" fill="#0b4a35"/>
+    </g>
+  </g>
+</svg>

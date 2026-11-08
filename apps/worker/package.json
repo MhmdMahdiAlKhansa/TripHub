@@ -1,0 +1,26 @@
+{
+  "name": "@triphub/worker",
+  "version": "0.0.0",
+  "private": true,
+  "main": "dist/main.js",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "start": "node dist/main.js",
+    "dev": "tsx watch src/main.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run --passWithNoTests"
+  },
+  "dependencies": {
+    "@triphub/database": "workspace:*",
+    "@triphub/shared": "workspace:*",
+    "bullmq": "6.7.1",
+    "dotenv": "17.2.0"
+  },
+  "devDependencies": {
+    "@types/node": "24.0.0",
+    "tsx": "4.20.3",
+    "typescript": "5.9.3",
+    "vitest": "4.1.12"
+  }
+}

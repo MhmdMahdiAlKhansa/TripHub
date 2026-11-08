@@ -1,0 +1,209 @@
+@import 'tailwindcss';
+@source '../../../../packages/ui/src';
+
+/* Design tokens. Brand: Forest Green #285C50, Sage #8BAA96, Warm Off-White #F7F8F3,
+   Mist Green #E6ECE5, Deep Pine #263C36. */
+:root {
+  /* Fresh blue brand: sky/azure primary, turquoise sea, sun yellow and orange accents, leaf green for nature. */
+  --bg: #f8fbff;
+  --fg: #14304a;
+  --muted: #455e77;
+  --surface: #ffffff;
+  --surface-2: #e4effb;
+  --surface-3: #cfe3f8;
+  --border: #d0e0f0;
+  --brand: #0a6fd8;
+  --brand-hover: #0858b0;
+  --on-brand: #ffffff;
+  --accent: #f08a3c;
+  --accent-ink: #9a4308;
+  --sea: #1fa3b8;
+  --leaf: #7cc06a;
+  --sun: #ffc94a;
+  --ring: #0a6fd8;
+  --logo-needle: #f8fbff;
+  --font-sans: 'DM Sans Variable', system-ui, sans-serif;
+  color-scheme: light;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --bg: #0d1b2a;
+    --fg: #e8f1fb;
+    --muted: #a5bdd6;
+    --surface: #14283d;
+    --surface-2: #1b3652;
+    --surface-3: #25476a;
+    --border: #27425e;
+    --brand: #6cb6ff;
+    --brand-hover: #94caff;
+    --on-brand: #0d1b2a;
+    --accent: #ffb067;
+    --accent-ink: #ffc58d;
+    --sea: #52c7d9;
+    --ring: #94caff;
+    --logo-needle: #0d1b2a;
+    color-scheme: dark;
+  }
+}
+
+:root[data-theme='dark'] {
+  --bg: #0d1b2a;
+  --fg: #e8f1fb;
+  --muted: #a5bdd6;
+  --surface: #14283d;
+  --surface-2: #1b3652;
+  --surface-3: #25476a;
+  --border: #27425e;
+  --brand: #6cb6ff;
+  --brand-hover: #94caff;
+  --on-brand: #0d1b2a;
+  --accent: #ffb067;
+  --accent-ink: #ffc58d;
+  --sea: #52c7d9;
+  --ring: #94caff;
+  --logo-needle: #0d1b2a;
+  color-scheme: dark;
+}
+
+html:lang(ar) {
+  --font-sans: 'Noto Sans Arabic Variable', 'DM Sans Variable', system-ui, sans-serif;
+}
+
+body {
+  background: linear-gradient(180deg, var(--bg) 0%, var(--surface-2) 100%) fixed;
+  color: var(--fg);
+  font-family: var(--font-sans);
+  /* leave room for the mobile bottom nav */
+  padding-block-end: 4.5rem;
+}
+
+@media (min-width: 768px) {
+  body {
+    padding-block-end: 0;
+  }
+}
+
+:focus-visible {
+  outline: 2px solid var(--ring);
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ------------------------------------------------------------------ immersive customer site */
+html,
+body {
+  overflow-x: clip;
+}
+
+.full-bleed {
+  width: 100vw;
+  margin-inline: calc(50% - 50vw);
+}
+
+/* Scroll reveal and parallax: CSS scroll-driven animations (no JavaScript). Where unsupported, or when the
+   visitor prefers reduced motion, nothing is hidden or moved. */
+@supports (animation-timeline: view()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .reveal {
+      animation: reveal-in linear both;
+      animation-timeline: view();
+      animation-range: entry 0% entry 40%;
+    }
+    @media (pointer: fine) {
+      .parallax {
+        animation: parallax-drift linear both;
+        animation-timeline: scroll(root);
+        animation-range: 0 100vh;
+        will-change: transform;
+      }
+    }
+  }
+}
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, 16px, 0);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+@keyframes parallax-drift {
+  to {
+    transform: translate3d(0, var(--travel, 24px), 0);
+  }
+}
+
+.hero-scrim {
+  background:
+    linear-gradient(180deg, rgb(6 38 84 / 0.5) 0%, rgb(6 38 84 / 0.16) 40%, rgb(6 30 66 / 0.62) 100%),
+    linear-gradient(90deg, rgb(6 38 84 / 0.55), transparent 62%);
+}
+
+.card-lift {
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    border-color 0.35s ease;
+}
+.card-lift:hover,
+.card-lift:focus-within {
+  transform: translate3d(0, -4px, 0);
+  box-shadow: 0 18px 40px -22px rgb(38 60 54 / 0.45);
+}
+.card-lift .card-img {
+  transition: transform 0.6s ease;
+}
+.card-lift:hover .card-img,
+.card-lift:focus-within .card-img {
+  transform: scale(1.04);
+}
+
+.rail {
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+.rail > * {
+  scroll-snap-align: start;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .card-lift:hover,
+  .card-lift:focus-within {
+    transform: none;
+  }
+  .card-lift:hover .card-img,
+  .card-lift:focus-within .card-img {
+    transform: none;
+  }
+}
+
+/* Header floating over a hero photo: white text on a soft dark fade, no solid bar. */
+.header-hero {
+  --fg: #ffffff;
+  --muted: #e4effb;
+  --surface-2: rgb(255 255 255 / 0.2);
+  --brand: #ffffff;
+  --on-brand: #14304a;
+  color: #ffffff;
+  background: linear-gradient(180deg, rgb(6 30 66 / 0.62) 0%, rgb(6 30 66 / 0.28) 60%, transparent 100%);
+}
+
+/* The bottom of every hero fades into the page so the photo flows into the content. */
+.hero-fade {
+  background: linear-gradient(180deg, transparent 0%, var(--bg) 100%);
+}
+/* Deep-blue band used for trust/summary sections, matching the hero's evening sky. */
+.band-deep {
+  background: linear-gradient(135deg, #0a2f66 0%, #0a4a9a 60%, #0c7a8a 130%);
+  color: #ffffff;
+}
