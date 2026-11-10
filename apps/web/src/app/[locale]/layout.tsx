@@ -1,4 +1,3 @@
-import '@fontsource-variable/dm-sans';
 import '@fontsource-variable/noto-sans-arabic';
 import '../globals.css';
 import { LOCALES } from '@triphub/shared';

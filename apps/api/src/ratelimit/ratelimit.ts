@@ -101,6 +101,10 @@ export class RateLimitGuard implements CanActivate {
     {
       provide: RATE_LIMITER,
       useFactory: () => {
+        // Load tests only: never honoured in production.
+        if (process.env.RATE_LIMIT_DISABLED === '1' && process.env.NODE_ENV !== 'production') {
+          return { hit: async () => ({ allowed: true, retryAfterSec: 1 }) } as RateLimiter;
+        }
         const url = process.env.REDIS_URL;
         if (!url || process.env.NODE_ENV === 'test') return new MemoryRateLimiter();
         return new RedisRateLimiter(new Redis(url, { maxRetriesPerRequest: 1, enableOfflineQueue: false }));

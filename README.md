@@ -68,9 +68,13 @@ corepack pnpm --filter @triphub/web start    # terminal 2
 corepack pnpm --filter @triphub/e2e e2e      # uses the system Microsoft Edge (E2E_CHANNEL=chrome for Chrome)
 ```
 
+## Email
+
+Set `SMTP_HOST`, `SMTP_PORT` (587), `SMTP_SECURE`, `SMTP_USER`, `SMTP_PASS` and `MAIL_FROM` to send real mail through any SMTP server (verification, password reset, invitations; each message is English + Arabic). Without them nothing is delivered. In local development `DEV_MAILBOX=1` shows the links at /en/dev-mailbox instead.
+
 ## Map
 
-The map shows only when a tile provider is configured. Set `NEXT_PUBLIC_MAP_STYLE_URL` (a MapLibre style JSON URL) and `NEXT_PUBLIC_MAP_ORIGIN` (its tile origin, for the CSP) at build time. For local development without a provider, `apps/web/public/map/dev-style.json` uses OpenStreetMap tiles (not for real traffic). The map browser test runs with `E2E_MAP=1` on such a build.
+The map shows only when a tile provider is configured. Set `NEXT_PUBLIC_MAP_STYLE_URL` (a MapLibre style JSON URL) and `NEXT_PUBLIC_MAP_ORIGIN` (its tile origin, for the CSP) at build time. With MapTiler, just set `NEXT_PUBLIC_MAPTILER_KEY` (restrict the key to your domain in their dashboard). For local development without a provider, `apps/web/public/map/dev-style.json` uses OpenStreetMap tiles (not for real traffic). The map browser test runs with `E2E_MAP=1` on such a build.
 
 ## Things to know
 

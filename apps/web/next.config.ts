@@ -4,7 +4,9 @@ const apiOrigin = (process.env.API_INTERNAL_URL ?? 'http://localhost:4000').repl
 
 const isProd = process.env.NODE_ENV === 'production';
 // Map tiles/styles come from the configured provider only (see src/lib/map.ts). Dev uses OpenStreetMap tiles.
-const mapOrigins = (process.env.NEXT_PUBLIC_MAP_STYLE_URL
+const mapOrigins = (process.env.NEXT_PUBLIC_MAPTILER_KEY
+  ? ['https://api.maptiler.com']
+  : process.env.NEXT_PUBLIC_MAP_STYLE_URL
   ? (process.env.NEXT_PUBLIC_MAP_ORIGIN ?? '').split(',').map((o) => o.trim()).filter(Boolean)
   : isProd ? [] : ['https://tile.openstreetmap.org']
 ).join(' ');

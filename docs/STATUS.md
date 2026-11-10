@@ -51,7 +51,7 @@ honest "NOT DONE" lists per slice are in `docs/PROGRESS.md`. The GitHub CI workf
 8. Review my Arabic copy and the region names/blurbs.
 
 **I can build without you (next, in this order)**
-1. Mobile page speed: Lighthouse mobile is 73-78 (LCP about 3.8 s, target 2.5 s); next steps are trimming client JavaScript and the Arabic font payload. (Image resizing/metadata stripping and the first speed pass are DONE.)
+1. Mobile page speed: under real DevTools throttling LCP is about 2.2 s (target 2.5 s met on localhost); Lighthouse's simulated mode still shows about 3.5 s. Not yet measured on a real phone or network.
 2. Map: component is BUILT; production needs a licensed tile provider (set the two map env vars).
 3. Business UI for promo codes, refund requests, payout view and analytics charts; staff UI for invoices.
 4. (Done: content pages, staff-featured list, indicative LBP estimate, map component, CI job definitions.) Still to do: prove the CI workflow on GitHub, real load tests, remaining hardening.

@@ -85,7 +85,9 @@ export const ModelName = {
   ListingImage: 'ListingImage',
   PromoCode: 'PromoCode',
   PromoRedemption: 'PromoRedemption',
-  ExchangeRate: 'ExchangeRate'
+  ExchangeRate: 'ExchangeRate',
+  EmailOutbox: 'EmailOutbox',
+  LoginCode: 'LoginCode'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -109,6 +111,7 @@ export const UserScalarFieldEnum = {
   email: 'email',
   emailVerifiedAt: 'emailVerifiedAt',
   passwordHash: 'passwordHash',
+  googleSub: 'googleSub',
   displayName: 'displayName',
   locale: 'locale',
   status: 'status',
@@ -594,6 +597,7 @@ export const NotificationScalarFieldEnum = {
   kind: 'kind',
   data: 'data',
   readAt: 'readAt',
+  emailedAt: 'emailedAt',
   createdAt: 'createdAt'
 } as const
 
@@ -677,6 +681,35 @@ export const ExchangeRateScalarFieldEnum = {
 } as const
 
 export type ExchangeRateScalarFieldEnum = (typeof ExchangeRateScalarFieldEnum)[keyof typeof ExchangeRateScalarFieldEnum]
+
+
+export const EmailOutboxScalarFieldEnum = {
+  id: 'id',
+  toEmail: 'toEmail',
+  template: 'template',
+  payloadEnc: 'payloadEnc',
+  status: 'status',
+  attempts: 'attempts',
+  nextAttemptAt: 'nextAttemptAt',
+  lastError: 'lastError',
+  createdAt: 'createdAt',
+  sentAt: 'sentAt'
+} as const
+
+export type EmailOutboxScalarFieldEnum = (typeof EmailOutboxScalarFieldEnum)[keyof typeof EmailOutboxScalarFieldEnum]
+
+
+export const LoginCodeScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  codeHash: 'codeHash',
+  attempts: 'attempts',
+  expiresAt: 'expiresAt',
+  consumedAt: 'consumedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type LoginCodeScalarFieldEnum = (typeof LoginCodeScalarFieldEnum)[keyof typeof LoginCodeScalarFieldEnum]
 
 
 export const SortOrder = {

@@ -1,0 +1,12 @@
+{
+  "name": "@triphub/loadtest",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "load": "node run.mjs"
+  },
+  "devDependencies": {
+    "autocannon": "8.0.0"
+  }
+}

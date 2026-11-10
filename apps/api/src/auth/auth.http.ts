@@ -15,6 +15,14 @@ export function readSessionToken(req: Request): string | undefined {
   return undefined;
 }
 
+export function readCookie(req: Request, name: string): string | undefined {
+  for (const part of (req.headers.cookie ?? '').split(';')) {
+    const [n, ...rest] = part.trim().split('=');
+    if (n === name) return decodeURIComponent(rest.join('='));
+  }
+  return undefined;
+}
+
 export function setSessionCookie(res: Response, token: string) {
   res.cookie(SESSION_COOKIE, token, {
     httpOnly: true,

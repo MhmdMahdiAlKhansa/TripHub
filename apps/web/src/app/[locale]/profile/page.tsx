@@ -1,6 +1,7 @@
 import { PageHero } from '../../../components/PageHero';
 import { notFound } from 'next/navigation';
 import { ProfilePanel } from '../../../components/ProfilePanel';
+import { PrivacyPanel } from '../../../components/PrivacyPanel';
 import { isLocale } from '../../../i18n/locale';
 import { createT } from '../../../i18n/messages';
 
@@ -35,6 +36,13 @@ export default async function Profile({ params }: { params: Promise<{ locale: st
           },
           emptyTitle: t('profile.emptyTitle'), emptyBody: t('profile.emptyBody'), signIn: t('auth.loginCta'),
           signedInAs: t('auth.signedInAs'), logout: t('auth.logout'), working: t('auth.working'), businessLink: t('biz.profileLink'), securityLink: t('sec.link'), staffLink: t('adm.link'),
+        }}
+      />
+      <PrivacyPanel
+        labels={{
+          title: t('privacy.title'), exportBody: t('privacy.exportBody'), exportBtn: t('privacy.exportBtn'), deleteTitle: t('privacy.deleteTitle'), deleteBody: t('privacy.deleteBody'), deleteBtn: t('privacy.deleteBtn'),
+          password: t('privacy.password'), confirmLabel: t('privacy.confirmLabel'), confirmWord: 'DELETE', working: t('auth.working'),
+          errors: { open_bookings: t('privacy.err.open_bookings'), sole_owner: t('privacy.err.sole_owner'), open_offer: t('privacy.err.open_offer'), staff_account: t('privacy.err.staff_account'), recent_login_required: t('privacy.err.recent_login_required'), invalid: t('privacy.err.invalid'), generic: t('privacy.err.generic') },
         }}
       />
     </div>

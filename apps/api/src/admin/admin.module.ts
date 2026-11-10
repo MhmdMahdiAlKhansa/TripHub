@@ -1,3 +1,4 @@
+import { EmailAdminController } from './email-admin.controller';
 import { Module } from '@nestjs/common';
 import { AuthModule } from '../auth/auth.module';
 import { AdminController } from './admin.controller';
@@ -6,7 +7,7 @@ import { AdminService } from './admin.service';
 
 @Module({
   imports: [AuthModule],
-  controllers: [AdminController],
+  controllers: [AdminController, EmailAdminController],
   providers: [AdminService, PlatformGuard],
 })
 export class AdminModule {}

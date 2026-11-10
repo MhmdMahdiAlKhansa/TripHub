@@ -200,3 +200,14 @@ export type PromoRedemption = Prisma.PromoRedemptionModel
  * Indicative USD to LBP rate set by staff. Display only: bookings and the ledger stay in the booking currency.
  */
 export type ExchangeRate = Prisma.ExchangeRateModel
+/**
+ * Model EmailOutbox
+ * Durable email queue. The payload (which can hold a one-time link token) is encrypted at rest and cleared
+ * once the server has accepted the message. SENT means "accepted by the SMTP server", never "delivered".
+ */
+export type EmailOutbox = Prisma.EmailOutboxModel
+/**
+ * Model LoginCode
+ * One-time sign-in code emailed to the user (6 digits, 10 minutes, 5 tries). Only a hash is stored.
+ */
+export type LoginCode = Prisma.LoginCodeModel

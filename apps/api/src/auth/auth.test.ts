@@ -8,6 +8,7 @@ import request from 'supertest';
 import { afterAll, beforeAll, describe, expect, it } from 'vitest';
 
 config({ path: path.resolve(__dirname, '../../../../.env') });
+process.env.SIMPLE_SIGNUP = '0'; // these tests cover the verified sign-up flow
 
 import { AppModule } from '../app.module';
 import { sha256 } from './crypto';

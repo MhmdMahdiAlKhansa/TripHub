@@ -65,6 +65,7 @@ export type PlatformRole = (typeof PLATFORM_ROLES)[number];
 export const PLATFORM_PERMISSIONS = [
   'company.review',
   'company.review.view',
+  'email.view',
   'payment.view',
   'payment.verify',
   'refund.view',
@@ -82,10 +83,10 @@ export type PlatformPermission = (typeof PLATFORM_PERMISSIONS)[number];
 
 export const PLATFORM_ROLE_PERMISSIONS: Record<PlatformRole, readonly PlatformPermission[]> = {
   NONE: [],
-  SUPPORT: ['company.review.view', 'review.moderate', 'content.manage'],
+  SUPPORT: ['company.review.view', 'email.view', 'review.moderate', 'content.manage'],
   VERIFIER: ['company.review.view', 'company.review'],
   FINANCE: ['payment.view', 'payment.verify', 'refund.view', 'refund.decide', 'subscription.view', 'subscription.manage', 'payout.view', 'payout.manage', 'fx.manage', 'ledger.view'],
-  ADMIN: ['company.review.view', 'company.review', 'payment.view', 'refund.view', 'subscription.view', 'payout.view', 'review.moderate', 'content.manage', 'fx.manage', 'ledger.view'],
+  ADMIN: ['company.review.view', 'email.view', 'company.review', 'payment.view', 'refund.view', 'subscription.view', 'payout.view', 'review.moderate', 'content.manage', 'fx.manage', 'ledger.view'],
 };
 
 export function platformCan(role: PlatformRole, permission: PlatformPermission): boolean {

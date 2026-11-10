@@ -16,6 +16,9 @@ const DEV_OSM_STYLE = {
 };
 
 export function mapConfig(): MapConfig | null {
+  // MapTiler: set only the key (restrict it to your domain in the MapTiler dashboard; it is public by design).
+  const key = process.env.NEXT_PUBLIC_MAPTILER_KEY;
+  if (key) return { style: `https://api.maptiler.com/maps/streets-v2/style.json?key=${encodeURIComponent(key)}`, origins: ['https://api.maptiler.com'] };
   const url = process.env.NEXT_PUBLIC_MAP_STYLE_URL;
   if (url) return { style: url, origins: (process.env.NEXT_PUBLIC_MAP_ORIGIN ?? '').split(',').map((s) => s.trim()).filter(Boolean) };
   if (process.env.NODE_ENV !== 'production') return { style: DEV_OSM_STYLE, origins: ['https://tile.openstreetmap.org'] };

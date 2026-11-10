@@ -1,5 +1,6 @@
 import { ConflictException, Inject, Injectable, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import type { PrismaClient, Session, User } from '@triphub/database';
+import { randomInt, timingSafeEqual } from 'node:crypto';
 import * as OTPAuth from 'otpauth';
 import { PRISMA } from '../database/database.module';
 import {
@@ -68,6 +69,22 @@ export class AuthService {
       data: { userId, type, tokenHash: sha256(token), expiresAt: new Date(Date.now() + ttlMs) },
     });
     return token;
+  }
+
+  /**
+   * Simple sign-up for local testing: email + password, signed in at once, no email check. Never in production.
+   * The account stays marked UNVERIFIED (so invitations, code sign-in and notification emails still need a real check).
+   */
+  static simpleSignup() {
+    return process.env.SIMPLE_SIGNUP === '1' && process.env.NODE_ENV !== 'production';
+  }
+
+  async registerSimple(email: string, password: string, displayName: string | undefined, ctx: RequestCtx): Promise<{ token: string; user: User }> {
+    const passwordHash = await hashPassword(password);
+    if (await this.db.user.findUnique({ where: { email } })) throw new ConflictException({ code: 'email_taken', message: 'This email is already registered.' });
+    const user = await this.db.user.create({ data: { email, passwordHash, displayName } });
+    await this.audit('auth.register', ctx, user.id, { simple: true });
+    return this.createSession(user, false, ctx, 'auth.login');
   }
 
   /** Always resolves the same way whether or not the email exists (no account enumeration). */
@@ -141,7 +158,7 @@ export class AuthService {
       throw new UnauthorizedException('Invalid credentials');
     }
     // Same response as bad credentials: do not reveal that the password was right.
-    if (!user.emailVerifiedAt || user.status !== 'ACTIVE') {
+    if ((!user.emailVerifiedAt && !AuthService.simpleSignup()) || user.status !== 'ACTIVE') {
       await this.audit('auth.login.blocked', ctx, user.id, { reason: 'unverified_or_inactive' });
       throw new UnauthorizedException('Invalid credentials');
     }
@@ -157,6 +174,12 @@ export class AuthService {
     }
 
     await this.db.user.update({ where: { id: user.id }, data: { failedLogins: 0, lockedUntil: null } });
+    return this.createSession(user, mfaVerified, ctx, 'auth.login');
+  }
+
+  /** Starts a server-side session (the cookie value is returned once; only its hash is stored). */
+  async createSession(user: User, mfaVerified: boolean, ctx: RequestCtx, auditAction: string): Promise<{ token: string; user: User }> {
+    const now = new Date();
     const token = newToken();
     await this.db.session.create({
       data: {
@@ -168,7 +191,7 @@ export class AuthService {
         expiresAt: new Date(now.getTime() + SESSION_DAYS * day),
       },
     });
-    await this.audit('auth.login', ctx, user.id, { mfa: mfaVerified });
+    await this.audit(auditAction, ctx, user.id, { mfa: mfaVerified });
     return { token, user };
   }
 
@@ -189,6 +212,47 @@ export class AuthService {
       data: { revokedAt: new Date() },
     });
     if (res.count) await this.audit('auth.logout', ctx);
+  }
+
+  // ---------------------------------------------------------------- email sign-in code
+
+  private codeHash(userId: string, code: string) {
+    return sha256(`${userId}:${code}`);
+  }
+
+  /** Always behaves the same to the caller. Sends a 6-digit code only to verified, active accounts without two-step verification. */
+  async requestLoginCode(email: string, ctx: RequestCtx) {
+    const user = await this.db.user.findUnique({ where: { email } });
+    if (!user || user.status !== 'ACTIVE' || !user.emailVerifiedAt || user.mfaEnabledAt) return;
+    const last = await this.db.loginCode.findFirst({ where: { userId: user.id }, orderBy: { createdAt: 'desc' } });
+    if (last && Date.now() - last.createdAt.getTime() < 60_000) return; // one per minute
+    const code = String(randomInt(0, 1_000_000)).padStart(6, '0');
+    await this.db.$transaction([
+      this.db.loginCode.updateMany({ where: { userId: user.id, consumedAt: null }, data: { consumedAt: new Date() } }),
+      this.db.loginCode.create({ data: { userId: user.id, codeHash: this.codeHash(user.id, code), expiresAt: new Date(Date.now() + 10 * 60_000) } }),
+    ]);
+    await this.audit('auth.login_code.requested', ctx, user.id);
+    await this.mailer.send({ to: email, template: 'login-code', token: code });
+  }
+
+  async loginWithCode(email: string, code: string, ctx: RequestCtx): Promise<{ token: string; user: User }> {
+    const fail = (): never => { throw new UnauthorizedException('Invalid or expired code'); };
+    const user = await this.db.user.findUnique({ where: { email } });
+    if (!user || user.status !== 'ACTIVE' || !user.emailVerifiedAt || user.mfaEnabledAt) return fail();
+    const row = await this.db.loginCode.findFirst({ where: { userId: user.id, consumedAt: null, expiresAt: { gt: new Date() } }, orderBy: { createdAt: 'desc' } });
+    if (!row || row.attempts >= 5) return fail();
+    // Count the try first so parallel guesses cannot exceed the limit.
+    const tried = await this.db.loginCode.updateMany({ where: { id: row.id, attempts: { lt: 5 }, consumedAt: null }, data: { attempts: { increment: 1 } } });
+    if (tried.count !== 1) return fail();
+    const a = Buffer.from(this.codeHash(user.id, code));
+    const b = Buffer.from(row.codeHash);
+    if (a.length !== b.length || !timingSafeEqual(a, b)) {
+      await this.audit('auth.login_code.failed', ctx, user.id);
+      return fail();
+    }
+    const used = await this.db.loginCode.updateMany({ where: { id: row.id, consumedAt: null }, data: { consumedAt: new Date() } });
+    if (used.count !== 1) return fail();
+    return this.createSession(user, false, ctx, 'auth.login.code');
   }
 
   // ---------------------------------------------------------------- password reset

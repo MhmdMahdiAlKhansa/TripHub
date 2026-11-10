@@ -266,3 +266,12 @@ export const PromoKind = {
 } as const
 
 export type PromoKind = (typeof PromoKind)[keyof typeof PromoKind]
+
+
+export const OutboxStatus = {
+  QUEUED: 'QUEUED',
+  SENT: 'SENT',
+  FAILED: 'FAILED'
+} as const
+
+export type OutboxStatus = (typeof OutboxStatus)[keyof typeof OutboxStatus]

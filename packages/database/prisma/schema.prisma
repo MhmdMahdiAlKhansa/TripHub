@@ -27,6 +27,8 @@ model User {
   email           String     @unique
   emailVerifiedAt DateTime?  @db.Timestamptz(6)
   passwordHash    String?
+  /// Google account id (OIDC `sub`) once the user has signed in with Google.
+  googleSub       String?    @unique
   displayName     String?
   locale          String     @default("en")
   status          UserStatus @default(ACTIVE)
@@ -49,6 +51,7 @@ model User {
   favorites     Favorite[]
   reviews       Review[]
   notifications Notification[]
+  loginCodes    LoginCode[]
 
   @@map("user")
 }
@@ -804,6 +807,8 @@ model Notification {
   kind      String
   data      Json      @default("{}")
   readAt    DateTime? @db.Timestamptz(6)
+  /// When an email copy was queued (null = not yet, or not applicable).
+  emailedAt DateTime? @db.Timestamptz(6)
   createdAt DateTime  @default(now()) @db.Timestamptz(6)
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -928,4 +933,44 @@ model ExchangeRate {
 
   @@index([effectiveFrom])
   @@map("exchange_rate")
+}
+
+enum OutboxStatus {
+  QUEUED
+  SENT
+  FAILED
+}
+
+/// Durable email queue. The payload (which can hold a one-time link token) is encrypted at rest and cleared
+/// once the server has accepted the message. SENT means "accepted by the SMTP server", never "delivered".
+model EmailOutbox {
+  id            String       @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  toEmail       String
+  template      String
+  payloadEnc    String?
+  status        OutboxStatus @default(QUEUED)
+  attempts      Int          @default(0)
+  nextAttemptAt DateTime     @default(now()) @db.Timestamptz(6)
+  lastError     String?
+  createdAt     DateTime     @default(now()) @db.Timestamptz(6)
+  sentAt        DateTime?    @db.Timestamptz(6)
+
+  @@index([status, nextAttemptAt])
+  @@map("email_outbox")
+}
+
+/// One-time sign-in code emailed to the user (6 digits, 10 minutes, 5 tries). Only a hash is stored.
+model LoginCode {
+  id         String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId     String    @db.Uuid
+  codeHash   String
+  attempts   Int       @default(0)
+  expiresAt  DateTime  @db.Timestamptz(6)
+  consumedAt DateTime? @db.Timestamptz(6)
+  createdAt  DateTime  @default(now()) @db.Timestamptz(6)
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, createdAt])
+  @@map("login_code")
 }

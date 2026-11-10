@@ -2,15 +2,19 @@ import { Injectable, Logger } from '@nestjs/common';
 
 export interface Mail {
   to: string;
-  template: 'verify-email' | 'password-reset' | 'company-invitation';
-  /** Link/token the recipient needs. */
+  template: 'verify-email' | 'password-reset' | 'company-invitation' | 'notification' | 'login-code';
+  /** One-time link token the recipient needs (auth mails only). */
   token: string;
+  /** For `notification` mails: the in-app notification kind, e.g. `waitlist.offer`. */
+  kind?: string;
 }
 
 export const MAILER = Symbol('MAILER');
 
 export interface Mailer {
   send(mail: Mail): Promise<void>;
+  /** Like send, but throws when the server did not accept the message (used by the retrying outbox). */
+  deliver?(mail: Mail): Promise<void>;
 }
 
 /**
@@ -30,6 +34,8 @@ export interface DevMail {
   to: string;
   template: Mail['template'];
   link: string;
+  /** `login-code` mails only (development mailbox): the 6-digit code. */
+  code?: string;
   at: string;
 }
 
@@ -48,8 +54,10 @@ export class DevMailbox implements Mailer {
     const path =
       mail.template === 'verify-email' ? `/en/verify-email?token=${encodeURIComponent(mail.token)}`
       : mail.template === 'password-reset' ? `/en/reset-password?token=${encodeURIComponent(mail.token)}`
+      : mail.template === 'notification' ? '/en/profile'
+      : mail.template === 'login-code' ? '/en/login'
       : `/en/invitation?token=${encodeURIComponent(mail.token)}`;
-    this.mails.unshift({ to: mail.to, template: mail.template, link: `${web}${path}`, at: new Date().toISOString() });
+    this.mails.unshift({ to: mail.to, template: mail.template, link: `${web}${path}`, ...(mail.template === 'login-code' ? { code: mail.token } : {}), at: new Date().toISOString() });
     this.mails.length = Math.min(this.mails.length, 50);
   }
 }

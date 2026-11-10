@@ -9,6 +9,7 @@ import {
   Inject,
   NotFoundException,
   Post,
+  Query,
   Req,
   Res,
   UseGuards,
@@ -17,11 +18,13 @@ import { ApiTags } from '@nestjs/swagger';
 import type { User } from '@triphub/database';
 import type { Request, Response } from 'express';
 import { z } from 'zod';
-import { clearSessionCookie, readSessionToken, requestCtx, setSessionCookie } from './auth.http';
+import { clearSessionCookie, readCookie, readSessionToken, requestCtx, setSessionCookie } from './auth.http';
 import { CurrentUser, SessionGuard, type AuthedRequest } from './auth.guards';
 import { UUID_RE } from '../tenancy/tenancy.guards';
 import { RateLimit } from '../ratelimit/ratelimit';
 import { AuthService, InvalidTokenError } from './auth.service';
+import { GoogleAuthService, OAUTH_COOKIE } from './google.service';
+import { PrivacyService } from './privacy.service';
 
 const email = z.string().trim().toLowerCase().max(254).pipe(z.email());
 // NIST-style: length over composition rules.
@@ -33,6 +36,9 @@ const LoginDto = z.object({ email, password: z.string().min(1).max(128), code: c
 const CodeDto = z.object({ code });
 const DisableMfaDto = z.object({ password: z.string().min(1).max(128), code });
 const StepUpDto = z.object({ password: z.string().min(1).max(128), code: code.optional() });
+const DeleteDto = z.object({ confirm: z.literal('DELETE'), password: z.string().max(128).optional(), code: code.optional() });
+const CodeRequestDto = z.object({ email });
+const CodeLoginDto = z.object({ email, code: z.string().trim().regex(/^\d{6}$/) });
 const TokenDto = z.object({ token: z.string().min(20).max(200) });
 const ResetRequestDto = z.object({ email });
 const ResetConfirmDto = z.object({ token: z.string().min(20).max(200), password });
@@ -51,13 +57,50 @@ function parse<T>(schema: z.ZodType<T>, body: unknown): T {
 @ApiTags('auth')
 @Controller({ path: 'auth', version: '1' })
 export class AuthController {
-  constructor(@Inject(AuthService) private readonly auth: AuthService) {}
+  constructor(
+    @Inject(AuthService) private readonly auth: AuthService,
+    @Inject(GoogleAuthService) private readonly google: GoogleAuthService,
+    @Inject(PrivacyService) private readonly privacy: PrivacyService,
+  ) {}
+
+  // ------------------------------------------------------------------ Continue with Google (OIDC + PKCE)
+
+  @Get('google/status')
+  googleStatus() {
+    return { enabled: this.google.enabled() };
+  }
+
+  @Get('google/start')
+  @RateLimit({ limit: 20, windowSec: 60 })
+  googleStart(@Query('locale') locale: string | undefined, @Res() res: Response) {
+    const s = this.google.start(locale === 'ar' ? 'ar' : 'en');
+    if (!s) throw new NotFoundException();
+    res.cookie(OAUTH_COOKIE, s.cookie, { httpOnly: true, sameSite: 'lax', secure: process.env.NODE_ENV === 'production', path: '/api', maxAge: 10 * 60_000 });
+    res.redirect(302, s.url);
+  }
+
+  @Get('google/callback')
+  @RateLimit({ limit: 20, windowSec: 60 })
+  async googleCallback(@Query() q: Record<string, string | undefined>, @Req() req: Request, @Res() res: Response) {
+    const web = (process.env.WEB_ORIGIN ?? 'http://localhost:3000').split(',')[0]!.trim();
+    const r = await this.google.finish({ code: q.code, state: q.state, error: q.error, cookie: readCookie(req, OAUTH_COOKIE) }, requestCtx(req));
+    res.clearCookie(OAUTH_COOKIE, { path: '/api' });
+    if (!r.ok) return res.redirect(302, `${web}/${r.locale}/login?error=${r.failure}`);
+    setSessionCookie(res, r.token);
+    return res.redirect(302, `${web}/${r.locale}/profile`);
+  }
 
   @Post('register')
   @RateLimit({ limit: 10, windowSec: 60 })
   @HttpCode(202)
-  async register(@Body() body: unknown, @Req() req: Request) {
+  async register(@Body() body: unknown, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const dto = parse(RegisterDto, body);
+    if (AuthService.simpleSignup()) {
+      const { token, user } = await this.auth.registerSimple(dto.email, dto.password, dto.displayName, requestCtx(req));
+      setSessionCookie(res, token);
+      res.status(201);
+      return { signedIn: true, user: publicUser(user) };
+    }
     await this.auth.register(dto.email, dto.password, dto.displayName, requestCtx(req));
     // Identical response whether or not the address already exists.
     return { status: 'verification_email_sent_if_new' };
@@ -89,6 +132,25 @@ export class AuthController {
     return { user: publicUser(user) };
   }
 
+  @Post('code/request')
+  @HttpCode(202)
+  @RateLimit({ limit: 5, windowSec: 600 })
+  async requestCode(@Body() body: unknown, @Req() req: Request) {
+    const dto = parse(CodeRequestDto, body);
+    await this.auth.requestLoginCode(dto.email, requestCtx(req));
+    return { status: 'If the address belongs to an account, a code was sent.' };
+  }
+
+  @Post('code/verify')
+  @HttpCode(200)
+  @RateLimit({ limit: 10, windowSec: 600 })
+  async verifyCode(@Body() body: unknown, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const dto = parse(CodeLoginDto, body);
+    const { token, user } = await this.auth.loginWithCode(dto.email, dto.code, requestCtx(req));
+    setSessionCookie(res, token);
+    return { user: publicUser(user) };
+  }
+
   @Post('logout')
   @HttpCode(204)
   @UseGuards(SessionGuard)
@@ -109,6 +171,24 @@ export class AuthController {
   @UseGuards(SessionGuard)
   me(@CurrentUser() user: User) {
     return { user: publicUser(user) };
+  }
+
+  @Get('me/export')
+  @RateLimit({ limit: 5, windowSec: 3600 })
+  @UseGuards(SessionGuard)
+  async exportMine(@CurrentUser() user: User, @Res({ passthrough: true }) res: Response) {
+    res.setHeader('Content-Disposition', 'attachment; filename="triphub-my-data.json"');
+    return this.privacy.export(user);
+  }
+
+  @Post('me/delete')
+  @HttpCode(204)
+  @RateLimit({ limit: 5, windowSec: 3600 })
+  @UseGuards(SessionGuard)
+  async deleteMine(@CurrentUser() user: User, @Body() body: unknown, @Req() req: AuthedRequest, @Res({ passthrough: true }) res: Response) {
+    const dto = parse(DeleteDto, body);
+    await this.privacy.deleteAccount(user, req.session!, { password: dto.password, code: dto.code }, requestCtx(req));
+    clearSessionCookie(res);
   }
 
   @Post('mfa/setup')

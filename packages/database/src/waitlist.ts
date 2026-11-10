@@ -15,6 +15,8 @@ export const OFFER_MINUTES = 60;
  * Idempotent and safe to run concurrently. Returns how many offers were made.
  */
 export async function promoteWaitlist(db: PrismaClient, slotId: string, now = new Date()): Promise<number> {
+  // Hot path: most slots have nobody waiting. Skip the slot row lock entirely so bookings do not queue behind it.
+  if ((await db.waitlistEntry.count({ where: { slotId, status: { in: ['WAITING', 'OFFERED'] } } })) === 0) return 0;
   return db.$transaction(async (tx) => {
     const rows = await tx.$queryRaw<Array<{ startsAt: Date }>>`
       SELECT "startsAt" FROM "slot" WHERE "id" = ${slotId}::uuid FOR UPDATE`;
@@ -81,7 +83,8 @@ export async function expireHoldsAndPromote(
   db: PrismaClient,
   opts: { slotId?: string; limit?: number; now?: Date } = {},
 ): Promise<{ expired: number; offers: number }> {
-  const expired = (await expireDueHolds(db, opts)) + (await expireDueRequests(db, opts.now));
+  // The per-slot booking path only needs that slot's lapsed holds; the global sweep of unanswered requests is the worker's job.
+  const expired = (await expireDueHolds(db, opts)) + (opts.slotId ? 0 : await expireDueRequests(db, opts.now));
   const now = opts.now ?? new Date();
   let offers = 0;
   if (opts.slotId) {

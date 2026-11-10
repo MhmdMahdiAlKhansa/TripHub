@@ -10,6 +10,8 @@ import { createPrismaClient, PrismaClient } from '@triphub/database';
 import request from 'supertest';
 
 config({ path: path.resolve(__dirname, '../../../../.env') });
+// Tests exercise the real verified sign-up flow; the local-only simple sign-up is tested on its own.
+process.env.SIMPLE_SIGNUP = '0';
 
 import { AppModule } from '../app.module';
 import { MAILER, type Mail } from '../auth/mailer';

@@ -10,6 +10,7 @@ export interface AuthLabels {
   cta: string;
   working: string;
   errorGeneric: string;
+  errorTaken: string;
   errorInvalid: string;
   errorTooMany: string;
   errorValidation: string;
@@ -44,7 +45,8 @@ export function AuthForm({ mode, locale, labels }: { mode: 'login' | 'register';
         credentials: 'same-origin',
       });
       if (res.ok) {
-        if (mode === 'login') window.location.assign(`/${locale}/profile`);
+        const ok = (await res.clone().json().catch(() => ({}))) as { signedIn?: boolean };
+        if (mode === 'login' || ok.signedIn) window.location.assign(`/${locale}/profile`);
         else setDone(true);
         return;
       }
@@ -54,6 +56,7 @@ export function AuthForm({ mode, locale, labels }: { mode: 'login' | 'register';
         setError(labels.codeNeeded);
         return;
       }
+      if (res.status === 409) return void setError(labels.errorTaken);
       setError(res.status === 429 ? labels.errorTooMany : res.status === 400 ? labels.errorValidation : res.status === 401 ? labels.errorInvalid : labels.errorGeneric);
     } catch {
       setError(labels.errorGeneric);

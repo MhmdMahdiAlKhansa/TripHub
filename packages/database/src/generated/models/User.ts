@@ -41,6 +41,7 @@ export type UserMinAggregateOutputType = {
   email: string | null
   emailVerifiedAt: Date | null
   passwordHash: string | null
+  googleSub: string | null
   displayName: string | null
   locale: string | null
   status: $Enums.UserStatus | null
@@ -59,6 +60,7 @@ export type UserMaxAggregateOutputType = {
   email: string | null
   emailVerifiedAt: Date | null
   passwordHash: string | null
+  googleSub: string | null
   displayName: string | null
   locale: string | null
   status: $Enums.UserStatus | null
@@ -77,6 +79,7 @@ export type UserCountAggregateOutputType = {
   email: number
   emailVerifiedAt: number
   passwordHash: number
+  googleSub: number
   displayName: number
   locale: number
   status: number
@@ -107,6 +110,7 @@ export type UserMinAggregateInputType = {
   email?: true
   emailVerifiedAt?: true
   passwordHash?: true
+  googleSub?: true
   displayName?: true
   locale?: true
   status?: true
@@ -125,6 +129,7 @@ export type UserMaxAggregateInputType = {
   email?: true
   emailVerifiedAt?: true
   passwordHash?: true
+  googleSub?: true
   displayName?: true
   locale?: true
   status?: true
@@ -143,6 +148,7 @@ export type UserCountAggregateInputType = {
   email?: true
   emailVerifiedAt?: true
   passwordHash?: true
+  googleSub?: true
   displayName?: true
   locale?: true
   status?: true
@@ -248,6 +254,7 @@ export type UserGroupByOutputType = {
   email: string
   emailVerifiedAt: Date | null
   passwordHash: string | null
+  googleSub: string | null
   displayName: string | null
   locale: string
   status: $Enums.UserStatus
@@ -289,6 +296,7 @@ export type UserWhereInput = {
   email?: Prisma.StringFilter<"User"> | string
   emailVerifiedAt?: Prisma.DateTimeNullableFilter<"User"> | Date | string | null
   passwordHash?: Prisma.StringNullableFilter<"User"> | string | null
+  googleSub?: Prisma.StringNullableFilter<"User"> | string | null
   displayName?: Prisma.StringNullableFilter<"User"> | string | null
   locale?: Prisma.StringFilter<"User"> | string
   status?: Prisma.EnumUserStatusFilter<"User"> | $Enums.UserStatus
@@ -310,6 +318,7 @@ export type UserWhereInput = {
   favorites?: Prisma.FavoriteListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  loginCodes?: Prisma.LoginCodeListRelationFilter
 }
 
 export type UserOrderByWithRelationInput = {
@@ -317,6 +326,7 @@ export type UserOrderByWithRelationInput = {
   email?: Prisma.SortOrder
   emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  googleSub?: Prisma.SortOrderInput | Prisma.SortOrder
   displayName?: Prisma.SortOrderInput | Prisma.SortOrder
   locale?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -338,11 +348,13 @@ export type UserOrderByWithRelationInput = {
   favorites?: Prisma.FavoriteOrderByRelationAggregateInput
   reviews?: Prisma.ReviewOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  loginCodes?: Prisma.LoginCodeOrderByRelationAggregateInput
 }
 
 export type UserWhereUniqueInput = Prisma.AtLeast<{
   id?: string
   email?: string
+  googleSub?: string
   AND?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
   OR?: Prisma.UserWhereInput[]
   NOT?: Prisma.UserWhereInput | Prisma.UserWhereInput[]
@@ -369,13 +381,15 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   favorites?: Prisma.FavoriteListRelationFilter
   reviews?: Prisma.ReviewListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
-}, "id" | "email">
+  loginCodes?: Prisma.LoginCodeListRelationFilter
+}, "id" | "email" | "googleSub">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   email?: Prisma.SortOrder
   emailVerifiedAt?: Prisma.SortOrderInput | Prisma.SortOrder
   passwordHash?: Prisma.SortOrderInput | Prisma.SortOrder
+  googleSub?: Prisma.SortOrderInput | Prisma.SortOrder
   displayName?: Prisma.SortOrderInput | Prisma.SortOrder
   locale?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -402,6 +416,7 @@ export type UserScalarWhereWithAggregatesInput = {
   email?: Prisma.StringWithAggregatesFilter<"User"> | string
   emailVerifiedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"User"> | Date | string | null
   passwordHash?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
+  googleSub?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   displayName?: Prisma.StringNullableWithAggregatesFilter<"User"> | string | null
   locale?: Prisma.StringWithAggregatesFilter<"User"> | string
   status?: Prisma.EnumUserStatusWithAggregatesFilter<"User"> | $Enums.UserStatus
@@ -420,6 +435,7 @@ export type UserCreateInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -441,6 +457,7 @@ export type UserCreateInput = {
   favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateInput = {
@@ -448,6 +465,7 @@ export type UserUncheckedCreateInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -469,6 +487,7 @@ export type UserUncheckedCreateInput = {
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserUpdateInput = {
@@ -476,6 +495,7 @@ export type UserUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -497,6 +517,7 @@ export type UserUpdateInput = {
   favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateInput = {
@@ -504,6 +525,7 @@ export type UserUncheckedUpdateInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -525,6 +547,7 @@ export type UserUncheckedUpdateInput = {
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateManyInput = {
@@ -532,6 +555,7 @@ export type UserCreateManyInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -550,6 +574,7 @@ export type UserUpdateManyMutationInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -568,6 +593,7 @@ export type UserUncheckedUpdateManyInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -586,6 +612,7 @@ export type UserCountOrderByAggregateInput = {
   email?: Prisma.SortOrder
   emailVerifiedAt?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  googleSub?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   locale?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -609,6 +636,7 @@ export type UserMaxOrderByAggregateInput = {
   email?: Prisma.SortOrder
   emailVerifiedAt?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  googleSub?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   locale?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -627,6 +655,7 @@ export type UserMinOrderByAggregateInput = {
   email?: Prisma.SortOrder
   emailVerifiedAt?: Prisma.SortOrder
   passwordHash?: Prisma.SortOrder
+  googleSub?: Prisma.SortOrder
   displayName?: Prisma.SortOrder
   locale?: Prisma.SortOrder
   status?: Prisma.SortOrder
@@ -830,11 +859,26 @@ export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UserUpdateWithoutNotificationsInput>, Prisma.UserUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UserCreateNestedOneWithoutLoginCodesInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLoginCodesInput, Prisma.UserUncheckedCreateWithoutLoginCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoginCodesInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutLoginCodesNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutLoginCodesInput, Prisma.UserUncheckedCreateWithoutLoginCodesInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutLoginCodesInput
+  upsert?: Prisma.UserUpsertWithoutLoginCodesInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutLoginCodesInput, Prisma.UserUpdateWithoutLoginCodesInput>, Prisma.UserUncheckedUpdateWithoutLoginCodesInput>
+}
+
 export type UserCreateWithoutSessionsInput = {
   id?: string
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -855,6 +899,7 @@ export type UserCreateWithoutSessionsInput = {
   favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutSessionsInput = {
@@ -862,6 +907,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -882,6 +928,7 @@ export type UserUncheckedCreateWithoutSessionsInput = {
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutSessionsInput = {
@@ -905,6 +952,7 @@ export type UserUpdateWithoutSessionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -925,6 +973,7 @@ export type UserUpdateWithoutSessionsInput = {
   favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutSessionsInput = {
@@ -932,6 +981,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -952,6 +1002,7 @@ export type UserUncheckedUpdateWithoutSessionsInput = {
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutRecoveryCodesInput = {
@@ -959,6 +1010,7 @@ export type UserCreateWithoutRecoveryCodesInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -979,6 +1031,7 @@ export type UserCreateWithoutRecoveryCodesInput = {
   favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutRecoveryCodesInput = {
@@ -986,6 +1039,7 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1006,6 +1060,7 @@ export type UserUncheckedCreateWithoutRecoveryCodesInput = {
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutRecoveryCodesInput = {
@@ -1029,6 +1084,7 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1049,6 +1105,7 @@ export type UserUpdateWithoutRecoveryCodesInput = {
   favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
@@ -1056,6 +1113,7 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1076,6 +1134,7 @@ export type UserUncheckedUpdateWithoutRecoveryCodesInput = {
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutBookingsInput = {
@@ -1083,6 +1142,7 @@ export type UserCreateWithoutBookingsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1103,6 +1163,7 @@ export type UserCreateWithoutBookingsInput = {
   favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutBookingsInput = {
@@ -1110,6 +1171,7 @@ export type UserUncheckedCreateWithoutBookingsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1130,6 +1192,7 @@ export type UserUncheckedCreateWithoutBookingsInput = {
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutBookingsInput = {
@@ -1153,6 +1216,7 @@ export type UserUpdateWithoutBookingsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1173,6 +1237,7 @@ export type UserUpdateWithoutBookingsInput = {
   favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutBookingsInput = {
@@ -1180,6 +1245,7 @@ export type UserUncheckedUpdateWithoutBookingsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1200,6 +1266,7 @@ export type UserUncheckedUpdateWithoutBookingsInput = {
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutPaymentsInput = {
@@ -1207,6 +1274,7 @@ export type UserCreateWithoutPaymentsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1227,6 +1295,7 @@ export type UserCreateWithoutPaymentsInput = {
   favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutPaymentsInput = {
@@ -1234,6 +1303,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1254,6 +1324,7 @@ export type UserUncheckedCreateWithoutPaymentsInput = {
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutPaymentsInput = {
@@ -1277,6 +1348,7 @@ export type UserUpdateWithoutPaymentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1297,6 +1369,7 @@ export type UserUpdateWithoutPaymentsInput = {
   favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutPaymentsInput = {
@@ -1304,6 +1377,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1324,6 +1398,7 @@ export type UserUncheckedUpdateWithoutPaymentsInput = {
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutMembershipsInput = {
@@ -1331,6 +1406,7 @@ export type UserCreateWithoutMembershipsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1351,6 +1427,7 @@ export type UserCreateWithoutMembershipsInput = {
   favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMembershipsInput = {
@@ -1358,6 +1435,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1378,6 +1456,7 @@ export type UserUncheckedCreateWithoutMembershipsInput = {
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMembershipsInput = {
@@ -1401,6 +1480,7 @@ export type UserUpdateWithoutMembershipsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1421,6 +1501,7 @@ export type UserUpdateWithoutMembershipsInput = {
   favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMembershipsInput = {
@@ -1428,6 +1509,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1448,6 +1530,7 @@ export type UserUncheckedUpdateWithoutMembershipsInput = {
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutTokensInput = {
@@ -1455,6 +1538,7 @@ export type UserCreateWithoutTokensInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1475,6 +1559,7 @@ export type UserCreateWithoutTokensInput = {
   favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutTokensInput = {
@@ -1482,6 +1567,7 @@ export type UserUncheckedCreateWithoutTokensInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1502,6 +1588,7 @@ export type UserUncheckedCreateWithoutTokensInput = {
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutTokensInput = {
@@ -1525,6 +1612,7 @@ export type UserUpdateWithoutTokensInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1545,6 +1633,7 @@ export type UserUpdateWithoutTokensInput = {
   favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutTokensInput = {
@@ -1552,6 +1641,7 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1572,6 +1662,7 @@ export type UserUncheckedUpdateWithoutTokensInput = {
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutWaitlistInput = {
@@ -1579,6 +1670,7 @@ export type UserCreateWithoutWaitlistInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1599,6 +1691,7 @@ export type UserCreateWithoutWaitlistInput = {
   favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutWaitlistInput = {
@@ -1606,6 +1699,7 @@ export type UserUncheckedCreateWithoutWaitlistInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1626,6 +1720,7 @@ export type UserUncheckedCreateWithoutWaitlistInput = {
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutWaitlistInput = {
@@ -1649,6 +1744,7 @@ export type UserUpdateWithoutWaitlistInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1669,6 +1765,7 @@ export type UserUpdateWithoutWaitlistInput = {
   favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutWaitlistInput = {
@@ -1676,6 +1773,7 @@ export type UserUncheckedUpdateWithoutWaitlistInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1696,6 +1794,7 @@ export type UserUncheckedUpdateWithoutWaitlistInput = {
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutFavoritesInput = {
@@ -1703,6 +1802,7 @@ export type UserCreateWithoutFavoritesInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1723,6 +1823,7 @@ export type UserCreateWithoutFavoritesInput = {
   waitlist?: Prisma.WaitlistEntryCreateNestedManyWithoutCustomerInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutFavoritesInput = {
@@ -1730,6 +1831,7 @@ export type UserUncheckedCreateWithoutFavoritesInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1750,6 +1852,7 @@ export type UserUncheckedCreateWithoutFavoritesInput = {
   waitlist?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutCustomerInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutFavoritesInput = {
@@ -1773,6 +1876,7 @@ export type UserUpdateWithoutFavoritesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1793,6 +1897,7 @@ export type UserUpdateWithoutFavoritesInput = {
   waitlist?: Prisma.WaitlistEntryUpdateManyWithoutCustomerNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutFavoritesInput = {
@@ -1800,6 +1905,7 @@ export type UserUncheckedUpdateWithoutFavoritesInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1820,6 +1926,7 @@ export type UserUncheckedUpdateWithoutFavoritesInput = {
   waitlist?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutCustomerNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutReviewsInput = {
@@ -1827,6 +1934,7 @@ export type UserCreateWithoutReviewsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1847,6 +1955,7 @@ export type UserCreateWithoutReviewsInput = {
   waitlist?: Prisma.WaitlistEntryCreateNestedManyWithoutCustomerInput
   favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutReviewsInput = {
@@ -1854,6 +1963,7 @@ export type UserUncheckedCreateWithoutReviewsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1874,6 +1984,7 @@ export type UserUncheckedCreateWithoutReviewsInput = {
   waitlist?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutCustomerInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutReviewsInput = {
@@ -1897,6 +2008,7 @@ export type UserUpdateWithoutReviewsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1917,6 +2029,7 @@ export type UserUpdateWithoutReviewsInput = {
   waitlist?: Prisma.WaitlistEntryUpdateManyWithoutCustomerNestedInput
   favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutReviewsInput = {
@@ -1924,6 +2037,7 @@ export type UserUncheckedUpdateWithoutReviewsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -1944,6 +2058,7 @@ export type UserUncheckedUpdateWithoutReviewsInput = {
   waitlist?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutCustomerNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UserCreateWithoutNotificationsInput = {
@@ -1951,6 +2066,7 @@ export type UserCreateWithoutNotificationsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1971,6 +2087,7 @@ export type UserCreateWithoutNotificationsInput = {
   waitlist?: Prisma.WaitlistEntryCreateNestedManyWithoutCustomerInput
   favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
+  loginCodes?: Prisma.LoginCodeCreateNestedManyWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -1978,6 +2095,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   email: string
   emailVerifiedAt?: Date | string | null
   passwordHash?: string | null
+  googleSub?: string | null
   displayName?: string | null
   locale?: string
   status?: $Enums.UserStatus
@@ -1998,6 +2116,7 @@ export type UserUncheckedCreateWithoutNotificationsInput = {
   waitlist?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutCustomerInput
   favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
   reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
+  loginCodes?: Prisma.LoginCodeUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -2021,6 +2140,7 @@ export type UserUpdateWithoutNotificationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -2041,6 +2161,7 @@ export type UserUpdateWithoutNotificationsInput = {
   waitlist?: Prisma.WaitlistEntryUpdateManyWithoutCustomerNestedInput
   favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
+  loginCodes?: Prisma.LoginCodeUpdateManyWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -2048,6 +2169,7 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   email?: Prisma.StringFieldUpdateOperationsInput | string
   emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   locale?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
@@ -2068,6 +2190,139 @@ export type UserUncheckedUpdateWithoutNotificationsInput = {
   waitlist?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutCustomerNestedInput
   favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
   reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+  loginCodes?: Prisma.LoginCodeUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UserCreateWithoutLoginCodesInput = {
+  id?: string
+  email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
+  googleSub?: string | null
+  displayName?: string | null
+  locale?: string
+  status?: $Enums.UserStatus
+  platformRole?: $Enums.PlatformRole
+  mfaSecretEnc?: string | null
+  mfaEnabledAt?: Date | string | null
+  mfaLastStep?: number | null
+  failedLogins?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionCreateNestedManyWithoutUserInput
+  tokens?: Prisma.UserTokenCreateNestedManyWithoutUserInput
+  memberships?: Prisma.MembershipCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.MfaRecoveryCodeCreateNestedManyWithoutUserInput
+  bookings?: Prisma.BookingCreateNestedManyWithoutCustomerInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutCustomerInput
+  waitlist?: Prisma.WaitlistEntryCreateNestedManyWithoutCustomerInput
+  favorites?: Prisma.FavoriteCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ReviewCreateNestedManyWithoutCustomerInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutLoginCodesInput = {
+  id?: string
+  email: string
+  emailVerifiedAt?: Date | string | null
+  passwordHash?: string | null
+  googleSub?: string | null
+  displayName?: string | null
+  locale?: string
+  status?: $Enums.UserStatus
+  platformRole?: $Enums.PlatformRole
+  mfaSecretEnc?: string | null
+  mfaEnabledAt?: Date | string | null
+  mfaLastStep?: number | null
+  failedLogins?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sessions?: Prisma.SessionUncheckedCreateNestedManyWithoutUserInput
+  tokens?: Prisma.UserTokenUncheckedCreateNestedManyWithoutUserInput
+  memberships?: Prisma.MembershipUncheckedCreateNestedManyWithoutUserInput
+  recoveryCodes?: Prisma.MfaRecoveryCodeUncheckedCreateNestedManyWithoutUserInput
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutCustomerInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutCustomerInput
+  waitlist?: Prisma.WaitlistEntryUncheckedCreateNestedManyWithoutCustomerInput
+  favorites?: Prisma.FavoriteUncheckedCreateNestedManyWithoutUserInput
+  reviews?: Prisma.ReviewUncheckedCreateNestedManyWithoutCustomerInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutLoginCodesInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutLoginCodesInput, Prisma.UserUncheckedCreateWithoutLoginCodesInput>
+}
+
+export type UserUpsertWithoutLoginCodesInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutLoginCodesInput, Prisma.UserUncheckedUpdateWithoutLoginCodesInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutLoginCodesInput, Prisma.UserUncheckedCreateWithoutLoginCodesInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutLoginCodesInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutLoginCodesInput, Prisma.UserUncheckedUpdateWithoutLoginCodesInput>
+}
+
+export type UserUpdateWithoutLoginCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locale?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  platformRole?: Prisma.EnumPlatformRoleFieldUpdateOperationsInput | $Enums.PlatformRole
+  mfaSecretEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  failedLogins?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.UserTokenUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.MembershipUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.MfaRecoveryCodeUpdateManyWithoutUserNestedInput
+  bookings?: Prisma.BookingUpdateManyWithoutCustomerNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutCustomerNestedInput
+  waitlist?: Prisma.WaitlistEntryUpdateManyWithoutCustomerNestedInput
+  favorites?: Prisma.FavoriteUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ReviewUpdateManyWithoutCustomerNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutLoginCodesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  emailVerifiedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  passwordHash?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  googleSub?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  displayName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locale?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumUserStatusFieldUpdateOperationsInput | $Enums.UserStatus
+  platformRole?: Prisma.EnumPlatformRoleFieldUpdateOperationsInput | $Enums.PlatformRole
+  mfaSecretEnc?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  mfaEnabledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  mfaLastStep?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  failedLogins?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sessions?: Prisma.SessionUncheckedUpdateManyWithoutUserNestedInput
+  tokens?: Prisma.UserTokenUncheckedUpdateManyWithoutUserNestedInput
+  memberships?: Prisma.MembershipUncheckedUpdateManyWithoutUserNestedInput
+  recoveryCodes?: Prisma.MfaRecoveryCodeUncheckedUpdateManyWithoutUserNestedInput
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutCustomerNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutCustomerNestedInput
+  waitlist?: Prisma.WaitlistEntryUncheckedUpdateManyWithoutCustomerNestedInput
+  favorites?: Prisma.FavoriteUncheckedUpdateManyWithoutUserNestedInput
+  reviews?: Prisma.ReviewUncheckedUpdateManyWithoutCustomerNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -2086,6 +2341,7 @@ export type UserCountOutputType = {
   favorites: number
   reviews: number
   notifications: number
+  loginCodes: number
 }
 
 export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2099,6 +2355,7 @@ export type UserCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   favorites?: boolean | UserCountOutputTypeCountFavoritesArgs
   reviews?: boolean | UserCountOutputTypeCountReviewsArgs
   notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
+  loginCodes?: boolean | UserCountOutputTypeCountLoginCodesArgs
 }
 
 /**
@@ -2181,12 +2438,20 @@ export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Ty
   where?: Prisma.NotificationWhereInput
 }
 
+/**
+ * UserCountOutputType without action
+ */
+export type UserCountOutputTypeCountLoginCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LoginCodeWhereInput
+}
+
 
 export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
   email?: boolean
   emailVerifiedAt?: boolean
   passwordHash?: boolean
+  googleSub?: boolean
   displayName?: boolean
   locale?: boolean
   status?: boolean
@@ -2208,6 +2473,7 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   favorites?: boolean | Prisma.User$favoritesArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  loginCodes?: boolean | Prisma.User$loginCodesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
 
@@ -2216,6 +2482,7 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   emailVerifiedAt?: boolean
   passwordHash?: boolean
+  googleSub?: boolean
   displayName?: boolean
   locale?: boolean
   status?: boolean
@@ -2234,6 +2501,7 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   email?: boolean
   emailVerifiedAt?: boolean
   passwordHash?: boolean
+  googleSub?: boolean
   displayName?: boolean
   locale?: boolean
   status?: boolean
@@ -2252,6 +2520,7 @@ export type UserSelectScalar = {
   email?: boolean
   emailVerifiedAt?: boolean
   passwordHash?: boolean
+  googleSub?: boolean
   displayName?: boolean
   locale?: boolean
   status?: boolean
@@ -2265,7 +2534,7 @@ export type UserSelectScalar = {
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerifiedAt" | "passwordHash" | "displayName" | "locale" | "status" | "platformRole" | "mfaSecretEnc" | "mfaEnabledAt" | "mfaLastStep" | "failedLogins" | "lockedUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "emailVerifiedAt" | "passwordHash" | "googleSub" | "displayName" | "locale" | "status" | "platformRole" | "mfaSecretEnc" | "mfaEnabledAt" | "mfaLastStep" | "failedLogins" | "lockedUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sessions?: boolean | Prisma.User$sessionsArgs<ExtArgs>
   tokens?: boolean | Prisma.User$tokensArgs<ExtArgs>
@@ -2277,6 +2546,7 @@ export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   favorites?: boolean | Prisma.User$favoritesArgs<ExtArgs>
   reviews?: boolean | Prisma.User$reviewsArgs<ExtArgs>
   notifications?: boolean | Prisma.User$notificationsArgs<ExtArgs>
+  loginCodes?: boolean | Prisma.User$loginCodesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UserIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2295,12 +2565,17 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     favorites: Prisma.$FavoritePayload<ExtArgs>[]
     reviews: Prisma.$ReviewPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    loginCodes: Prisma.$LoginCodePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     email: string
     emailVerifiedAt: Date | null
     passwordHash: string | null
+    /**
+     * Google account id (OIDC `sub`) once the user has signed in with Google.
+     */
+    googleSub: string | null
     displayName: string | null
     locale: string
     status: $Enums.UserStatus
@@ -2716,6 +2991,7 @@ export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Typ
   favorites<T extends Prisma.User$favoritesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$favoritesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$FavoritePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   reviews<T extends Prisma.User$reviewsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$reviewsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ReviewPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.User$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  loginCodes<T extends Prisma.User$loginCodesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$loginCodesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoginCodePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2749,6 +3025,7 @@ export interface UserFieldRefs {
   readonly email: Prisma.FieldRef<"User", 'String'>
   readonly emailVerifiedAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly passwordHash: Prisma.FieldRef<"User", 'String'>
+  readonly googleSub: Prisma.FieldRef<"User", 'String'>
   readonly displayName: Prisma.FieldRef<"User", 'String'>
   readonly locale: Prisma.FieldRef<"User", 'String'>
   readonly status: Prisma.FieldRef<"User", 'UserStatus'>
@@ -3390,6 +3667,30 @@ export type User$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * User.loginCodes
+ */
+export type User$loginCodesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LoginCode
+   */
+  select?: Prisma.LoginCodeSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LoginCode
+   */
+  omit?: Prisma.LoginCodeOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LoginCodeInclude<ExtArgs> | null
+  where?: Prisma.LoginCodeWhereInput
+  orderBy?: Prisma.LoginCodeOrderByWithRelationInput | Prisma.LoginCodeOrderByWithRelationInput[]
+  cursor?: Prisma.LoginCodeWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LoginCodeScalarFieldEnum | Prisma.LoginCodeScalarFieldEnum[]
 }
 
 /**
