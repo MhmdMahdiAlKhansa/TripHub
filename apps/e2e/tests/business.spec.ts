@@ -6,16 +6,16 @@ test('a business owner signs in, sees plan and bookings, and creates a priced-fr
   await page.getByLabel('Email').fill('owner@demo.triphub.test');
   await page.getByLabel('Password').fill('Demo-Password-123!');
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await expect(page).toHaveURL(/\/en\/profile/);
+  await expect(page).toHaveURL(/\/en\/business/); // a business member lands in the business workspace
 
-  await page.getByRole('link', { name: 'Business workspace' }).click();
   await page.getByRole('listitem').filter({ hasText: 'DEMO Cedar Guides' }).getByRole('link', { name: 'Open' }).click();
   await expect(page.getByRole('heading', { name: 'Subscription' })).toBeVisible();
   await expect(page.getByText('Free trial')).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Bookings' })).toBeVisible();
   const dash = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
-  expect(dash.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id)).toEqual([]);
+  expect(dash.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => `${v.id}: ${v.nodes.map((n) => n.html.slice(0, 100)).join(' | ')}`)).toEqual([]);
 
+  await page.getByRole('tab', { name: 'Listings' }).click();
   await page.getByRole('link', { name: 'Manage listings' }).click();
   const title = `DEMO E2E draft ${Date.now()}`;
   const create = page.locator('form').filter({ has: page.getByRole('button', { name: 'Create draft' }) });

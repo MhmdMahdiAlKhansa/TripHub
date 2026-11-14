@@ -13,3 +13,4 @@ export function createPrismaClient(connectionString = process.env.DATABASE_URL):
 }
 export * from './notify';
 export * from './promo';
+export * from './reminders';

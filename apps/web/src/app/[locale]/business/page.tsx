@@ -1,4 +1,3 @@
-import { PageHero } from '../../../components/PageHero';
 import { notFound } from 'next/navigation';
 import { BusinessList } from '../../../components/BusinessList';
 import { isLocale } from '../../../i18n/locale';
@@ -10,7 +9,7 @@ export default async function Business({ params }: { params: Promise<{ locale: s
   const t = createT(locale);
   return (
     <div className="space-y-6">
-      <PageHero title={t('biz.title')} />
+      <h1 className="text-3xl font-bold">{t('biz.title')}</h1>
       <BusinessList
         locale={locale}
         labels={{ createTitle: t('biz.createTitle'), createName: t('biz.createName'), createCta: t('biz.createCta'), createError: t('biz.createError'), companies: t('biz.companies'), none: t('biz.none'), open: t('biz.open'), signIn: t('biz.signIn'), loginCta: t('auth.loginCta'), working: t('auth.working') }}

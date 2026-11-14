@@ -62,6 +62,10 @@ export type BookingMinAggregateOutputType = {
   declineReason: string | null
   checkedInAt: Date | null
   checkedInBy: string | null
+  pickupPoint: string | null
+  emergencyContactName: string | null
+  emergencyContactPhone: string | null
+  reminderSentAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -90,6 +94,10 @@ export type BookingMaxAggregateOutputType = {
   declineReason: string | null
   checkedInAt: Date | null
   checkedInBy: string | null
+  pickupPoint: string | null
+  emergencyContactName: string | null
+  emergencyContactPhone: string | null
+  reminderSentAt: Date | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -119,6 +127,10 @@ export type BookingCountAggregateOutputType = {
   declineReason: number
   checkedInAt: number
   checkedInBy: number
+  pickupPoint: number
+  emergencyContactName: number
+  emergencyContactPhone: number
+  reminderSentAt: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -161,6 +173,10 @@ export type BookingMinAggregateInputType = {
   declineReason?: true
   checkedInAt?: true
   checkedInBy?: true
+  pickupPoint?: true
+  emergencyContactName?: true
+  emergencyContactPhone?: true
+  reminderSentAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -189,6 +205,10 @@ export type BookingMaxAggregateInputType = {
   declineReason?: true
   checkedInAt?: true
   checkedInBy?: true
+  pickupPoint?: true
+  emergencyContactName?: true
+  emergencyContactPhone?: true
+  reminderSentAt?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -218,6 +238,10 @@ export type BookingCountAggregateInputType = {
   declineReason?: true
   checkedInAt?: true
   checkedInBy?: true
+  pickupPoint?: true
+  emergencyContactName?: true
+  emergencyContactPhone?: true
+  reminderSentAt?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -334,6 +358,10 @@ export type BookingGroupByOutputType = {
   declineReason: string | null
   checkedInAt: Date | null
   checkedInBy: string | null
+  pickupPoint: string | null
+  emergencyContactName: string | null
+  emergencyContactPhone: string | null
+  reminderSentAt: Date | null
   createdAt: Date
   updatedAt: Date
   _count: BookingCountAggregateOutputType | null
@@ -386,6 +414,10 @@ export type BookingWhereInput = {
   declineReason?: Prisma.StringNullableFilter<"Booking"> | string | null
   checkedInAt?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
   checkedInBy?: Prisma.UuidNullableFilter<"Booking"> | string | null
+  pickupPoint?: Prisma.StringNullableFilter<"Booking"> | string | null
+  emergencyContactName?: Prisma.StringNullableFilter<"Booking"> | string | null
+  emergencyContactPhone?: Prisma.StringNullableFilter<"Booking"> | string | null
+  reminderSentAt?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
@@ -393,6 +425,7 @@ export type BookingWhereInput = {
   slot?: Prisma.XOR<Prisma.SlotScalarRelationFilter, Prisma.SlotWhereInput>
   customer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   hold?: Prisma.XOR<Prisma.HoldNullableScalarRelationFilter, Prisma.HoldWhereInput> | null
+  deposits?: Prisma.DepositListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
 }
 
@@ -421,6 +454,10 @@ export type BookingOrderByWithRelationInput = {
   declineReason?: Prisma.SortOrderInput | Prisma.SortOrder
   checkedInAt?: Prisma.SortOrderInput | Prisma.SortOrder
   checkedInBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  pickupPoint?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergencyContactName?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergencyContactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  reminderSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   company?: Prisma.CompanyOrderByWithRelationInput
@@ -428,6 +465,7 @@ export type BookingOrderByWithRelationInput = {
   slot?: Prisma.SlotOrderByWithRelationInput
   customer?: Prisma.UserOrderByWithRelationInput
   hold?: Prisma.HoldOrderByWithRelationInput
+  deposits?: Prisma.DepositOrderByRelationAggregateInput
   payments?: Prisma.PaymentOrderByRelationAggregateInput
 }
 
@@ -460,6 +498,10 @@ export type BookingWhereUniqueInput = Prisma.AtLeast<{
   declineReason?: Prisma.StringNullableFilter<"Booking"> | string | null
   checkedInAt?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
   checkedInBy?: Prisma.UuidNullableFilter<"Booking"> | string | null
+  pickupPoint?: Prisma.StringNullableFilter<"Booking"> | string | null
+  emergencyContactName?: Prisma.StringNullableFilter<"Booking"> | string | null
+  emergencyContactPhone?: Prisma.StringNullableFilter<"Booking"> | string | null
+  reminderSentAt?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   company?: Prisma.XOR<Prisma.CompanyScalarRelationFilter, Prisma.CompanyWhereInput>
@@ -467,6 +509,7 @@ export type BookingWhereUniqueInput = Prisma.AtLeast<{
   slot?: Prisma.XOR<Prisma.SlotScalarRelationFilter, Prisma.SlotWhereInput>
   customer?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   hold?: Prisma.XOR<Prisma.HoldNullableScalarRelationFilter, Prisma.HoldWhereInput> | null
+  deposits?: Prisma.DepositListRelationFilter
   payments?: Prisma.PaymentListRelationFilter
 }, "id" | "reference" | "customerId_idempotencyKey">
 
@@ -495,6 +538,10 @@ export type BookingOrderByWithAggregationInput = {
   declineReason?: Prisma.SortOrderInput | Prisma.SortOrder
   checkedInAt?: Prisma.SortOrderInput | Prisma.SortOrder
   checkedInBy?: Prisma.SortOrderInput | Prisma.SortOrder
+  pickupPoint?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergencyContactName?: Prisma.SortOrderInput | Prisma.SortOrder
+  emergencyContactPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  reminderSentAt?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.BookingCountOrderByAggregateInput
@@ -532,6 +579,10 @@ export type BookingScalarWhereWithAggregatesInput = {
   declineReason?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
   checkedInAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
   checkedInBy?: Prisma.UuidNullableWithAggregatesFilter<"Booking"> | string | null
+  pickupPoint?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
+  emergencyContactName?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
+  emergencyContactPhone?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
+  reminderSentAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Booking"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Booking"> | Date | string
 }
@@ -557,6 +608,10 @@ export type BookingCreateInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutBookingsInput
@@ -564,6 +619,7 @@ export type BookingCreateInput = {
   slot: Prisma.SlotCreateNestedOneWithoutBookingsInput
   customer: Prisma.UserCreateNestedOneWithoutBookingsInput
   hold?: Prisma.HoldCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBookingInput
 }
 
@@ -592,9 +648,14 @@ export type BookingUncheckedCreateInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hold?: Prisma.HoldUncheckedCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositUncheckedCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBookingInput
 }
 
@@ -619,6 +680,10 @@ export type BookingUpdateInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutBookingsNestedInput
@@ -626,6 +691,7 @@ export type BookingUpdateInput = {
   slot?: Prisma.SlotUpdateOneRequiredWithoutBookingsNestedInput
   customer?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
   hold?: Prisma.HoldUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBookingNestedInput
 }
 
@@ -654,9 +720,14 @@ export type BookingUncheckedUpdateInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hold?: Prisma.HoldUncheckedUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUncheckedUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBookingNestedInput
 }
 
@@ -685,6 +756,10 @@ export type BookingCreateManyInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -710,6 +785,10 @@ export type BookingUpdateManyMutationInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -739,6 +818,10 @@ export type BookingUncheckedUpdateManyInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -783,6 +866,10 @@ export type BookingCountOrderByAggregateInput = {
   declineReason?: Prisma.SortOrder
   checkedInAt?: Prisma.SortOrder
   checkedInBy?: Prisma.SortOrder
+  pickupPoint?: Prisma.SortOrder
+  emergencyContactName?: Prisma.SortOrder
+  emergencyContactPhone?: Prisma.SortOrder
+  reminderSentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -817,6 +904,10 @@ export type BookingMaxOrderByAggregateInput = {
   declineReason?: Prisma.SortOrder
   checkedInAt?: Prisma.SortOrder
   checkedInBy?: Prisma.SortOrder
+  pickupPoint?: Prisma.SortOrder
+  emergencyContactName?: Prisma.SortOrder
+  emergencyContactPhone?: Prisma.SortOrder
+  reminderSentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -845,6 +936,10 @@ export type BookingMinOrderByAggregateInput = {
   declineReason?: Prisma.SortOrder
   checkedInAt?: Prisma.SortOrder
   checkedInBy?: Prisma.SortOrder
+  pickupPoint?: Prisma.SortOrder
+  emergencyContactName?: Prisma.SortOrder
+  emergencyContactPhone?: Prisma.SortOrder
+  reminderSentAt?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -1060,6 +1155,20 @@ export type BookingUpdateOneRequiredWithoutPaymentsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.BookingUpdateToOneWithWhereWithoutPaymentsInput, Prisma.BookingUpdateWithoutPaymentsInput>, Prisma.BookingUncheckedUpdateWithoutPaymentsInput>
 }
 
+export type BookingCreateNestedOneWithoutDepositsInput = {
+  create?: Prisma.XOR<Prisma.BookingCreateWithoutDepositsInput, Prisma.BookingUncheckedCreateWithoutDepositsInput>
+  connectOrCreate?: Prisma.BookingCreateOrConnectWithoutDepositsInput
+  connect?: Prisma.BookingWhereUniqueInput
+}
+
+export type BookingUpdateOneRequiredWithoutDepositsNestedInput = {
+  create?: Prisma.XOR<Prisma.BookingCreateWithoutDepositsInput, Prisma.BookingUncheckedCreateWithoutDepositsInput>
+  connectOrCreate?: Prisma.BookingCreateOrConnectWithoutDepositsInput
+  upsert?: Prisma.BookingUpsertWithoutDepositsInput
+  connect?: Prisma.BookingWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.BookingUpdateToOneWithWhereWithoutDepositsInput, Prisma.BookingUpdateWithoutDepositsInput>, Prisma.BookingUncheckedUpdateWithoutDepositsInput>
+}
+
 export type BookingCreateWithoutCustomerInput = {
   id?: string
   reference: string
@@ -1081,12 +1190,17 @@ export type BookingCreateWithoutCustomerInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutBookingsInput
   listing: Prisma.ListingCreateNestedOneWithoutBookingsInput
   slot: Prisma.SlotCreateNestedOneWithoutBookingsInput
   hold?: Prisma.HoldCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBookingInput
 }
 
@@ -1114,9 +1228,14 @@ export type BookingUncheckedCreateWithoutCustomerInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hold?: Prisma.HoldUncheckedCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositUncheckedCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBookingInput
 }
 
@@ -1174,6 +1293,10 @@ export type BookingScalarWhereInput = {
   declineReason?: Prisma.StringNullableFilter<"Booking"> | string | null
   checkedInAt?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
   checkedInBy?: Prisma.UuidNullableFilter<"Booking"> | string | null
+  pickupPoint?: Prisma.StringNullableFilter<"Booking"> | string | null
+  emergencyContactName?: Prisma.StringNullableFilter<"Booking"> | string | null
+  emergencyContactPhone?: Prisma.StringNullableFilter<"Booking"> | string | null
+  reminderSentAt?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
 }
@@ -1199,12 +1322,17 @@ export type BookingCreateWithoutCompanyInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   listing: Prisma.ListingCreateNestedOneWithoutBookingsInput
   slot: Prisma.SlotCreateNestedOneWithoutBookingsInput
   customer: Prisma.UserCreateNestedOneWithoutBookingsInput
   hold?: Prisma.HoldCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBookingInput
 }
 
@@ -1232,9 +1360,14 @@ export type BookingUncheckedCreateWithoutCompanyInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hold?: Prisma.HoldUncheckedCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositUncheckedCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBookingInput
 }
 
@@ -1285,12 +1418,17 @@ export type BookingCreateWithoutListingInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutBookingsInput
   slot: Prisma.SlotCreateNestedOneWithoutBookingsInput
   customer: Prisma.UserCreateNestedOneWithoutBookingsInput
   hold?: Prisma.HoldCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBookingInput
 }
 
@@ -1318,9 +1456,14 @@ export type BookingUncheckedCreateWithoutListingInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hold?: Prisma.HoldUncheckedCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositUncheckedCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBookingInput
 }
 
@@ -1371,12 +1514,17 @@ export type BookingCreateWithoutSlotInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutBookingsInput
   listing: Prisma.ListingCreateNestedOneWithoutBookingsInput
   customer: Prisma.UserCreateNestedOneWithoutBookingsInput
   hold?: Prisma.HoldCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBookingInput
 }
 
@@ -1404,9 +1552,14 @@ export type BookingUncheckedCreateWithoutSlotInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hold?: Prisma.HoldUncheckedCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositUncheckedCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBookingInput
 }
 
@@ -1457,12 +1610,17 @@ export type BookingCreateWithoutHoldInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutBookingsInput
   listing: Prisma.ListingCreateNestedOneWithoutBookingsInput
   slot: Prisma.SlotCreateNestedOneWithoutBookingsInput
   customer: Prisma.UserCreateNestedOneWithoutBookingsInput
+  deposits?: Prisma.DepositCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentCreateNestedManyWithoutBookingInput
 }
 
@@ -1491,8 +1649,13 @@ export type BookingUncheckedCreateWithoutHoldInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  deposits?: Prisma.DepositUncheckedCreateNestedManyWithoutBookingInput
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBookingInput
 }
 
@@ -1533,12 +1696,17 @@ export type BookingUpdateWithoutHoldInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutBookingsNestedInput
   listing?: Prisma.ListingUpdateOneRequiredWithoutBookingsNestedInput
   slot?: Prisma.SlotUpdateOneRequiredWithoutBookingsNestedInput
   customer?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
+  deposits?: Prisma.DepositUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBookingNestedInput
 }
 
@@ -1567,8 +1735,13 @@ export type BookingUncheckedUpdateWithoutHoldInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  deposits?: Prisma.DepositUncheckedUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBookingNestedInput
 }
 
@@ -1593,6 +1766,10 @@ export type BookingCreateWithoutPaymentsInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   company: Prisma.CompanyCreateNestedOneWithoutBookingsInput
@@ -1600,6 +1777,7 @@ export type BookingCreateWithoutPaymentsInput = {
   slot: Prisma.SlotCreateNestedOneWithoutBookingsInput
   customer: Prisma.UserCreateNestedOneWithoutBookingsInput
   hold?: Prisma.HoldCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositCreateNestedManyWithoutBookingInput
 }
 
 export type BookingUncheckedCreateWithoutPaymentsInput = {
@@ -1627,9 +1805,14 @@ export type BookingUncheckedCreateWithoutPaymentsInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   hold?: Prisma.HoldUncheckedCreateNestedOneWithoutBookingInput
+  deposits?: Prisma.DepositUncheckedCreateNestedManyWithoutBookingInput
 }
 
 export type BookingCreateOrConnectWithoutPaymentsInput = {
@@ -1669,6 +1852,10 @@ export type BookingUpdateWithoutPaymentsInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutBookingsNestedInput
@@ -1676,6 +1863,7 @@ export type BookingUpdateWithoutPaymentsInput = {
   slot?: Prisma.SlotUpdateOneRequiredWithoutBookingsNestedInput
   customer?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
   hold?: Prisma.HoldUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUpdateManyWithoutBookingNestedInput
 }
 
 export type BookingUncheckedUpdateWithoutPaymentsInput = {
@@ -1703,9 +1891,170 @@ export type BookingUncheckedUpdateWithoutPaymentsInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hold?: Prisma.HoldUncheckedUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUncheckedUpdateManyWithoutBookingNestedInput
+}
+
+export type BookingCreateWithoutDepositsInput = {
+  id?: string
+  reference: string
+  status: $Enums.BookingStatus
+  quantity: number
+  currency: string
+  totalMinor: bigint | number
+  snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  contactName?: string | null
+  contactPhone?: string | null
+  version?: number
+  idempotencyKey: string
+  requestHash: string
+  cancelledAt?: Date | string | null
+  cancelReason?: string | null
+  cancelledBy?: string | null
+  requestExpiresAt?: Date | string | null
+  decidedAt?: Date | string | null
+  declineReason?: string | null
+  checkedInAt?: Date | string | null
+  checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  company: Prisma.CompanyCreateNestedOneWithoutBookingsInput
+  listing: Prisma.ListingCreateNestedOneWithoutBookingsInput
+  slot: Prisma.SlotCreateNestedOneWithoutBookingsInput
+  customer: Prisma.UserCreateNestedOneWithoutBookingsInput
+  hold?: Prisma.HoldCreateNestedOneWithoutBookingInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutBookingInput
+}
+
+export type BookingUncheckedCreateWithoutDepositsInput = {
+  id?: string
+  reference: string
+  companyId: string
+  listingId: string
+  slotId: string
+  customerId: string
+  status: $Enums.BookingStatus
+  quantity: number
+  currency: string
+  totalMinor: bigint | number
+  snapshot: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  contactName?: string | null
+  contactPhone?: string | null
+  version?: number
+  idempotencyKey: string
+  requestHash: string
+  cancelledAt?: Date | string | null
+  cancelReason?: string | null
+  cancelledBy?: string | null
+  requestExpiresAt?: Date | string | null
+  decidedAt?: Date | string | null
+  declineReason?: string | null
+  checkedInAt?: Date | string | null
+  checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hold?: Prisma.HoldUncheckedCreateNestedOneWithoutBookingInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutBookingInput
+}
+
+export type BookingCreateOrConnectWithoutDepositsInput = {
+  where: Prisma.BookingWhereUniqueInput
+  create: Prisma.XOR<Prisma.BookingCreateWithoutDepositsInput, Prisma.BookingUncheckedCreateWithoutDepositsInput>
+}
+
+export type BookingUpsertWithoutDepositsInput = {
+  update: Prisma.XOR<Prisma.BookingUpdateWithoutDepositsInput, Prisma.BookingUncheckedUpdateWithoutDepositsInput>
+  create: Prisma.XOR<Prisma.BookingCreateWithoutDepositsInput, Prisma.BookingUncheckedCreateWithoutDepositsInput>
+  where?: Prisma.BookingWhereInput
+}
+
+export type BookingUpdateToOneWithWhereWithoutDepositsInput = {
+  where?: Prisma.BookingWhereInput
+  data: Prisma.XOR<Prisma.BookingUpdateWithoutDepositsInput, Prisma.BookingUncheckedUpdateWithoutDepositsInput>
+}
+
+export type BookingUpdateWithoutDepositsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
+  requestHash?: Prisma.StringFieldUpdateOperationsInput | string
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  company?: Prisma.CompanyUpdateOneRequiredWithoutBookingsNestedInput
+  listing?: Prisma.ListingUpdateOneRequiredWithoutBookingsNestedInput
+  slot?: Prisma.SlotUpdateOneRequiredWithoutBookingsNestedInput
+  customer?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
+  hold?: Prisma.HoldUpdateOneWithoutBookingNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutBookingNestedInput
+}
+
+export type BookingUncheckedUpdateWithoutDepositsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  reference?: Prisma.StringFieldUpdateOperationsInput | string
+  companyId?: Prisma.StringFieldUpdateOperationsInput | string
+  listingId?: Prisma.StringFieldUpdateOperationsInput | string
+  slotId?: Prisma.StringFieldUpdateOperationsInput | string
+  customerId?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumBookingStatusFieldUpdateOperationsInput | $Enums.BookingStatus
+  quantity?: Prisma.IntFieldUpdateOperationsInput | number
+  currency?: Prisma.StringFieldUpdateOperationsInput | string
+  totalMinor?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  snapshot?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  contactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  contactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  version?: Prisma.IntFieldUpdateOperationsInput | number
+  idempotencyKey?: Prisma.StringFieldUpdateOperationsInput | string
+  requestHash?: Prisma.StringFieldUpdateOperationsInput | string
+  cancelledAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  cancelReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  cancelledBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  requestExpiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  decidedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hold?: Prisma.HoldUncheckedUpdateOneWithoutBookingNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutBookingNestedInput
 }
 
 export type BookingCreateManyCustomerInput = {
@@ -1732,6 +2081,10 @@ export type BookingCreateManyCustomerInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1757,12 +2110,17 @@ export type BookingUpdateWithoutCustomerInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutBookingsNestedInput
   listing?: Prisma.ListingUpdateOneRequiredWithoutBookingsNestedInput
   slot?: Prisma.SlotUpdateOneRequiredWithoutBookingsNestedInput
   hold?: Prisma.HoldUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBookingNestedInput
 }
 
@@ -1790,9 +2148,14 @@ export type BookingUncheckedUpdateWithoutCustomerInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hold?: Prisma.HoldUncheckedUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUncheckedUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBookingNestedInput
 }
 
@@ -1820,6 +2183,10 @@ export type BookingUncheckedUpdateManyWithoutCustomerInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1848,6 +2215,10 @@ export type BookingCreateManyCompanyInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1873,12 +2244,17 @@ export type BookingUpdateWithoutCompanyInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listing?: Prisma.ListingUpdateOneRequiredWithoutBookingsNestedInput
   slot?: Prisma.SlotUpdateOneRequiredWithoutBookingsNestedInput
   customer?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
   hold?: Prisma.HoldUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBookingNestedInput
 }
 
@@ -1906,9 +2282,14 @@ export type BookingUncheckedUpdateWithoutCompanyInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hold?: Prisma.HoldUncheckedUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUncheckedUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBookingNestedInput
 }
 
@@ -1936,6 +2317,10 @@ export type BookingUncheckedUpdateManyWithoutCompanyInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -1964,6 +2349,10 @@ export type BookingCreateManyListingInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -1989,12 +2378,17 @@ export type BookingUpdateWithoutListingInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutBookingsNestedInput
   slot?: Prisma.SlotUpdateOneRequiredWithoutBookingsNestedInput
   customer?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
   hold?: Prisma.HoldUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBookingNestedInput
 }
 
@@ -2022,9 +2416,14 @@ export type BookingUncheckedUpdateWithoutListingInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hold?: Prisma.HoldUncheckedUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUncheckedUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBookingNestedInput
 }
 
@@ -2052,6 +2451,10 @@ export type BookingUncheckedUpdateManyWithoutListingInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2080,6 +2483,10 @@ export type BookingCreateManySlotInput = {
   declineReason?: string | null
   checkedInAt?: Date | string | null
   checkedInBy?: string | null
+  pickupPoint?: string | null
+  emergencyContactName?: string | null
+  emergencyContactPhone?: string | null
+  reminderSentAt?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -2105,12 +2512,17 @@ export type BookingUpdateWithoutSlotInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   company?: Prisma.CompanyUpdateOneRequiredWithoutBookingsNestedInput
   listing?: Prisma.ListingUpdateOneRequiredWithoutBookingsNestedInput
   customer?: Prisma.UserUpdateOneRequiredWithoutBookingsNestedInput
   hold?: Prisma.HoldUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUpdateManyWithoutBookingNestedInput
 }
 
@@ -2138,9 +2550,14 @@ export type BookingUncheckedUpdateWithoutSlotInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   hold?: Prisma.HoldUncheckedUpdateOneWithoutBookingNestedInput
+  deposits?: Prisma.DepositUncheckedUpdateManyWithoutBookingNestedInput
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutBookingNestedInput
 }
 
@@ -2168,6 +2585,10 @@ export type BookingUncheckedUpdateManyWithoutSlotInput = {
   declineReason?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   checkedInAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   checkedInBy?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  pickupPoint?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  emergencyContactPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  reminderSentAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -2178,10 +2599,12 @@ export type BookingUncheckedUpdateManyWithoutSlotInput = {
  */
 
 export type BookingCountOutputType = {
+  deposits: number
   payments: number
 }
 
 export type BookingCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  deposits?: boolean | BookingCountOutputTypeCountDepositsArgs
   payments?: boolean | BookingCountOutputTypeCountPaymentsArgs
 }
 
@@ -2193,6 +2616,13 @@ export type BookingCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Exte
    * Select specific fields to fetch from the BookingCountOutputType
    */
   select?: Prisma.BookingCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * BookingCountOutputType without action
+ */
+export type BookingCountOutputTypeCountDepositsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DepositWhereInput
 }
 
 /**
@@ -2228,6 +2658,10 @@ export type BookingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   declineReason?: boolean
   checkedInAt?: boolean
   checkedInBy?: boolean
+  pickupPoint?: boolean
+  emergencyContactName?: boolean
+  emergencyContactPhone?: boolean
+  reminderSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -2235,6 +2669,7 @@ export type BookingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   slot?: boolean | Prisma.SlotDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   hold?: boolean | Prisma.Booking$holdArgs<ExtArgs>
+  deposits?: boolean | Prisma.Booking$depositsArgs<ExtArgs>
   payments?: boolean | Prisma.Booking$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.BookingCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["booking"]>
@@ -2264,6 +2699,10 @@ export type BookingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   declineReason?: boolean
   checkedInAt?: boolean
   checkedInBy?: boolean
+  pickupPoint?: boolean
+  emergencyContactName?: boolean
+  emergencyContactPhone?: boolean
+  reminderSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -2297,6 +2736,10 @@ export type BookingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   declineReason?: boolean
   checkedInAt?: boolean
   checkedInBy?: boolean
+  pickupPoint?: boolean
+  emergencyContactName?: boolean
+  emergencyContactPhone?: boolean
+  reminderSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
@@ -2330,17 +2773,22 @@ export type BookingSelectScalar = {
   declineReason?: boolean
   checkedInAt?: boolean
   checkedInBy?: boolean
+  pickupPoint?: boolean
+  emergencyContactName?: boolean
+  emergencyContactPhone?: boolean
+  reminderSentAt?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type BookingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reference" | "companyId" | "listingId" | "slotId" | "customerId" | "status" | "quantity" | "currency" | "totalMinor" | "snapshot" | "contactName" | "contactPhone" | "version" | "idempotencyKey" | "requestHash" | "cancelledAt" | "cancelReason" | "cancelledBy" | "requestExpiresAt" | "decidedAt" | "declineReason" | "checkedInAt" | "checkedInBy" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
+export type BookingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "reference" | "companyId" | "listingId" | "slotId" | "customerId" | "status" | "quantity" | "currency" | "totalMinor" | "snapshot" | "contactName" | "contactPhone" | "version" | "idempotencyKey" | "requestHash" | "cancelledAt" | "cancelReason" | "cancelledBy" | "requestExpiresAt" | "decidedAt" | "declineReason" | "checkedInAt" | "checkedInBy" | "pickupPoint" | "emergencyContactName" | "emergencyContactPhone" | "reminderSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["booking"]>
 export type BookingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
   slot?: boolean | Prisma.SlotDefaultArgs<ExtArgs>
   customer?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   hold?: boolean | Prisma.Booking$holdArgs<ExtArgs>
+  deposits?: boolean | Prisma.Booking$depositsArgs<ExtArgs>
   payments?: boolean | Prisma.Booking$paymentsArgs<ExtArgs>
   _count?: boolean | Prisma.BookingCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -2365,6 +2813,7 @@ export type $BookingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     slot: Prisma.$SlotPayload<ExtArgs>
     customer: Prisma.$UserPayload<ExtArgs>
     hold: Prisma.$HoldPayload<ExtArgs> | null
+    deposits: Prisma.$DepositPayload<ExtArgs>[]
     payments: Prisma.$PaymentPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -2401,6 +2850,16 @@ export type $BookingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     declineReason: string | null
     checkedInAt: Date | null
     checkedInBy: string | null
+    /**
+     * Participant details the trip needs: pickup point and an emergency contact.
+     */
+    pickupPoint: string | null
+    emergencyContactName: string | null
+    emergencyContactPhone: string | null
+    /**
+     * When the day-before reminder was sent (null = not yet).
+     */
+    reminderSentAt: Date | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["booking"]>
@@ -2802,6 +3261,7 @@ export interface Prisma__BookingClient<T, Null = never, ExtArgs extends runtime.
   slot<T extends Prisma.SlotDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.SlotDefaultArgs<ExtArgs>>): Prisma.Prisma__SlotClient<runtime.Types.Result.GetResult<Prisma.$SlotPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   customer<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   hold<T extends Prisma.Booking$holdArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Booking$holdArgs<ExtArgs>>): Prisma.Prisma__HoldClient<runtime.Types.Result.GetResult<Prisma.$HoldPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  deposits<T extends Prisma.Booking$depositsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Booking$depositsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DepositPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   payments<T extends Prisma.Booking$paymentsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Booking$paymentsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -2856,6 +3316,10 @@ export interface BookingFieldRefs {
   readonly declineReason: Prisma.FieldRef<"Booking", 'String'>
   readonly checkedInAt: Prisma.FieldRef<"Booking", 'DateTime'>
   readonly checkedInBy: Prisma.FieldRef<"Booking", 'String'>
+  readonly pickupPoint: Prisma.FieldRef<"Booking", 'String'>
+  readonly emergencyContactName: Prisma.FieldRef<"Booking", 'String'>
+  readonly emergencyContactPhone: Prisma.FieldRef<"Booking", 'String'>
+  readonly reminderSentAt: Prisma.FieldRef<"Booking", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Booking", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Booking", 'DateTime'>
 }
@@ -3275,6 +3739,30 @@ export type Booking$holdArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
    */
   include?: Prisma.HoldInclude<ExtArgs> | null
   where?: Prisma.HoldWhereInput
+}
+
+/**
+ * Booking.deposits
+ */
+export type Booking$depositsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Deposit
+   */
+  select?: Prisma.DepositSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Deposit
+   */
+  omit?: Prisma.DepositOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DepositInclude<ExtArgs> | null
+  where?: Prisma.DepositWhereInput
+  orderBy?: Prisma.DepositOrderByWithRelationInput | Prisma.DepositOrderByWithRelationInput[]
+  cursor?: Prisma.DepositWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DepositScalarFieldEnum | Prisma.DepositScalarFieldEnum[]
 }
 
 /**

@@ -1,9 +1,9 @@
-import { PageHero } from '../../../components/PageHero';
 import { notFound } from 'next/navigation';
 import { AdminQueue, type QueueConfig, type QueueLabels } from '../../../components/AdminQueue';
 import { AdminConsole } from '../../../components/AdminConsole';
+import { EmailHealthPanel, FeaturedPanel, type StaffPanelLabels } from '../../../components/StaffPanels';
 import { isLocale } from '../../../i18n/locale';
-import { createT } from '../../../i18n/messages';
+import { createT, type MessageKey } from '../../../i18n/messages';
 
 export default async function Admin({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
@@ -45,12 +45,18 @@ export default async function Admin({ params }: { params: Promise<{ locale: stri
       actions: [{ label: t('q.hide'), path: '/api/v1/admin/reviews/{id}/moderate', input: 'reason', extra: { status: 'HIDDEN' } }],
     },
   ];
+  const q = (i: number) => <AdminQueue key={queues[i]!.title} config={queues[i]!} labels={qLabels} />;
+  const panel: StaffPanelLabels = {
+    working: t('auth.working'), error: t('sec.error'),
+    emailTitle: t('desk.email.title'), emailNote: t('desk.email.note'), emailSent: t('desk.email.sent'), emailQueued: t('desk.email.queued'), emailFailed: t('desk.email.failed'),
+    emailNoFailed: t('desk.email.nofailed'), emailTemplate: '', emailTo: '', emailAttempts: t('desk.email.attempts'), emailReason: t('desk.email.reason'),
+    featTitle: t('desk.feat.title'), featNote: t('desk.feat.note'), featOn: t('desk.feat.on'), featOff: t('desk.feat.off'), featAdd: t('desk.feat.add'), featRemove: t('desk.feat.remove'),
+  };
+  const desk = (k: string, accent: string) => ({ kicker: t(`desk.${k}.kicker` as MessageKey), title: t(`desk.${k}.title` as MessageKey), subtitle: t(`desk.${k}.sub` as MessageKey), accent });
   return (
-    <div className="space-y-6">
-      <PageHero title={t('adm.title')} />
-      <AdminConsole
-        locale={locale}
-        labels={{
+    <AdminConsole
+      locale={locale}
+      labels={{
           signIn: t('sec.signIn'), loginCta: t('auth.loginCta'), working: t('auth.working'), notStaff: t('adm.notStaff'), error: t('sec.error'),
           companies: t('adm.companies'), noCompanies: t('adm.noCompanies'), documents: t('adm.documents'), noDocuments: t('adm.noDocuments'),
           notScanned: t('adm.notScanned'), download: t('adm.download'), approve: t('adm.approve'), changes: t('adm.changes'), reject: t('adm.reject'),
@@ -58,11 +64,16 @@ export default async function Admin({ params }: { params: Promise<{ locale: stri
           rejectPay: t('adm.rejectPay'), unverifiedNote: t('adm.unverifiedNote'), reference: t('adm.reference'),
           stepUpTitle: t('adm.stepUp'), password: t('sec.password'), code: t('auth.code'), stepUpCta: t('adm.stepUpCta'),
         }}
-      >
-        {queues.map((q) => (
-          <AdminQueue key={q.title} config={q} labels={qLabels} />
-        ))}
-      </AdminConsole>
-    </div>
+      desks={{ VERIFIER: desk('verifier', '#6a4fd8'), SUPPORT: desk('support', '#1fa3b8'), FINANCE: desk('finance', '#2c8f6a'), ADMIN: desk('admin', '#0a6fd8') }}
+      tabLabels={{ companies: t('desk.tab.companies'), payments: t('desk.tab.payments'), refunds: t('desk.tab.refunds'), payouts: t('desk.tab.payouts'), subs: t('desk.tab.subs'), reviews: t('desk.tab.reviews'), featured: t('desk.tab.featured'), email: t('desk.tab.email') }}
+      slots={{
+        refunds: <>{q(0)}{q(1)}</>,
+        payouts: <>{q(2)}{q(3)}</>,
+        subs: q(4),
+        reviews: q(5),
+        featured: <FeaturedPanel labels={panel} />,
+        email: <EmailHealthPanel labels={panel} />,
+      }}
+    />
   );
 }

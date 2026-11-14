@@ -70,6 +70,9 @@ const NOTES: Record<string, { en: string; ar: string }> = {
   'payment.rejected': { en: 'Your payment proof was not accepted.', ar: 'لم يتم قبول إثبات الدفع.' },
   'refund.approved': { en: 'Your refund was approved and is awaiting the transfer.', ar: 'تمت الموافقة على استردادك وهو بانتظار التحويل.' },
   'refund.paid': { en: 'Your refund has been sent.', ar: 'تم إرسال المبلغ المسترد.' },
+  'booking.reminder': { en: 'Reminder: your trip is tomorrow. Check the time and pickup point in your bookings, and bring your ticket code.', ar: 'تذكير: رحلتك غداً. تحقق من الوقت ونقطة الانطلاق في حجوزاتك وأحضر رمز التذكرة.' },
+  'deposit.received': { en: 'The organiser recorded your deposit. Your bookings page shows what is still due.', ar: 'سجّلت الجهة المنظمة دفعتك. تعرض صفحة حجوزاتك ما تبقّى.' },
+  'booking.confirmed': { en: 'Your deposit was received and your seat is confirmed.', ar: 'تم استلام دفعتك وتأكيد مقعدك.' },
   'refund.rejected': { en: 'Your refund request was not approved.', ar: 'لم تتم الموافقة على طلب الاسترداد.' },
 };
 

@@ -72,6 +72,8 @@ export class ListingsService {
         meetingPoint: input.meetingPoint,
         meetingLatitude: dec(input.meetingLatitude),
         meetingLongitude: dec(input.meetingLongitude),
+        pickupPoints: input.pickupPoints ?? [],
+        depositPercent: input.depositPercent ?? 100,
         attributes: attributes as Prisma.InputJsonValue,
         translations: {
           create: Object.entries(input.translations).map(([locale, t]) => ({
@@ -125,6 +127,8 @@ export class ListingsService {
           meetingPoint: input.meetingPoint,
           meetingLatitude: dec(input.meetingLatitude),
           meetingLongitude: dec(input.meetingLongitude),
+          pickupPoints: input.pickupPoints,
+          depositPercent: input.depositPercent,
           attributes,
         },
       });
@@ -164,9 +168,7 @@ export class ListingsService {
         // Never advertise a price we cannot take, or a bookable listing with no price card.
         const rates = await this.db.listingRate.findMany({ where: { listingId } });
         if (rates.length === 0) throw new UnprocessableEntityException({ code: 'incomplete_listing', missing: ['rates'] });
-        if (!this.features.payments && rates.some((r) => r.amountMinor > 0n)) {
-          throw new ConflictException({ code: 'payments_not_available_yet' });
-        }
+        // Priced listings are fine without platform custody: the operator collects the deposit directly (see DepositsService).
       }
       const missing = missingForPublish({
         bookingMode: l.bookingMode,
@@ -309,6 +311,8 @@ export function privateListing(l: ListingFull) {
     meetingPoint: l.meetingPoint,
     meetingLatitude: num(l.meetingLatitude),
     meetingLongitude: num(l.meetingLongitude),
+    pickupPoints: l.pickupPoints,
+    depositPercent: l.depositPercent,
     attributes: l.attributes,
     publishedAt: l.publishedAt,
     translations: Object.fromEntries(
@@ -336,6 +340,8 @@ export function publicListing(l: WithCompany, locale: string) {
     latitude: num(l.latitude),
     longitude: num(l.longitude),
     meetingPoint: l.meetingPoint,
+    pickupPoints: l.pickupPoints,
+    depositPercent: l.depositPercent,
     attributes: l.attributes,
     title: t?.title ?? null,
     summary: t?.summary ?? null,

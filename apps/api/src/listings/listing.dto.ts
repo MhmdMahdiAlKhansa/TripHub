@@ -20,6 +20,10 @@ const base = {
   latitude: lat.nullable(),
   longitude: lng.nullable(),
   meetingPoint: nullableText(200),
+  /** Pickup points offered to participants (chosen per booking). */
+  pickupPoints: z.array(z.string().trim().min(2).max(120)).max(10),
+  /** Deposit required before a seat is secured, as a percentage of the price (100 = full amount). */
+  depositPercent: z.number().int().min(1).max(100),
   meetingLatitude: lat.nullable(),
   meetingLongitude: lng.nullable(),
   attributes: z.record(z.string().max(40), z.unknown()),
@@ -42,7 +46,7 @@ export const CreateListingDto = z
     ...base,
     translations: base.translations.refine((t) => Object.keys(t).length > 0, 'at least one translation is required'),
   })
-  .partial({ city: true, address: true, latitude: true, longitude: true, meetingPoint: true, meetingLatitude: true, meetingLongitude: true, attributes: true })
+  .partial({ city: true, address: true, latitude: true, longitude: true, meetingPoint: true, meetingLatitude: true, meetingLongitude: true, attributes: true, pickupPoints: true, depositPercent: true })
   .strict()
   .refine(pairs, pairsMsg);
 

@@ -1,4 +1,4 @@
-import { expireHoldsAndPromote, type PrismaClient } from '@triphub/database';
+import { expireHoldsAndPromote, sendTripReminders, type PrismaClient } from '@triphub/database';
 import { entitlementsFor, type AddOns, type PlanCode } from '@triphub/shared';
 
 /**
@@ -10,6 +10,7 @@ export type Handlers = Record<string, JobHandler>;
 export const QUEUE_SYSTEM = 'system';
 export const JOB_EXPIRE_HOLDS = 'bookings.expireHolds';
 export const JOB_SETTLE_SUBSCRIPTIONS = 'billing.settleSubscriptions';
+export const JOB_TRIP_REMINDERS = 'bookings.tripReminders';
 
 /** Persists the date-derived subscription status so reports agree with what the API enforces. */
 export async function settleSubscriptions(db: PrismaClient, now = new Date()): Promise<number> {
@@ -46,6 +47,8 @@ export function createHandlers(deps: { db: Pick<PrismaClient, 'hold' | '$transac
     // Safe to run concurrently and repeatedly.
     [JOB_SETTLE_SUBSCRIPTIONS]: async () => settleSubscriptions(deps.db as PrismaClient),
     [JOB_EXPIRE_HOLDS]: async () => expireHoldsAndPromote(deps.db as PrismaClient, { limit: 500 }),
+    // One reminder per confirmed booking the day before the trip (the email outbox delivers it).
+    [JOB_TRIP_REMINDERS]: async () => ({ sent: await sendTripReminders(deps.db as PrismaClient) }),
   };
 }
 

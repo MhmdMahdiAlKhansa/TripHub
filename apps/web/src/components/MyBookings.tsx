@@ -8,11 +8,15 @@ interface B {
   slot: { startsAt: string }; snapshot: { listing?: { title?: string } };
   payments: Payment[];
   cancellation: { policy: string; refundIfCancelledNowMinor: string };
+  holdExpiresAt: string | null;
+  pickupPoint: string | null;
+  deposit: { requiredMinor: string; receivedMinor: string; remainingMinor: string; depositMet: boolean; items: Array<{ method: string; amountMinor: string }> };
 }
 export interface MyBookingsLabels {
   title: string; empty: string; cancel: string; cancelling: string; statuses: Record<string, string>;
   ticket: string; ticketCode: string; calendar: string; refundNow: string; policy: string; policies: Record<string, string>;
   payTitle: string; payNote: string; payMethod: string; payReference: string; paySubmit: string; payStates: Record<string, string>;
+  depositTitle: string; depositNote: string; depositReceived: string; depositBy: string; pickup: string;
   reviewTitle: string; rating: string; comment: string; reviewSubmit: string; reviewDone: string; error: string; saved: string;
 }
 
@@ -100,7 +104,15 @@ export function MyBookings({ locale, labels }: { locale: string; labels: MyBooki
                   </p>
                 ) : null}
 
-                {b.status === 'HELD' && b.totalMinor !== '0' ? (
+                {b.pickupPoint ? <p className="text-sm text-[var(--muted)]">{labels.pickup}: {b.pickupPoint}</p> : null}
+                {b.status === 'HELD' && b.totalMinor !== '0' && !payment ? (
+                  <div className="space-y-1 rounded-xl border border-[var(--border)] p-3">
+                    <p className="font-semibold">{labels.depositTitle}: {money(b.deposit.requiredMinor, b.currency, locale)}</p>
+                    <p className="text-sm text-[var(--muted)]">{labels.depositNote}{b.holdExpiresAt ? ` ${labels.depositBy} ${new Intl.DateTimeFormat(locale === 'ar' ? 'ar-LB' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Beirut' }).format(new Date(b.holdExpiresAt))}.` : ''}</p>
+                    {b.deposit.receivedMinor !== '0' ? <p className="text-sm">{labels.depositReceived}: {money(b.deposit.receivedMinor, b.currency, locale)}</p> : null}
+                  </div>
+                ) : null}
+                {b.status === 'HELD' && b.totalMinor !== '0' && payment ? (
                   payment ? (
                     <p className="text-sm">{labels.payStates[payment.state] ?? payment.state}</p>
                   ) : (

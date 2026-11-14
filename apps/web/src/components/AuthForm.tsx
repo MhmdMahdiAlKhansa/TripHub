@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
+import { workspaceOf } from '../lib/roleHome';
 
 export interface AuthLabels {
   email: string;
@@ -46,7 +47,7 @@ export function AuthForm({ mode, locale, labels }: { mode: 'login' | 'register';
       });
       if (res.ok) {
         const ok = (await res.clone().json().catch(() => ({}))) as { signedIn?: boolean };
-        if (mode === 'login' || ok.signedIn) window.location.assign(`/${locale}/profile`);
+        if (mode === 'login' || ok.signedIn) window.location.assign((await workspaceOf()).href(locale));
         else setDone(true);
         return;
       }

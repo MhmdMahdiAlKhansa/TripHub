@@ -32,6 +32,7 @@ export type ListingAvgAggregateOutputType = {
   meetingLatitude: runtime.Decimal | null
   meetingLongitude: runtime.Decimal | null
   holdMinutes: number | null
+  depositPercent: number | null
 }
 
 export type ListingSumAggregateOutputType = {
@@ -40,6 +41,7 @@ export type ListingSumAggregateOutputType = {
   meetingLatitude: runtime.Decimal | null
   meetingLongitude: runtime.Decimal | null
   holdMinutes: number | null
+  depositPercent: number | null
 }
 
 export type ListingMinAggregateOutputType = {
@@ -56,6 +58,7 @@ export type ListingMinAggregateOutputType = {
   meetingLatitude: runtime.Decimal | null
   meetingLongitude: runtime.Decimal | null
   holdMinutes: number | null
+  depositPercent: number | null
   cancellationPolicy: $Enums.CancellationPolicy | null
   featuredAt: Date | null
   publishedAt: Date | null
@@ -77,6 +80,7 @@ export type ListingMaxAggregateOutputType = {
   meetingLatitude: runtime.Decimal | null
   meetingLongitude: runtime.Decimal | null
   holdMinutes: number | null
+  depositPercent: number | null
   cancellationPolicy: $Enums.CancellationPolicy | null
   featuredAt: Date | null
   publishedAt: Date | null
@@ -99,6 +103,8 @@ export type ListingCountAggregateOutputType = {
   meetingLongitude: number
   attributes: number
   holdMinutes: number
+  pickupPoints: number
+  depositPercent: number
   cancellationPolicy: number
   featuredAt: number
   publishedAt: number
@@ -114,6 +120,7 @@ export type ListingAvgAggregateInputType = {
   meetingLatitude?: true
   meetingLongitude?: true
   holdMinutes?: true
+  depositPercent?: true
 }
 
 export type ListingSumAggregateInputType = {
@@ -122,6 +129,7 @@ export type ListingSumAggregateInputType = {
   meetingLatitude?: true
   meetingLongitude?: true
   holdMinutes?: true
+  depositPercent?: true
 }
 
 export type ListingMinAggregateInputType = {
@@ -138,6 +146,7 @@ export type ListingMinAggregateInputType = {
   meetingLatitude?: true
   meetingLongitude?: true
   holdMinutes?: true
+  depositPercent?: true
   cancellationPolicy?: true
   featuredAt?: true
   publishedAt?: true
@@ -159,6 +168,7 @@ export type ListingMaxAggregateInputType = {
   meetingLatitude?: true
   meetingLongitude?: true
   holdMinutes?: true
+  depositPercent?: true
   cancellationPolicy?: true
   featuredAt?: true
   publishedAt?: true
@@ -181,6 +191,8 @@ export type ListingCountAggregateInputType = {
   meetingLongitude?: true
   attributes?: true
   holdMinutes?: true
+  pickupPoints?: true
+  depositPercent?: true
   cancellationPolicy?: true
   featuredAt?: true
   publishedAt?: true
@@ -290,6 +302,8 @@ export type ListingGroupByOutputType = {
   meetingLongitude: runtime.Decimal | null
   attributes: runtime.JsonValue
   holdMinutes: number
+  pickupPoints: string[]
+  depositPercent: number
   cancellationPolicy: $Enums.CancellationPolicy
   featuredAt: Date | null
   publishedAt: Date | null
@@ -335,6 +349,8 @@ export type ListingWhereInput = {
   meetingLongitude?: Prisma.DecimalNullableFilter<"Listing"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonFilter<"Listing">
   holdMinutes?: Prisma.IntFilter<"Listing"> | number
+  pickupPoints?: Prisma.StringNullableListFilter<"Listing">
+  depositPercent?: Prisma.IntFilter<"Listing"> | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFilter<"Listing"> | $Enums.CancellationPolicy
   featuredAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -365,6 +381,8 @@ export type ListingOrderByWithRelationInput = {
   meetingLongitude?: Prisma.SortOrderInput | Prisma.SortOrder
   attributes?: Prisma.SortOrder
   holdMinutes?: Prisma.SortOrder
+  pickupPoints?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
   cancellationPolicy?: Prisma.SortOrder
   featuredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -398,6 +416,8 @@ export type ListingWhereUniqueInput = Prisma.AtLeast<{
   meetingLongitude?: Prisma.DecimalNullableFilter<"Listing"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonFilter<"Listing">
   holdMinutes?: Prisma.IntFilter<"Listing"> | number
+  pickupPoints?: Prisma.StringNullableListFilter<"Listing">
+  depositPercent?: Prisma.IntFilter<"Listing"> | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFilter<"Listing"> | $Enums.CancellationPolicy
   featuredAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -428,6 +448,8 @@ export type ListingOrderByWithAggregationInput = {
   meetingLongitude?: Prisma.SortOrderInput | Prisma.SortOrder
   attributes?: Prisma.SortOrder
   holdMinutes?: Prisma.SortOrder
+  pickupPoints?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
   cancellationPolicy?: Prisma.SortOrder
   featuredAt?: Prisma.SortOrderInput | Prisma.SortOrder
   publishedAt?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -458,6 +480,8 @@ export type ListingScalarWhereWithAggregatesInput = {
   meetingLongitude?: Prisma.DecimalNullableWithAggregatesFilter<"Listing"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonWithAggregatesFilter<"Listing">
   holdMinutes?: Prisma.IntWithAggregatesFilter<"Listing"> | number
+  pickupPoints?: Prisma.StringNullableListFilter<"Listing">
+  depositPercent?: Prisma.IntWithAggregatesFilter<"Listing"> | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyWithAggregatesFilter<"Listing"> | $Enums.CancellationPolicy
   featuredAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
   publishedAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Listing"> | Date | string | null
@@ -479,6 +503,8 @@ export type ListingCreateInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -509,6 +535,8 @@ export type ListingUncheckedCreateInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -537,6 +565,8 @@ export type ListingUpdateInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -567,6 +597,8 @@ export type ListingUncheckedUpdateInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -596,6 +628,8 @@ export type ListingCreateManyInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -617,6 +651,8 @@ export type ListingUpdateManyMutationInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -639,6 +675,8 @@ export type ListingUncheckedUpdateManyInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -671,6 +709,8 @@ export type ListingCountOrderByAggregateInput = {
   meetingLongitude?: Prisma.SortOrder
   attributes?: Prisma.SortOrder
   holdMinutes?: Prisma.SortOrder
+  pickupPoints?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
   cancellationPolicy?: Prisma.SortOrder
   featuredAt?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
@@ -684,6 +724,7 @@ export type ListingAvgOrderByAggregateInput = {
   meetingLatitude?: Prisma.SortOrder
   meetingLongitude?: Prisma.SortOrder
   holdMinutes?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
 }
 
 export type ListingMaxOrderByAggregateInput = {
@@ -700,6 +741,7 @@ export type ListingMaxOrderByAggregateInput = {
   meetingLatitude?: Prisma.SortOrder
   meetingLongitude?: Prisma.SortOrder
   holdMinutes?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
   cancellationPolicy?: Prisma.SortOrder
   featuredAt?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
@@ -721,6 +763,7 @@ export type ListingMinOrderByAggregateInput = {
   meetingLatitude?: Prisma.SortOrder
   meetingLongitude?: Prisma.SortOrder
   holdMinutes?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
   cancellationPolicy?: Prisma.SortOrder
   featuredAt?: Prisma.SortOrder
   publishedAt?: Prisma.SortOrder
@@ -734,6 +777,7 @@ export type ListingSumOrderByAggregateInput = {
   meetingLatitude?: Prisma.SortOrder
   meetingLongitude?: Prisma.SortOrder
   holdMinutes?: Prisma.SortOrder
+  depositPercent?: Prisma.SortOrder
 }
 
 export type ListingScalarRelationFilter = {
@@ -783,12 +827,21 @@ export type ListingUncheckedUpdateManyWithoutCompanyNestedInput = {
   deleteMany?: Prisma.ListingScalarWhereInput | Prisma.ListingScalarWhereInput[]
 }
 
+export type ListingCreatepickupPointsInput = {
+  set: string[]
+}
+
 export type EnumBookingModeFieldUpdateOperationsInput = {
   set?: $Enums.BookingMode
 }
 
 export type EnumListingStatusFieldUpdateOperationsInput = {
   set?: $Enums.ListingStatus
+}
+
+export type ListingUpdatepickupPointsInput = {
+  set?: string[]
+  push?: string | string[]
 }
 
 export type EnumCancellationPolicyFieldUpdateOperationsInput = {
@@ -907,6 +960,8 @@ export type ListingCreateWithoutCompanyInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -935,6 +990,8 @@ export type ListingUncheckedCreateWithoutCompanyInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -993,6 +1050,8 @@ export type ListingScalarWhereInput = {
   meetingLongitude?: Prisma.DecimalNullableFilter<"Listing"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonFilter<"Listing">
   holdMinutes?: Prisma.IntFilter<"Listing"> | number
+  pickupPoints?: Prisma.StringNullableListFilter<"Listing">
+  depositPercent?: Prisma.IntFilter<"Listing"> | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFilter<"Listing"> | $Enums.CancellationPolicy
   featuredAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
   publishedAt?: Prisma.DateTimeNullableFilter<"Listing"> | Date | string | null
@@ -1014,6 +1073,8 @@ export type ListingCreateWithoutRatesInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1043,6 +1104,8 @@ export type ListingUncheckedCreateWithoutRatesInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1086,6 +1149,8 @@ export type ListingUpdateWithoutRatesInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1115,6 +1180,8 @@ export type ListingUncheckedUpdateWithoutRatesInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1142,6 +1209,8 @@ export type ListingCreateWithoutSlotsInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1171,6 +1240,8 @@ export type ListingUncheckedCreateWithoutSlotsInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1214,6 +1285,8 @@ export type ListingUpdateWithoutSlotsInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1243,6 +1316,8 @@ export type ListingUncheckedUpdateWithoutSlotsInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1270,6 +1345,8 @@ export type ListingCreateWithoutBookingsInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1299,6 +1376,8 @@ export type ListingUncheckedCreateWithoutBookingsInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1342,6 +1421,8 @@ export type ListingUpdateWithoutBookingsInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1371,6 +1452,8 @@ export type ListingUncheckedUpdateWithoutBookingsInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1398,6 +1481,8 @@ export type ListingCreateWithoutTranslationsInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1427,6 +1512,8 @@ export type ListingUncheckedCreateWithoutTranslationsInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1470,6 +1557,8 @@ export type ListingUpdateWithoutTranslationsInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1499,6 +1588,8 @@ export type ListingUncheckedUpdateWithoutTranslationsInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1526,6 +1617,8 @@ export type ListingCreateWithoutFavoritesInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1555,6 +1648,8 @@ export type ListingUncheckedCreateWithoutFavoritesInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1598,6 +1693,8 @@ export type ListingUpdateWithoutFavoritesInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1627,6 +1724,8 @@ export type ListingUncheckedUpdateWithoutFavoritesInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1654,6 +1753,8 @@ export type ListingCreateWithoutReviewsInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1683,6 +1784,8 @@ export type ListingUncheckedCreateWithoutReviewsInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1726,6 +1829,8 @@ export type ListingUpdateWithoutReviewsInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1755,6 +1860,8 @@ export type ListingUncheckedUpdateWithoutReviewsInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1782,6 +1889,8 @@ export type ListingCreateWithoutImagesInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1811,6 +1920,8 @@ export type ListingUncheckedCreateWithoutImagesInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1854,6 +1965,8 @@ export type ListingUpdateWithoutImagesInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1883,6 +1996,8 @@ export type ListingUncheckedUpdateWithoutImagesInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1910,6 +2025,8 @@ export type ListingCreateManyCompanyInput = {
   meetingLongitude?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: number
+  pickupPoints?: Prisma.ListingCreatepickupPointsInput | string[]
+  depositPercent?: number
   cancellationPolicy?: $Enums.CancellationPolicy
   featuredAt?: Date | string | null
   publishedAt?: Date | string | null
@@ -1931,6 +2048,8 @@ export type ListingUpdateWithoutCompanyInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1959,6 +2078,8 @@ export type ListingUncheckedUpdateWithoutCompanyInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -1987,6 +2108,8 @@ export type ListingUncheckedUpdateManyWithoutCompanyInput = {
   meetingLongitude?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   attributes?: Prisma.JsonNullValueInput | runtime.InputJsonValue
   holdMinutes?: Prisma.IntFieldUpdateOperationsInput | number
+  pickupPoints?: Prisma.ListingUpdatepickupPointsInput | string[]
+  depositPercent?: Prisma.IntFieldUpdateOperationsInput | number
   cancellationPolicy?: Prisma.EnumCancellationPolicyFieldUpdateOperationsInput | $Enums.CancellationPolicy
   featuredAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   publishedAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
@@ -2094,6 +2217,8 @@ export type ListingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   meetingLongitude?: boolean
   attributes?: boolean
   holdMinutes?: boolean
+  pickupPoints?: boolean
+  depositPercent?: boolean
   cancellationPolicy?: boolean
   featuredAt?: boolean
   publishedAt?: boolean
@@ -2125,6 +2250,8 @@ export type ListingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   meetingLongitude?: boolean
   attributes?: boolean
   holdMinutes?: boolean
+  pickupPoints?: boolean
+  depositPercent?: boolean
   cancellationPolicy?: boolean
   featuredAt?: boolean
   publishedAt?: boolean
@@ -2148,6 +2275,8 @@ export type ListingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   meetingLongitude?: boolean
   attributes?: boolean
   holdMinutes?: boolean
+  pickupPoints?: boolean
+  depositPercent?: boolean
   cancellationPolicy?: boolean
   featuredAt?: boolean
   publishedAt?: boolean
@@ -2171,6 +2300,8 @@ export type ListingSelectScalar = {
   meetingLongitude?: boolean
   attributes?: boolean
   holdMinutes?: boolean
+  pickupPoints?: boolean
+  depositPercent?: boolean
   cancellationPolicy?: boolean
   featuredAt?: boolean
   publishedAt?: boolean
@@ -2178,7 +2309,7 @@ export type ListingSelectScalar = {
   updatedAt?: boolean
 }
 
-export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "category" | "bookingMode" | "status" | "city" | "address" | "latitude" | "longitude" | "meetingPoint" | "meetingLatitude" | "meetingLongitude" | "attributes" | "holdMinutes" | "cancellationPolicy" | "featuredAt" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["listing"]>
+export type ListingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "companyId" | "category" | "bookingMode" | "status" | "city" | "address" | "latitude" | "longitude" | "meetingPoint" | "meetingLatitude" | "meetingLongitude" | "attributes" | "holdMinutes" | "pickupPoints" | "depositPercent" | "cancellationPolicy" | "featuredAt" | "publishedAt" | "createdAt" | "updatedAt", ExtArgs["result"]["listing"]>
 export type ListingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   company?: boolean | Prisma.CompanyDefaultArgs<ExtArgs>
   translations?: boolean | Prisma.Listing$translationsArgs<ExtArgs>
@@ -2224,6 +2355,14 @@ export type $ListingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     meetingLongitude: runtime.Decimal | null
     attributes: runtime.JsonValue
     holdMinutes: number
+    /**
+     * Where the operator picks participants up (free text, e.g. "Hamra, Beirut"). Chosen per booking.
+     */
+    pickupPoints: string[]
+    /**
+     * Share of the price the operator wants as a deposit before the seat is secured (100 = full amount).
+     */
+    depositPercent: number
     cancellationPolicy: $Enums.CancellationPolicy
     /**
      * Set by staff to show the listing in the home page's featured section.
@@ -2677,6 +2816,8 @@ export interface ListingFieldRefs {
   readonly meetingLongitude: Prisma.FieldRef<"Listing", 'Decimal'>
   readonly attributes: Prisma.FieldRef<"Listing", 'Json'>
   readonly holdMinutes: Prisma.FieldRef<"Listing", 'Int'>
+  readonly pickupPoints: Prisma.FieldRef<"Listing", 'String[]'>
+  readonly depositPercent: Prisma.FieldRef<"Listing", 'Int'>
   readonly cancellationPolicy: Prisma.FieldRef<"Listing", 'CancellationPolicy'>
   readonly featuredAt: Prisma.FieldRef<"Listing", 'DateTime'>
   readonly publishedAt: Prisma.FieldRef<"Listing", 'DateTime'>

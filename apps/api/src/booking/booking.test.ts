@@ -159,12 +159,13 @@ describe('creating bookings', () => {
     expect((await assertConsistent(f.slotId)).reserved).toBe(0);
   });
 
-  it('refuses priced bookings while payments are not enabled', async () => {
+  it('holds priced bookings for the operator-collected deposit while platform payments are off', async () => {
     const f = await fixture(h, { capacity: 6 });
     await h.db.listingRate.updateMany({ where: { listingId: f.listingId }, data: { amountMinor: 2500n } });
     const [u] = await users(1);
-    expect((await book(h, u!, f).expect(409)).body.code).toBe('payments_not_available_yet');
-    expect((await assertConsistent(f.slotId)).reserved).toBe(0);
+    const r = await book(h, u!, f).expect(201);
+    expect(r.body.booking).toMatchObject({ status: 'HELD', deposit: { requiredMinor: '2500', receivedMinor: '0' } });
+    expect((await assertConsistent(f.slotId)).reserved).toBe(1);
   });
 
   it('refuses closed, past and unbookable slots', async () => {

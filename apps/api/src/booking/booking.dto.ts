@@ -1,4 +1,4 @@
-import { RATE_KINDS } from '@triphub/shared';
+import { DEPOSIT_METHODS, RATE_KINDS } from '@triphub/shared';
 import { z } from 'zod';
 
 const amount = z
@@ -70,8 +70,23 @@ export const CreateBookingDto = z
     promoCode: z.string().trim().max(40).optional(),
     contactName: z.string().trim().min(2).max(80).optional(),
     contactPhone: z.string().trim().regex(/^\+?[0-9 ()-]{7,20}$/).optional(),
+    /** One of the listing's pickup points (required when the listing offers any). */
+    pickupPoint: z.string().trim().min(1).max(120).optional(),
+    emergencyContactName: z.string().trim().min(2).max(80).optional(),
+    emergencyContactPhone: z.string().trim().regex(/^\+?[0-9 ()-]{7,20}$/).optional(),
   })
   .strict();
+
+export const RecordDepositDto = z
+  .object({
+    method: z.enum(DEPOSIT_METHODS),
+    amount,
+    currency: z.enum(['USD', 'LBP']),
+    reference: z.string().trim().min(2).max(64).optional(),
+    note: z.string().trim().max(300).optional(),
+  })
+  .strict()
+  .refine((v) => v.amount > 0n, { message: 'amount must be positive', path: ['amount'] });
 
 export const IdempotencyKey = z.string().regex(/^[A-Za-z0-9_-]{8,80}$/);
 

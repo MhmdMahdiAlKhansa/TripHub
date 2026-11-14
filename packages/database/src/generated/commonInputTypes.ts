@@ -932,6 +932,23 @@ export type EnumOutboxStatusWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumOutboxStatusFilter<$PrismaModel>
 }
 
+export type EnumDepositMethodFilter<$PrismaModel = never> = {
+  equals?: $Enums.DepositMethod | Prisma.EnumDepositMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.DepositMethod[] | Prisma.ListEnumDepositMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DepositMethod[] | Prisma.ListEnumDepositMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDepositMethodFilter<$PrismaModel> | $Enums.DepositMethod
+}
+
+export type EnumDepositMethodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DepositMethod | Prisma.EnumDepositMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.DepositMethod[] | Prisma.ListEnumDepositMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DepositMethod[] | Prisma.ListEnumDepositMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDepositMethodWithAggregatesFilter<$PrismaModel> | $Enums.DepositMethod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDepositMethodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDepositMethodFilter<$PrismaModel>
+}
+
 export type NestedUuidFilter<$PrismaModel = never> = {
   equals?: string | Prisma.StringFieldRefInput<$PrismaModel>
   in?: string[] | Prisma.ListStringFieldRefInput<$PrismaModel>
@@ -1803,6 +1820,23 @@ export type NestedEnumOutboxStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumOutboxStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumOutboxStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumDepositMethodFilter<$PrismaModel = never> = {
+  equals?: $Enums.DepositMethod | Prisma.EnumDepositMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.DepositMethod[] | Prisma.ListEnumDepositMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DepositMethod[] | Prisma.ListEnumDepositMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDepositMethodFilter<$PrismaModel> | $Enums.DepositMethod
+}
+
+export type NestedEnumDepositMethodWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.DepositMethod | Prisma.EnumDepositMethodFieldRefInput<$PrismaModel>
+  in?: $Enums.DepositMethod[] | Prisma.ListEnumDepositMethodFieldRefInput<$PrismaModel>
+  notIn?: $Enums.DepositMethod[] | Prisma.ListEnumDepositMethodFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumDepositMethodWithAggregatesFilter<$PrismaModel> | $Enums.DepositMethod
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumDepositMethodFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumDepositMethodFilter<$PrismaModel>
 }
 
 

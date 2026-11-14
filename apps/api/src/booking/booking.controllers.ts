@@ -27,7 +27,8 @@ import { RateLimit } from '../ratelimit/ratelimit';
 import { PermissionGuard, RequirePermission, TenantGuard, UUID_RE, type TenantRequest } from '../tenancy/tenancy.guards';
 import type { User } from '@triphub/database';
 import { AvailabilityService } from './availability.service';
-import { CancelDto, CreateBookingDto, IdempotencyKey, JoinWaitlistDto, DeclineDto, QuoteDto, RatesDto, SlotDto, SlotPatchDto } from './booking.dto';
+import { CancelDto, CreateBookingDto, IdempotencyKey, JoinWaitlistDto, DeclineDto, QuoteDto, RatesDto, RecordDepositDto, SlotDto, SlotPatchDto } from './booking.dto';
+import { DepositsService } from './deposits.service';
 import { WaitlistService } from './waitlist.service';
 import { BookingsService, bookingView, quoteOrThrow, toRateInputs } from './bookings.service';
 
@@ -237,7 +238,10 @@ export class WaitlistController {
 @ApiTags('company-bookings')
 @Controller({ path: 'companies/:companyId/bookings', version: '1' })
 export class CompanyBookingsController {
-  constructor(@Inject(BookingsService) private readonly svc: BookingsService) {}
+  constructor(
+    @Inject(BookingsService) private readonly svc: BookingsService,
+    @Inject(DepositsService) private readonly deposits: DepositsService,
+  ) {}
 
   @Get()
   @UseGuards(SessionGuard, TenantGuard, PermissionGuard)
@@ -245,7 +249,7 @@ export class CompanyBookingsController {
   async list(@Req() req: TenantRequest, @Query('status') status?: string) {
     if (status && !(BOOKING_STATUSES as readonly string[]).includes(status)) throw new BadRequestException({ code: 'invalid_status' });
     const rows = await this.svc.listForCompany(req.membership!.companyId, status);
-    return { bookings: rows.map((b) => ({ ...bookingView(b), customerEmail: b.customer.email, contactName: b.contactName, contactPhone: b.contactPhone })) };
+    return { bookings: rows.map((b) => ({ ...bookingView(b), customerEmail: b.customer.email, contactName: b.contactName, contactPhone: b.contactPhone, emergencyContactName: b.emergencyContactName, emergencyContactPhone: b.emergencyContactPhone })) };
   }
 
   @Get(':bookingId')
@@ -254,6 +258,24 @@ export class CompanyBookingsController {
   async get(@Req() req: TenantRequest, @Param('bookingId') bookingId: string) {
     const b = await this.svc.getForCompany(req.membership!.companyId, idOr404(bookingId));
     return { booking: { ...bookingView(b), customerEmail: b.customer.email, contactName: b.contactName, contactPhone: b.contactPhone } };
+  }
+
+  /** The operator records a deposit a participant paid them directly (Whish, OMT or cash). */
+  @Post(':bookingId/deposits')
+  @HttpCode(201)
+  @RateLimit({ limit: 60, windowSec: 60 })
+  @UseGuards(SessionGuard, TenantGuard, PermissionGuard)
+  @RequirePermission('booking.manage')
+  async recordDeposit(@Req() req: TenantRequest, @Param('bookingId') bookingId: string, @Body() body: unknown) {
+    const dto = parse(RecordDepositDto, body);
+    return this.deposits.record(req.membership!.companyId, req.user!.id, idOr404(bookingId), { method: dto.method, amountMinor: dto.amount, currency: dto.currency, reference: dto.reference, note: dto.note });
+  }
+
+  @Get(':bookingId/deposits')
+  @UseGuards(SessionGuard, TenantGuard, PermissionGuard)
+  @RequirePermission('booking.view')
+  async listDeposits(@Req() req: TenantRequest, @Param('bookingId') bookingId: string) {
+    return this.deposits.list(req.membership!.companyId, idOr404(bookingId));
   }
 
   @Post(':bookingId/cancel')

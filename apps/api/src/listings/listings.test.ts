@@ -100,11 +100,7 @@ describe('publishing rules', () => {
 
     const rates = (body: object) => h.http().put(`/api/v1/companies/${companyId}/listings/${fixed}/rates`).set('Cookie', owner.cookie).send(body);
     await rates({ rates: [{ kind: 'ADULT', amount: 2500, currency: 'USD' }] }).expect(200);
-    const priced = await act(owner, companyId, fixed, 'publish').expect(409);
-    expect(priced.body.code).toBe('payments_not_available_yet');
-
-    await rates({ rates: [{ kind: 'ADULT', amount: 0, currency: 'USD' }] }).expect(200);
-    await act(owner, companyId, fixed, 'publish').expect(200);
+    await act(owner, companyId, fixed, 'publish').expect(200); // priced is fine: the operator collects the deposit
 
     const rtb = (await bookable('REQUEST_TO_BOOK')).body.listing.id;
     expect((await act(owner, companyId, rtb, 'publish').expect(409)).body.code).toBe('booking_mode_not_supported_yet');

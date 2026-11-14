@@ -6,6 +6,8 @@ import { notFound } from 'next/navigation';
 import type { ReactNode } from 'react';
 import { BottomNav } from '../../components/BottomNav';
 import { SiteFooter } from '../../components/SiteFooter';
+import { ChromeGate, MainFrame } from '../../components/ChromeGate';
+import { WorkspaceBar } from '../../components/WorkspaceBar';
 import { SiteHeader } from '../../components/SiteHeader';
 import { themeInitScript } from '../../components/ThemeToggle';
 import { dirOf, isLocale } from '../../i18n/locale';
@@ -48,16 +50,17 @@ export default async function LocaleLayout({
         >
           {t('a11y.skip')}
         </a>
-        <SiteHeader locale={locale} t={t} />
-        <main id="main" className="mx-auto max-w-6xl px-4 pb-8 pt-24">
-          {children}
-        </main>
-        <SiteFooter locale={locale} t={t} />
-        <BottomNav
-          locale={locale}
-          ariaLabel={t('nav.main')}
-          labels={{ home: t('nav.home'), explore: t('nav.explore'), saved: t('nav.saved'), profile: t('nav.profile') }}
-        />
+        <ChromeGate mode="public"><SiteHeader locale={locale} t={t} /></ChromeGate>
+        <ChromeGate mode="workspace"><WorkspaceBar locale={locale} t={t} /></ChromeGate>
+        <MainFrame>{children}</MainFrame>
+        <ChromeGate mode="public"><SiteFooter locale={locale} t={t} /></ChromeGate>
+        <ChromeGate mode="public">
+          <BottomNav
+            locale={locale}
+            ariaLabel={t('nav.main')}
+            labels={{ home: t('nav.home'), explore: t('nav.explore'), saved: t('nav.saved'), profile: t('nav.profile') }}
+          />
+        </ChromeGate>
       </body>
     </html>
   );

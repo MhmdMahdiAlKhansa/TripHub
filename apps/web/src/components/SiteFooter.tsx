@@ -8,6 +8,7 @@ export function SiteFooter({ locale, t }: { locale: string; t: T }) {
     { href: `/${locale}/help`, label: t('footer.help') },
     { href: `/${locale}/terms`, label: t('footer.terms') },
     { href: `/${locale}/privacy`, label: t('footer.privacy') },
+    { href: `/${locale}/photo-credits`, label: t('footer.credits') },
   ];
   return (
     <footer className="band-deep mt-16 px-4 py-10 pb-24 md:pb-10">

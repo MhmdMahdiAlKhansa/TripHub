@@ -205,6 +205,10 @@ model Listing {
 
   attributes  Json      @default("{}")
   holdMinutes Int       @default(15)
+  /// Where the operator picks participants up (free text, e.g. "Hamra, Beirut"). Chosen per booking.
+  pickupPoints String[] @default([])
+  /// Share of the price the operator wants as a deposit before the seat is secured (100 = full amount).
+  depositPercent Int    @default(100)
   cancellationPolicy CancellationPolicy @default(MODERATE)
   /// Set by staff to show the listing in the home page's featured section.
   featuredAt  DateTime?     @db.Timestamptz(6)
@@ -321,6 +325,12 @@ model Booking {
   declineReason  String?
   checkedInAt    DateTime?     @db.Timestamptz(6)
   checkedInBy    String?       @db.Uuid
+  /// Participant details the trip needs: pickup point and an emergency contact.
+  pickupPoint           String?
+  emergencyContactName  String?
+  emergencyContactPhone String?
+  /// When the day-before reminder was sent (null = not yet).
+  reminderSentAt DateTime?     @db.Timestamptz(6)
   createdAt      DateTime      @default(now()) @db.Timestamptz(6)
   updatedAt      DateTime      @updatedAt @db.Timestamptz(6)
 
@@ -329,6 +339,7 @@ model Booking {
   slot     Slot    @relation(fields: [slotId], references: [id], onDelete: Restrict)
   customer User    @relation(fields: [customerId], references: [id], onDelete: Restrict)
   hold     Hold?
+  deposits Deposit[]
   payments Payment[]
 
   @@unique([customerId, idempotencyKey])
@@ -359,6 +370,13 @@ model Hold {
 enum PaymentMethod {
   WHISH
   OMT
+}
+
+/// How a participant paid the OPERATOR directly (no platform custody).
+enum DepositMethod {
+  WHISH
+  OMT
+  CASH
 }
 
 enum PaymentStatus {
@@ -973,4 +991,25 @@ model LoginCode {
 
   @@index([userId, createdAt])
   @@map("login_code")
+}
+
+/// A deposit the operator received from a participant (Whish, OMT or cash), recorded by the business.
+/// This is the operator's own bookkeeping; the platform never holds this money.
+model Deposit {
+  id          String        @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  bookingId   String        @db.Uuid
+  companyId   String        @db.Uuid
+  method      DepositMethod
+  amountMinor BigInt
+  currency    String
+  reference   String?
+  note        String?
+  recordedBy  String        @db.Uuid
+  recordedAt  DateTime      @default(now()) @db.Timestamptz(6)
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Restrict)
+
+  @@index([bookingId])
+  @@index([companyId, recordedAt])
+  @@map("deposit")
 }

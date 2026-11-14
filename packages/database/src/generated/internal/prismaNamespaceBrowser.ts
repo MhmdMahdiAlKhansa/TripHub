@@ -87,7 +87,8 @@ export const ModelName = {
   PromoRedemption: 'PromoRedemption',
   ExchangeRate: 'ExchangeRate',
   EmailOutbox: 'EmailOutbox',
-  LoginCode: 'LoginCode'
+  LoginCode: 'LoginCode',
+  Deposit: 'Deposit'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -210,6 +211,8 @@ export const ListingScalarFieldEnum = {
   meetingLongitude: 'meetingLongitude',
   attributes: 'attributes',
   holdMinutes: 'holdMinutes',
+  pickupPoints: 'pickupPoints',
+  depositPercent: 'depositPercent',
   cancellationPolicy: 'cancellationPolicy',
   featuredAt: 'featuredAt',
   publishedAt: 'publishedAt',
@@ -273,6 +276,10 @@ export const BookingScalarFieldEnum = {
   declineReason: 'declineReason',
   checkedInAt: 'checkedInAt',
   checkedInBy: 'checkedInBy',
+  pickupPoint: 'pickupPoint',
+  emergencyContactName: 'emergencyContactName',
+  emergencyContactPhone: 'emergencyContactPhone',
+  reminderSentAt: 'reminderSentAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -710,6 +717,22 @@ export const LoginCodeScalarFieldEnum = {
 } as const
 
 export type LoginCodeScalarFieldEnum = (typeof LoginCodeScalarFieldEnum)[keyof typeof LoginCodeScalarFieldEnum]
+
+
+export const DepositScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  companyId: 'companyId',
+  method: 'method',
+  amountMinor: 'amountMinor',
+  currency: 'currency',
+  reference: 'reference',
+  note: 'note',
+  recordedBy: 'recordedBy',
+  recordedAt: 'recordedAt'
+} as const
+
+export type DepositScalarFieldEnum = (typeof DepositScalarFieldEnum)[keyof typeof DepositScalarFieldEnum]
 
 
 export const SortOrder = {

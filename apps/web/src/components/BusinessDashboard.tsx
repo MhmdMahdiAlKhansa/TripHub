@@ -14,6 +14,13 @@ interface Booking {
   status: string;
   quantity: number;
   contactName: string | null;
+  contactPhone: string | null;
+  emergencyContactName: string | null;
+  emergencyContactPhone: string | null;
+  pickupPoint: string | null;
+  totalMinor: string;
+  currency: string;
+  deposit: { requiredMinor: string; receivedMinor: string; remainingMinor: string; depositMet: boolean; items: Array<{ id: string; method: string; amountMinor: string }> };
   customerEmail: string;
   slot: { startsAt: string };
   snapshot: { listing?: { title?: string } };
@@ -25,6 +32,7 @@ export interface BizLabels {
   refund: string; refundReason: string; refundSent: string; refundFail: string;
   checkIn: string; checkInCode: string; checkInCta: string; checkedIn: string; seats: string; error: string; working: string;
   statuses: Record<string, string>;
+  pickup: string; emergency: string; deposit: string; depositRequired: string; depositReceived: string; depositMethod: string; depositAmount: string; depositReference: string; depositRecord: string; depositMet: string;
 }
 
 async function call(method: string, url: string, body?: unknown): Promise<{ ok: boolean; json: unknown }> {
@@ -48,6 +56,26 @@ export function BusinessDashboard({ locale, companyId, labels, trialCommissionPc
   const [code, setCode] = useState('');
   const base = `/api/v1/companies/${companyId}`;
   const fmt = new Intl.DateTimeFormat(locale === 'ar' ? 'ar-LB' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Beirut' });
+
+  const money = (minor: string, currency: string) =>
+    currency === 'USD' ? `$${(Number(minor) / 100).toFixed(2)}` : `${new Intl.NumberFormat(locale === 'ar' ? 'ar-LB' : 'en-US').format(Number(minor))} LBP`;
+  const input = 'mt-1 block min-h-11 rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3';
+
+  async function recordDeposit(id: string, e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const f = new FormData(e.currentTarget);
+    const row = rows?.find((b) => b.id === id);
+    if (!row) return;
+    const major = Number(f.get('amount') ?? 0);
+    const amount = row.currency === 'USD' ? Math.round(major * 100) : Math.round(major);
+    const reference = String(f.get('reference') ?? '').trim();
+    setBusy(id);
+    const r = await call('POST', `${base}/bookings/${id}/deposits`, { method: String(f.get('method')), amount, currency: row.currency, ...(reference ? { reference } : {}) });
+    setBusy(null);
+    setMsg(r.ok ? null : labels.error);
+    if (r.ok) (e.target as HTMLFormElement).reset();
+    await load();
+  }
 
   const load = useCallback(async () => {
     const [o, b] = await Promise.all([fetch(`${base}/subscription`, { credentials: 'same-origin' }), fetch(`${base}/bookings`, { credentials: 'same-origin' })]);
@@ -167,7 +195,34 @@ export function BusinessDashboard({ locale, companyId, labels, trialCommissionPc
                   <p className="text-sm">
                     {b.contactName ?? ''} <span dir="ltr">{b.customerEmail}</span>
                   </p>
+                  {b.contactPhone || b.pickupPoint || b.emergencyContactName ? (
+                    <p className="text-sm text-[var(--muted)]">
+                      {b.contactPhone ? <span dir="ltr">{b.contactPhone}</span> : null}
+                      {b.pickupPoint ? ` · ${labels.pickup}: ${b.pickupPoint}` : ''}
+                      {b.emergencyContactName || b.emergencyContactPhone ? ` · ${labels.emergency}: ${b.emergencyContactName ?? ''} ` : ''}
+                      {b.emergencyContactPhone ? <span dir="ltr">{b.emergencyContactPhone}</span> : null}
+                    </p>
+                  ) : null}
                   <p>{labels.statuses[b.status] ?? b.status}</p>
+                  {b.totalMinor !== '0' && ['HELD', 'CONFIRMED', 'COMPLETED'].includes(b.status) ? (
+                    <div className="space-y-2 rounded-xl border border-[var(--border)] p-3">
+                      <p className="text-sm">
+                        <strong>{labels.deposit}:</strong> {labels.depositReceived} {money(b.deposit.receivedMinor, b.currency)} / {labels.depositRequired} {money(b.deposit.requiredMinor, b.currency)}
+                        {b.deposit.depositMet ? ` · ${labels.depositMet}` : ''}
+                        {b.deposit.items.length ? ` (${b.deposit.items.map((d) => `${d.method} ${money(d.amountMinor, b.currency)}`).join(', ')})` : ''}
+                      </p>
+                      <form className="flex flex-wrap items-end gap-2" onSubmit={(e) => recordDeposit(b.id, e)}>
+                        <label className="text-sm">{labels.depositMethod}
+                          <select name="method" className={input}><option>CASH</option><option>WHISH</option><option>OMT</option></select>
+                        </label>
+                        <label className="text-sm">{labels.depositAmount} ({b.currency})
+                          <input name="amount" type="number" min={b.currency === 'USD' ? 0.01 : 1} step={b.currency === 'USD' ? 0.01 : 1} required inputMode="decimal" dir="ltr" className={`${input} w-32`} />
+                        </label>
+                        <label className="text-sm">{labels.depositReference}<input name="reference" maxLength={64} dir="ltr" className={`${input} w-36`} /></label>
+                        <button className={btn} disabled={busy === b.id}>{labels.depositRecord}</button>
+                      </form>
+                    </div>
+                  ) : null}
                   <div className="flex flex-wrap gap-2">
                     {b.status === 'REQUESTED' ? (
                       <>

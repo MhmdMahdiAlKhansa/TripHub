@@ -2,7 +2,7 @@ import path from 'node:path';
 import { config } from 'dotenv';
 import { Queue, Worker } from 'bullmq';
 import { createPrismaClient } from '@triphub/database';
-import { createHandlers, JOB_EXPIRE_HOLDS, JOB_SETTLE_SUBSCRIPTIONS, QUEUE_SYSTEM, runJob } from './jobs';
+import { createHandlers, JOB_EXPIRE_HOLDS, JOB_SETTLE_SUBSCRIPTIONS, JOB_TRIP_REMINDERS, QUEUE_SYSTEM, runJob } from './jobs';
 
 config({ path: path.resolve(__dirname, '../../../.env') });
 
@@ -37,6 +37,7 @@ const queue = new Queue(QUEUE_SYSTEM, { connection });
 void queue
   .upsertJobScheduler('expire-holds', { every: 60_000 }, { name: JOB_EXPIRE_HOLDS, opts: { removeOnComplete: 100, removeOnFail: 500 } })
   .then(() => queue.upsertJobScheduler('settle-subscriptions', { every: 600_000 }, { name: JOB_SETTLE_SUBSCRIPTIONS, opts: { removeOnComplete: 100, removeOnFail: 500 } }))
+  .then(() => queue.upsertJobScheduler('trip-reminders', { every: 300_000 }, { name: JOB_TRIP_REMINDERS, opts: { removeOnComplete: 100, removeOnFail: 500 } }))
   .then(() => log('info', 'worker started', { queue: QUEUE_SYSTEM }));
 
 async function shutdown() {

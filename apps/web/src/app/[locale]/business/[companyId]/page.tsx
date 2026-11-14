@@ -1,4 +1,4 @@
-import { PageHero } from '../../../../components/PageHero';
+import { BusinessDesk } from '../../../../components/BusinessDesk';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { AnalyticsPanel, PayoutsPanel, PromoManager, type ToolsLabels } from '../../../../components/BusinessTools';
@@ -30,12 +30,7 @@ export default async function BusinessHome({ params }: { params: Promise<{ local
     promoOn: t('tools.promoOn'), promoOff: t('tools.promoOff'), promoLimit: t('tools.promoLimit'), promoNotIncluded: t('tools.promoNotIncluded'),
     statuses: { REQUESTED: t('status.REQUESTED'), DECLINED: t('status.DECLINED'), HELD: t('status.HELD'), CONFIRMED: t('status.CONFIRMED'), CANCELLED: t('status.CANCELLED'), EXPIRED: t('status.EXPIRED'), COMPLETED: t('status.COMPLETED') },
   };
-  return (
-    <div className="space-y-6">
-      <PageHero title={t('biz.title')} />
-      <Link href={`/${locale}/business/${companyId}/listings`} className="inline-block rounded-full border border-[var(--border)] px-6 py-3 font-semibold">
-        {t('lst.link')}
-      </Link>
+  const companyOnboardingNode = (
       <CompanyOnboarding
         companyId={companyId}
         labels={{
@@ -49,6 +44,8 @@ export default async function BusinessHome({ params }: { params: Promise<{ local
           languageNames: { en: t('onb.lang.en'), ar: t('onb.lang.ar'), fr: t('onb.lang.fr') },
         }}
       />
+  );
+  const businessDashboardNode = (
       <BusinessDashboard
         locale={locale}
         companyId={companyId}
@@ -61,6 +58,8 @@ export default async function BusinessHome({ params }: { params: Promise<{ local
           refund: t('biz.refund'), refundReason: t('biz.refundReason'), refundSent: t('biz.refundSent'), refundFail: t('biz.refundFail'),
           declineReason: t('biz.declineReason'), checkIn: t('biz.checkIn'), checkInCode: t('biz.checkInCode'), checkInCta: t('biz.checkInCta'),
           checkedIn: t('biz.checkedIn'), seats: t('biz.seats'), error: t('biz.error'), working: t('biz.working'),
+          pickup: t('biz.pickup'), emergency: t('biz.emergency'), deposit: t('biz.deposit'), depositRequired: t('biz.depositRequired'), depositReceived: t('biz.depositReceived'),
+          depositMethod: t('biz.depositMethod'), depositAmount: t('biz.depositAmount'), depositReference: t('biz.depositReference'), depositRecord: t('biz.depositRecord'), depositMet: t('biz.depositMet'),
           statuses: {
             REQUESTED: t('status.REQUESTED'), DECLINED: t('status.DECLINED'), HELD: t('status.HELD'), CONFIRMED: t('status.CONFIRMED'),
             CANCELLED: t('status.CANCELLED'), EXPIRED: t('status.EXPIRED'), COMPLETED: t('status.COMPLETED'),
@@ -68,9 +67,17 @@ export default async function BusinessHome({ params }: { params: Promise<{ local
           },
         }}
       />
+  );
+  const analyticsPanelNode = (
       <AnalyticsPanel companyId={companyId} labels={tools} />
+  );
+  const payoutsPanelNode = (
       <PayoutsPanel companyId={companyId} labels={tools} />
+  );
+  const promoManagerNode = (
       <PromoManager companyId={companyId} labels={tools} />
+  );
+  const teamManagerNode = (
       <TeamManager
         companyId={companyId}
         labels={{
@@ -80,6 +87,32 @@ export default async function BusinessHome({ params }: { params: Promise<{ local
           confirm: t('team.confirm'), inviteNote: t('team.inviteNote'),
         }}
       />
+  );
+  const listingsNode = (
+    <div className="space-y-3">
+      <p className="text-[var(--muted)]">{t('bdesk.listingsNote')}</p>
+      <Link href={`/${locale}/business/${companyId}/listings`} className="inline-flex min-h-12 items-center rounded-full bg-[var(--brand)] px-6 font-semibold text-[var(--on-brand)]">
+        {t('lst.link')}
+      </Link>
     </div>
+  );
+  const d = (k: string, accent: string) => ({ kicker: t(`bdesk.${k}.kicker` as MessageKey), title: t(`bdesk.${k}.title` as MessageKey), subtitle: t(`bdesk.${k}.sub` as MessageKey), accent });
+
+  return (
+    <BusinessDesk
+      companyId={companyId}
+      noRole={t('bdesk.noRole')}
+      working={t('auth.working')}
+      desks={{ OWNER: d('owner', '#d9722b'), MANAGER: d('manager', '#8e4fb8'), BOOKING_STAFF: d('staff', '#1c8f82'), FINANCE: d('finance', '#2c8f6a') }}
+      tabLabels={{ bookings: t('bdesk.tab.bookings'), listings: t('bdesk.tab.listings'), money: t('bdesk.tab.money'), insights: t('bdesk.tab.insights'), team: t('bdesk.tab.team'), profile: t('bdesk.tab.profile') }}
+      slots={{
+        bookings: businessDashboardNode,
+        listings: listingsNode,
+        money: <>{analyticsPanelNode}{payoutsPanelNode}</>,
+        insights: <>{analyticsPanelNode}{promoManagerNode}</>,
+        team: teamManagerNode,
+        profile: companyOnboardingNode,
+      }}
+    />
   );
 }

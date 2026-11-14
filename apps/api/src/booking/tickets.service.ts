@@ -96,15 +96,15 @@ export class TicketsService {
   async exportCsv(companyId: string): Promise<string> {
     const rows = await this.db.booking.findMany({
       where: { companyId },
-      include: { slot: true, customer: { select: { email: true } } },
+      include: { slot: true, customer: { select: { email: true } }, deposits: true },
       orderBy: { createdAt: 'desc' },
       take: 5000,
     });
-    const head = ['reference', 'status', 'customer_email', 'contact_name', 'contact_phone', 'seats', 'currency', 'total_minor', 'starts_at', 'checked_in_at'];
+    const head = ['reference', 'status', 'customer_email', 'contact_name', 'contact_phone', 'emergency_contact_name', 'emergency_contact_phone', 'pickup_point', 'seats', 'currency', 'total_minor', 'deposit_received_minor', 'starts_at', 'checked_in_at'];
     const lines = [head.map(csvCell).join(',')];
     for (const b of rows) {
       lines.push(
-        [b.reference, b.status, b.customer.email, b.contactName, b.contactPhone, b.quantity, b.currency, b.totalMinor.toString(), b.slot.startsAt.toISOString(), b.checkedInAt?.toISOString()]
+        [b.reference, b.status, b.customer.email, b.contactName, b.contactPhone, b.emergencyContactName, b.emergencyContactPhone, b.pickupPoint, b.quantity, b.currency, b.totalMinor.toString(), b.deposits.reduce((t, d) => t + d.amountMinor, 0n).toString(), b.slot.startsAt.toISOString(), b.checkedInAt?.toISOString()]
           .map(csvCell)
           .join(','),
       );

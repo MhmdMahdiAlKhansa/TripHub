@@ -28,6 +28,7 @@ test('a new business owner registers, verifies by the dev mailbox link, creates 
   await page.getByLabel('Business name').fill('E2E Mountain Guides');
   await page.getByRole('button', { name: 'Create business' }).click();
   await page.getByRole('listitem').filter({ hasText: 'E2E Mountain Guides' }).getByRole('link', { name: 'Open' }).click();
+  await page.getByRole('tab', { name: 'Business profile' }).click();
   await expect(page.getByText('Draft', { exact: true })).toBeVisible();
 
   // Submitting an incomplete profile is refused with what is missing.

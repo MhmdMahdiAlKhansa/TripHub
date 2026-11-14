@@ -1,0 +1,20 @@
+# Image credits
+
+Photographs of real places on the home page, region cards and sample listings are free-licensed images from Wikimedia Commons. They are processed (resized, metadata removed) before use. The same list is shown on the site at /en/photo-credits.
+
+- **cedars-chapel**: Christian chapel on the slopes of Mount Lebanon, Cedars of God, Lebanon.jpg by Vyacheslav Argenberg (CC BY 4.0). https://commons.wikimedia.org/wiki/File:Christian_chapel_on_the_slopes_of_Mount_Lebanon,_Cedars_of_God,_Lebanon.jpg
+- **cedars-forest**: Cedars of God (Lebanon cedar forest), Lebanon.jpg by Vyacheslav Argenberg (CC BY 4.0). https://commons.wikimedia.org/wiki/File:Cedars_of_God_(Lebanon_cedar_forest),_Lebanon.jpg
+- **qadisha-aerial**: Qadisha Valley, Aerial View From Qannoubine Monastery.jpg by Evan Williams (CC BY-SA 4.0). https://commons.wikimedia.org/wiki/File:Qadisha_Valley,_Aerial_View_From_Qannoubine_Monastery.jpg
+- **qadisha-marelisha**: The Monastery of Mar Elisha, Kadisha Valley, Lebanon.jpg by Vyacheslav Argenberg (CC BY 4.0). https://commons.wikimedia.org/wiki/File:The_Monastery_of_Mar_Elisha,_Kadisha_Valley,_Lebanon.jpg
+- **jeita-1**: Jeita Grotto ITH044.jpg by Dennis Chanter (CC BY 4.0). https://commons.wikimedia.org/wiki/File:Jeita_Grotto_ITH044.jpg
+- **jeita-2**: Jeita Grotto ITH043.jpg by Dennis Chanter (CC BY 4.0). https://commons.wikimedia.org/wiki/File:Jeita_Grotto_ITH043.jpg
+- **byblos-harbour**: ByblosHarbour.jpg by Heretiq (CC BY-SA 2.5). https://commons.wikimedia.org/wiki/File:ByblosHarbour.jpg
+- **baalbek-bacchus**: Temple of Bacchus in Baalbek WLM 2014 - 10.jpg by kazuki_shimomura (CC BY 2.0). https://commons.wikimedia.org/wiki/File:Temple_of_Bacchus_in_Baalbek_WLM_2014_-_10.jpg
+- **tyre-almina**: Al Mina site, Tyre, Lebanon.jpg by Vyacheslav Argenberg (CC BY 4.0). https://commons.wikimedia.org/wiki/File:Al_Mina_site,_Tyre,_Lebanon.jpg
+- **beiteddine-courtyard**: Courtyard at Beiteddine Palace - 2009.jpg by Peripitus (CC BY-SA 3.0). https://commons.wikimedia.org/wiki/File:Courtyard_at_Beiteddine_Palace_-_2009.jpg
+- **sidon-seacastle**: Sidon Sea Castle, Sidon, Lebanon.jpg by Vyacheslav Argenberg (CC BY 4.0). https://commons.wikimedia.org/wiki/File:Sidon_Sea_Castle,_Sidon,_Lebanon.jpg
+- **anjar-1**: Umayyad city of Anjar, March 2017 01.jpg by Bdx (CC BY-SA 4.0). https://commons.wikimedia.org/wiki/File:Umayyad_city_of_Anjar,_March_2017_01.jpg
+- **beirut-pigeon-rocks**: Pigeon Rocks of Beirut, Rock of Raouche, Beirut, Lebanon.jpg by Vyacheslav Argenberg (CC BY 4.0). https://commons.wikimedia.org/wiki/File:Pigeon_Rocks_of_Beirut,_Rock_of_Raouche,_Beirut,_Lebanon.jpg
+- **batroun-harbour**: Batroun Harbour.jpg by Heinz Hövel (CC BY-SA 3.0). https://commons.wikimedia.org/wiki/File:Batroun_Harbour.jpg
+
+The hero background photo was supplied by the project owner; its source and licence have not been confirmed.

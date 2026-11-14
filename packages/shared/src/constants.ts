@@ -13,6 +13,12 @@ export const BRAND = {
 /** Platform-enforced maximum hold duration (minutes). Decision D-10. */
 export const MAX_HOLD_MINUTES = 30;
 export const DEFAULT_HOLD_MINUTES = 15;
+/** When the operator collects deposits directly (no platform custody), a seat is held this long for the deposit. */
+export const OPERATOR_DEPOSIT_HOURS = 48;
+export const DEPOSIT_METHODS = ['WHISH', 'OMT', 'CASH'] as const;
+export type DepositMethod = (typeof DEPOSIT_METHODS)[number];
+/** Deposit needed before a seat is secured, from the listing's percentage (rounded up to the minor unit). */
+export const requiredDepositMinor = (totalMinor: bigint, depositPercent: number): bigint => (totalMinor * BigInt(depositPercent) + 99n) / 100n;
 export const DEFAULT_TIMEZONE = 'Asia/Beirut';
 
 export const CATEGORIES = ['hiking', 'tours', 'restaurants', 'museums', 'workshops', 'historical'] as const;

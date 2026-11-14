@@ -1,6 +1,7 @@
 'use client';
 
 import { useState, type FormEvent } from 'react';
+import { workspaceOf } from '../lib/roleHome';
 
 interface Labels { title: string; email: string; send: string; sent: string; code: string; verify: string; working: string; invalid: string; tooMany: string; generic: string }
 
@@ -31,7 +32,7 @@ export function EmailCodeLogin({ locale, labels }: { locale: string; labels: Lab
     setBusy(true); setError('');
     try {
       const r = await post('code/verify', { email: email.trim().toLowerCase(), code });
-      if (r.ok) return void window.location.assign(`/${locale}/profile`);
+      if (r.ok) return void window.location.assign((await workspaceOf()).href(locale));
       setError(r.status === 429 ? labels.tooMany : r.status === 401 ? labels.invalid : labels.generic);
     } catch { setError(labels.generic); } finally { setBusy(false); }
   }

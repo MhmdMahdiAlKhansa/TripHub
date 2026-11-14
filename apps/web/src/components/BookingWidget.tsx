@@ -22,19 +22,27 @@ export interface BookingLabels {
   waitlistJoin: string;
   waitlistHint: string;
   waitlistJoined: string;
+  pickup: string;
+  emergencyName: string;
+  emergencyPhone: string;
+  depositHeld: string;
 }
 
 interface Slot { id: string; startsAt: string; remaining: number }
 interface Rate { kind: string; amountMinor: string; currency: string }
-interface BookingResult { status: string; reference: string }
+interface BookingResult { status: string; reference: string; deposit?: { requiredMinor: string }; currency?: string; holdExpiresAt?: string | null }
 
 const money = (minor: string, currency: string, locale: string) =>
   currency === 'USD'
     ? new Intl.NumberFormat(locale === 'ar' ? 'ar-LB' : 'en-US', { style: 'currency', currency: 'USD' }).format(Number(minor) / 100)
     : `${new Intl.NumberFormat(locale === 'ar' ? 'ar-LB' : 'en-US').format(Number(minor))} LBP`;
 
-export function BookingWidget(props: { locale: string; listingId: string; slots: Slot[]; rates: Rate[]; dateLabels: string[]; labels: BookingLabels }) {
+export function BookingWidget(props: { locale: string; listingId: string; slots: Slot[]; rates: Rate[]; dateLabels: string[]; pickupPoints?: string[]; labels: BookingLabels }) {
   const { locale, listingId, slots, rates, dateLabels, labels } = props;
+  const pickupPoints = props.pickupPoints ?? [];
+  const [pickup, setPickup] = useState(pickupPoints[0] ?? '');
+  const [emName, setEmName] = useState('');
+  const [emPhone, setEmPhone] = useState('');
   const [slotId, setSlotId] = useState(slots[0]?.id ?? '');
   const [qty, setQty] = useState<Record<string, number>>({});
   const [total, setTotal] = useState<string | null>(null);
@@ -73,7 +81,12 @@ export function BookingWidget(props: { locale: string; listingId: string; slots:
       const res = await fetch('/api/v1/bookings', {
         method: 'POST',
         headers: { 'content-type': 'application/json', 'idempotency-key': idem },
-        body: JSON.stringify({ listingId, slotId, lines }),
+        body: JSON.stringify({
+          listingId, slotId, lines,
+          ...(pickupPoints.length ? { pickupPoint: pickup } : {}),
+          ...(emName.trim() ? { emergencyContactName: emName.trim() } : {}),
+          ...(emPhone.trim() ? { emergencyContactPhone: emPhone.trim() } : {}),
+        }),
         credentials: 'same-origin',
       });
       if (res.status === 401) return setNeedSignIn(true);
@@ -122,6 +135,9 @@ export function BookingWidget(props: { locale: string; listingId: string; slots:
         <p>
           {labels.reference}: <strong dir="ltr">{result.reference}</strong>
         </p>
+        {result.status === 'HELD' && result.deposit && result.currency ? (
+          <p>{labels.depositHeld.replace('{amount}', money(result.deposit.requiredMinor, result.currency, locale))}</p>
+        ) : null}
         <Link href={`/${locale}/profile`} className="text-[var(--brand)] underline">
           {labels.viewBookings}
         </Link>
@@ -162,6 +178,18 @@ export function BookingWidget(props: { locale: string; listingId: string; slots:
           </label>
         ))}
       </fieldset>
+      {pickupPoints.length ? (
+        <label className="block">
+          {labels.pickup}
+          <select value={pickup} onChange={(e) => setPickup(e.target.value)} className="mt-1 block min-h-12 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3">
+            {pickupPoints.map((p) => (<option key={p} value={p}>{p}</option>))}
+          </select>
+        </label>
+      ) : null}
+      <div className="grid gap-2 sm:grid-cols-2">
+        <label className="block">{labels.emergencyName}<input value={emName} onChange={(e) => setEmName(e.target.value)} maxLength={80} autoComplete="off" className="mt-1 block min-h-12 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3" /></label>
+        <label className="block">{labels.emergencyPhone}<input value={emPhone} onChange={(e) => setEmPhone(e.target.value)} maxLength={20} inputMode="tel" dir="ltr" placeholder="+961 70 000 000" className="mt-1 block min-h-12 w-full rounded-xl border border-[var(--border)] bg-[var(--bg)] px-3" /></label>
+      </div>
       {total !== null ? (
         <p className="font-semibold">
           {labels.total}: {total === '0' ? labels.free : money(total, currency, locale)}

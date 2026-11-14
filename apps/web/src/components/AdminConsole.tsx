@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { useCallback, useEffect, useState } from 'react';
+import { WorkspaceTabs } from './WorkspaceTabs';
 
 interface Company { id: string; name: string; city: string | null; submittedAt: string | null }
 interface Doc { id: string; kind: string; name: string; scanStatus: string; sizeBytes: number }
@@ -33,7 +34,9 @@ async function api(method: string, url: string, body?: unknown) {
   return { status: r?.status ?? 0, ok: !!r?.ok, json };
 }
 
-export function AdminConsole({ locale, labels, children }: { locale: string; labels: AdminLabels; children?: React.ReactNode }) {
+export interface DeskCopy { kicker: string; title: string; subtitle: string; accent: string }
+
+export function AdminConsole({ locale, labels, slots, tabLabels, desks }: { locale: string; labels: AdminLabels; slots: Record<string, React.ReactNode>; tabLabels: Record<string, string>; desks: Record<string, DeskCopy> }) {
   const [me, setMe] = useState<'loading' | 'out' | Me>('loading');
   const [companies, setCompanies] = useState<Company[]>([]);
   const [docs, setDocs] = useState<Record<string, Doc[]>>({});
@@ -49,11 +52,15 @@ export function AdminConsole({ locale, labels, children }: { locale: string; lab
     const user = (meRes.json as unknown as { user: Me }).user;
     setMe(user);
     if (user.platformRole === 'NONE') return;
-    const c = await api('GET', '/api/v1/admin/companies?status=PENDING_REVIEW');
-    if (c.ok) setCompanies((c.json as unknown as { companies: Company[] }).companies);
-    const p = await api('GET', '/api/v1/admin/payments?status=PROOF_SUBMITTED');
-    if (p.ok) setPays((p.json as unknown as { payments: Pay[] }).payments);
-    else setPays([]);
+    if (['VERIFIER', 'ADMIN'].includes(user.platformRole)) {
+      const c = await api('GET', '/api/v1/admin/companies?status=PENDING_REVIEW');
+      if (c.ok) setCompanies((c.json as unknown as { companies: Company[] }).companies);
+    }
+    if (['FINANCE', 'ADMIN'].includes(user.platformRole)) {
+      const p = await api('GET', '/api/v1/admin/payments?status=PROOF_SUBMITTED');
+      if (p.ok) setPays((p.json as unknown as { payments: Pay[] }).payments);
+      else setPays([]);
+    }
   }, []);
   useEffect(() => {
     void load();
@@ -98,41 +105,7 @@ export function AdminConsole({ locale, labels, children }: { locale: string; lab
   const btn = 'min-h-11 rounded-full border border-[var(--border)] px-4 text-sm font-semibold disabled:opacity-60';
   const input = 'mt-1 block min-h-12 w-full max-w-sm rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4';
 
-  return (
-    <div className="space-y-8">
-      {msg ? (
-        <p role="alert" className="rounded-xl border border-red-500 px-4 py-3">
-          {msg}
-        </p>
-      ) : null}
-
-      {needStepUp ? (
-        <form
-          className="space-y-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5"
-          onSubmit={async (e) => {
-            e.preventDefault();
-            const f = new FormData(e.currentTarget);
-            const code = String(f.get('code') ?? '').trim();
-            const r = await api('POST', '/api/v1/auth/step-up', { password: String(f.get('password') ?? ''), ...(code ? { code } : {}) });
-            if (!r.ok) return setMsg(labels.error);
-            const retry = needStepUp;
-            setNeedStepUp(null);
-            await retry();
-          }}
-        >
-          <h2 className="text-lg font-semibold">{labels.stepUpTitle}</h2>
-          <label className="block">
-            {labels.password}
-            <input name="password" type="password" required autoComplete="current-password" dir="ltr" className={input} />
-          </label>
-          <label className="block">
-            {labels.code}
-            <input name="code" autoComplete="one-time-code" maxLength={32} dir="ltr" className={input} />
-          </label>
-          <button className="min-h-12 rounded-full bg-[var(--brand)] px-6 font-semibold text-[var(--on-brand)]">{labels.stepUpCta}</button>
-        </form>
-      ) : null}
-
+  const companiesNode = (
       <section aria-labelledby="cq" className="space-y-3">
         <h2 id="cq" className="text-xl font-semibold">{labels.companies}</h2>
         {companies.length === 0 ? <p className="text-[var(--muted)]">{labels.noCompanies}</p> : null}
@@ -171,7 +144,8 @@ export function AdminConsole({ locale, labels, children }: { locale: string; lab
           ))}
         </ul>
       </section>
-
+  );
+  const paymentsNode = (
       <section aria-labelledby="pq" className="space-y-3">
         <h2 id="pq" className="text-xl font-semibold">{labels.payments}</h2>
         <p className="text-sm text-[var(--muted)]">{labels.unverifiedNote}</p>
@@ -199,7 +173,56 @@ export function AdminConsole({ locale, labels, children }: { locale: string; lab
           ))}
         </ul>
       </section>
-      {children}
+  );
+  const role = me.platformRole as 'VERIFIER' | 'SUPPORT' | 'FINANCE' | 'ADMIN';
+  const has = (id: string) => !!slots[id];
+  const make = (id: string, node: React.ReactNode) => ({ id, label: tabLabels[id] ?? id, node });
+  const byRole: Record<string, string[]> = {
+    VERIFIER: ['companies'],
+    SUPPORT: ['reviews', 'featured', 'email'],
+    FINANCE: ['payments', 'refunds', 'payouts', 'subs'],
+    ADMIN: ['companies', 'payments', 'refunds', 'payouts', 'subs', 'reviews', 'featured', 'email'],
+  };
+  const nodeFor = (id: string): React.ReactNode => (id === 'companies' ? companiesNode : id === 'payments' ? paymentsNode : slots[id]);
+  const tabs = (byRole[role] ?? []).filter((id) => id === 'companies' || id === 'payments' || has(id)).map((id) => make(id, nodeFor(id)));
+  const d = desks[role] ?? desks.ADMIN!;
+
+  return (
+    <div className="space-y-8">
+      {msg ? (
+        <p role="alert" className="rounded-xl border border-red-500 px-4 py-3">
+          {msg}
+        </p>
+      ) : null}
+
+      {needStepUp ? (
+        <form
+          className="space-y-3 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5"
+          onSubmit={async (e) => {
+            e.preventDefault();
+            const f = new FormData(e.currentTarget);
+            const code = String(f.get('code') ?? '').trim();
+            const r = await api('POST', '/api/v1/auth/step-up', { password: String(f.get('password') ?? ''), ...(code ? { code } : {}) });
+            if (!r.ok) return setMsg(labels.error);
+            const retry = needStepUp;
+            setNeedStepUp(null);
+            await retry();
+          }}
+        >
+          <h2 className="text-lg font-semibold">{labels.stepUpTitle}</h2>
+          <label className="block">
+            {labels.password}
+            <input name="password" type="password" required autoComplete="current-password" dir="ltr" className={input} />
+          </label>
+          <label className="block">
+            {labels.code}
+            <input name="code" autoComplete="one-time-code" maxLength={32} dir="ltr" className={input} />
+          </label>
+          <button className="min-h-12 rounded-full bg-[var(--brand)] px-6 font-semibold text-[var(--on-brand)]">{labels.stepUpCta}</button>
+        </form>
+      ) : null}
+
+      <WorkspaceTabs kicker={d.kicker} title={d.title} subtitle={d.subtitle} accent={d.accent} tabs={tabs} />
     </div>
   );
 }

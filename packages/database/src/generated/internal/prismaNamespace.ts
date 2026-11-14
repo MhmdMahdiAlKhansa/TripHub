@@ -433,7 +433,8 @@ export const ModelName = {
   PromoRedemption: 'PromoRedemption',
   ExchangeRate: 'ExchangeRate',
   EmailOutbox: 'EmailOutbox',
-  LoginCode: 'LoginCode'
+  LoginCode: 'LoginCode',
+  Deposit: 'Deposit'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -449,7 +450,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "mfaRecoveryCode" | "company" | "companyReview" | "listing" | "listingRate" | "slot" | "booking" | "hold" | "payment" | "ledgerAccount" | "journalEntry" | "ledgerLine" | "listingTranslation" | "membership" | "invitation" | "userToken" | "auditEvent" | "idempotencyKey" | "refund" | "waitlistEntry" | "planPrice" | "subscription" | "subscriptionRequest" | "invoice" | "payout" | "favorite" | "review" | "notification" | "companyDocument" | "listingImage" | "promoCode" | "promoRedemption" | "exchangeRate" | "emailOutbox" | "loginCode"
+    modelProps: "user" | "session" | "mfaRecoveryCode" | "company" | "companyReview" | "listing" | "listingRate" | "slot" | "booking" | "hold" | "payment" | "ledgerAccount" | "journalEntry" | "ledgerLine" | "listingTranslation" | "membership" | "invitation" | "userToken" | "auditEvent" | "idempotencyKey" | "refund" | "waitlistEntry" | "planPrice" | "subscription" | "subscriptionRequest" | "invoice" | "payout" | "favorite" | "review" | "notification" | "companyDocument" | "listingImage" | "promoCode" | "promoRedemption" | "exchangeRate" | "emailOutbox" | "loginCode" | "deposit"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3191,6 +3192,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    Deposit: {
+      payload: Prisma.$DepositPayload<ExtArgs>
+      fields: Prisma.DepositFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DepositFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DepositFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload>
+        }
+        findFirst: {
+          args: Prisma.DepositFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DepositFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload>
+        }
+        findMany: {
+          args: Prisma.DepositFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload>[]
+        }
+        create: {
+          args: Prisma.DepositCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload>
+        }
+        createMany: {
+          args: Prisma.DepositCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DepositCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload>[]
+        }
+        delete: {
+          args: Prisma.DepositDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload>
+        }
+        update: {
+          args: Prisma.DepositUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload>
+        }
+        deleteMany: {
+          args: Prisma.DepositDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DepositUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DepositUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload>[]
+        }
+        upsert: {
+          args: Prisma.DepositUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DepositPayload>
+        }
+        aggregate: {
+          args: Prisma.DepositAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDeposit>
+        }
+        groupBy: {
+          args: Prisma.DepositGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DepositGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DepositCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DepositCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3334,6 +3409,8 @@ export const ListingScalarFieldEnum = {
   meetingLongitude: 'meetingLongitude',
   attributes: 'attributes',
   holdMinutes: 'holdMinutes',
+  pickupPoints: 'pickupPoints',
+  depositPercent: 'depositPercent',
   cancellationPolicy: 'cancellationPolicy',
   featuredAt: 'featuredAt',
   publishedAt: 'publishedAt',
@@ -3397,6 +3474,10 @@ export const BookingScalarFieldEnum = {
   declineReason: 'declineReason',
   checkedInAt: 'checkedInAt',
   checkedInBy: 'checkedInBy',
+  pickupPoint: 'pickupPoint',
+  emergencyContactName: 'emergencyContactName',
+  emergencyContactPhone: 'emergencyContactPhone',
+  reminderSentAt: 'reminderSentAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -3834,6 +3915,22 @@ export const LoginCodeScalarFieldEnum = {
 } as const
 
 export type LoginCodeScalarFieldEnum = (typeof LoginCodeScalarFieldEnum)[keyof typeof LoginCodeScalarFieldEnum]
+
+
+export const DepositScalarFieldEnum = {
+  id: 'id',
+  bookingId: 'bookingId',
+  companyId: 'companyId',
+  method: 'method',
+  amountMinor: 'amountMinor',
+  currency: 'currency',
+  reference: 'reference',
+  note: 'note',
+  recordedBy: 'recordedBy',
+  recordedAt: 'recordedAt'
+} as const
+
+export type DepositScalarFieldEnum = (typeof DepositScalarFieldEnum)[keyof typeof DepositScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -4374,6 +4471,20 @@ export type ListEnumOutboxStatusFieldRefInput<$PrismaModel> = FieldRefInputType<
 
 
 /**
+ * Reference to a field of type 'DepositMethod'
+ */
+export type EnumDepositMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositMethod'>
+    
+
+
+/**
+ * Reference to a field of type 'DepositMethod[]'
+ */
+export type ListEnumDepositMethodFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DepositMethod[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -4574,6 +4685,7 @@ export type GlobalOmitConfig = {
   exchangeRate?: Prisma.ExchangeRateOmit
   emailOutbox?: Prisma.EmailOutboxOmit
   loginCode?: Prisma.LoginCodeOmit
+  deposit?: Prisma.DepositOmit
 }
 
 /* Types for Logging */

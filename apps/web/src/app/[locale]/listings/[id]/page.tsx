@@ -196,6 +196,7 @@ export default async function ListingPage({ params }: { params: Promise<{ locale
                 listingId={id}
                 slots={avail.data.slots}
                 rates={avail.data.rates}
+                pickupPoints={l.pickupPoints ?? []}
                 dateLabels={avail.data.slots.map((s) => `${dateFmt.format(new Date(s.startsAt))} · ${s.remaining} ${t('listing.seatsLeft')}`)}
                 labels={{
                   title: t('book.title'), date: t('book.date'), tickets: t('book.tickets'), total: t('book.total'),
@@ -210,6 +211,7 @@ export default async function ListingPage({ params }: { params: Promise<{ locale
                     generic: t('book.err.generic'),
                   },
                   waitlistJoin: t('wl.join'), waitlistHint: t('wl.joinHint'), waitlistJoined: t('wl.joined'),
+                  pickup: t('book.pickup'), emergencyName: t('book.emergencyName'), emergencyPhone: t('book.emergencyPhone'), depositHeld: t('book.depositHeld'),
                   results: { CONFIRMED: t('book.result.CONFIRMED'), HELD: t('book.result.HELD'), REQUESTED: t('book.result.REQUESTED') },
                 }}
               />

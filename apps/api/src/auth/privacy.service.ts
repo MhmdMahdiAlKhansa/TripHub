@@ -65,7 +65,7 @@ export class PrivacyService {
     const now = new Date();
     await this.db.$transaction([
       this.db.waitlistEntry.updateMany({ where: { customerId: user.id, status: 'WAITING' }, data: { status: 'CANCELLED', resolvedAt: now } }),
-      this.db.booking.updateMany({ where: { customerId: user.id }, data: { contactName: null, contactPhone: null } }),
+      this.db.booking.updateMany({ where: { customerId: user.id }, data: { contactName: null, contactPhone: null, emergencyContactName: null, emergencyContactPhone: null, pickupPoint: null } }),
       this.db.review.updateMany({ where: { customerId: user.id }, data: { comment: null } }),
       this.db.favorite.deleteMany({ where: { userId: user.id } }),
       this.db.notification.deleteMany({ where: { userId: user.id } }),

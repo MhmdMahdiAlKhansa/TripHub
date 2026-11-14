@@ -31,7 +31,7 @@ export function SiteHeader({ locale, t }: { locale: Locale; t: T }) {
         <div className="flex items-center gap-1">
           <LocaleSwitcher current={locale} label={t('common.language')} text={t('common.switchTo')} />
           <ThemeToggle label={t('theme.toggle')} />
-          <AuthLinks locale={locale} labels={{ login: t('nav.login'), signup: t('nav.signup'), profile: t('nav.profile') }} />
+          <AuthLinks locale={locale} labels={{ login: t('nav.login'), signup: t('nav.signup'), profile: t('nav.profile'), staffDesk: t('nav.staffDesk'), myBusiness: t('nav.myBusiness') }} />
         </div>
       </div>
     </HeaderShell>

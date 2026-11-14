@@ -12,12 +12,14 @@ import {
   type LineRequest,
   type Quote,
   type RateInput,
+  OPERATOR_DEPOSIT_HOURS,
 } from '@triphub/shared';
 import { createHash, randomBytes } from 'node:crypto';
 import { PromoService } from '../marketing/promo.service';
 import { SubscriptionsService } from '../subscriptions/subscriptions.service';
 import { FEATURES, type Features } from '../config/features';
 import { PRISMA } from '../database/database.module';
+import { DepositsService, depositView } from './deposits.service';
 import { paymentView } from '../payments/payments.service';
 
 
@@ -33,6 +35,9 @@ export interface CreateBookingInput {
   promoCode?: string;
   contactName?: string;
   contactPhone?: string;
+  pickupPoint?: string;
+  emergencyContactName?: string;
+  emergencyContactPhone?: string;
 }
 
 export const toRateInputs = (rates: Array<{ kind: string; amountMinor: bigint; currency: string; groupSize: number | null }>): RateInput[] =>
@@ -57,9 +62,15 @@ export function requestHash(input: CreateBookingInput): string {
     c: input.promoCode ? input.promoCode.trim().toUpperCase() : null,
     n: input.contactName ?? null,
     p: input.contactPhone ?? null,
+    pk: input.pickupPoint ?? null,
+    en: input.emergencyContactName ?? null,
+    ep: input.emergencyContactPhone ?? null,
   });
   return createHash('sha256').update(canonical).digest('hex');
 }
+
+/** Operator-collected deposits: hold the seat for OPERATOR_DEPOSIT_HOURS, never past the trip start. */
+export const depositHoldUntil = (now: Date, startsAt: Date) => new Date(Math.min(now.getTime() + OPERATOR_DEPOSIT_HOURS * 3_600_000, startsAt.getTime()));
 
 const REF_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'; // Crockford base32: no I, L, O, U
 const newReference = () => {
@@ -69,6 +80,8 @@ const newReference = () => {
 
 const bookingInclude = {
   hold: true,
+  deposits: { orderBy: { recordedAt: 'asc' } },
+  listing: { select: { depositPercent: true, pickupPoints: true } },
   payments: { orderBy: { submittedAt: 'desc' } },
   slot: { select: { startsAt: true, endsAt: true } },
 } satisfies Prisma.BookingInclude;
@@ -134,7 +147,11 @@ export class BookingsService {
     }
     const netMinor = quote.totalMinor - discountMinor;
     const isFree = netMinor === 0n;
-    if (!isFree && !this.features.payments) throw new ConflictException({ code: 'payments_not_available_yet' });
+    // Without platform custody, the operator collects the deposit directly: the seat is held long enough for that.
+    const operatorDeposit = !isFree && !this.features.payments;
+    if (listing.pickupPoints.length > 0 && (!input.pickupPoint || !listing.pickupPoints.includes(input.pickupPoint))) {
+      throw new UnprocessableEntityException({ code: 'pickup_point_required', options: listing.pickupPoints });
+    }
 
     // Release seats from lapsed holds on this slot before trying to take any.
     await expireHoldsAndPromote(this.db, { slotId: slot.id });
@@ -209,6 +226,9 @@ export class BookingsService {
             snapshot: snapshot as Prisma.InputJsonValue,
             contactName: input.contactName,
             contactPhone: input.contactPhone,
+            pickupPoint: input.pickupPoint ?? null,
+            emergencyContactName: input.emergencyContactName ?? null,
+            emergencyContactPhone: input.emergencyContactPhone ?? null,
             idempotencyKey: key,
             requestHash: hash,
           },
@@ -230,7 +250,7 @@ export class BookingsService {
             slotId: slot.id,
             quantity: quote.seats,
             status: isFree ? 'CONSUMED' : 'ACTIVE',
-            expiresAt: new Date(now.getTime() + listing.holdMinutes * 60_000),
+            expiresAt: operatorDeposit ? depositHoldUntil(now, slot.startsAt) : new Date(now.getTime() + listing.holdMinutes * 60_000),
             resolvedAt: isFree ? now : null,
           },
         });
@@ -346,7 +366,7 @@ export class BookingsService {
 
   /** Business approves a request: seats are reserved atomically now; it may fail if the slot filled up. */
   async approve(companyId: string, id: string, actorId: string) {
-    const found = await this.db.booking.findFirst({ where: { id, companyId }, include: { listing: { select: { holdMinutes: true } } } });
+    const found = await this.db.booking.findFirst({ where: { id, companyId }, include: { listing: { select: { holdMinutes: true } }, slot: { select: { startsAt: true } } } });
     if (!found) throw new NotFoundException();
     const now = new Date();
     if (found.status !== 'REQUESTED') throw new ConflictException({ code: 'invalid_transition', status: found.status });
@@ -355,7 +375,7 @@ export class BookingsService {
       throw new ConflictException({ code: 'request_expired' });
     }
     const free = found.totalMinor === 0n;
-    if (!free && !this.features.payments) throw new ConflictException({ code: 'payments_not_available_yet' });
+    const operatorDeposit = !free && !this.features.payments;
     try {
       await this.db.$transaction(async (tx) => {
         const gate = await tx.booking.updateMany({
@@ -370,7 +390,7 @@ export class BookingsService {
             slotId: found.slotId,
             quantity: found.quantity,
             status: free ? 'CONSUMED' : 'ACTIVE',
-            expiresAt: new Date(now.getTime() + found.listing.holdMinutes * 60_000),
+            expiresAt: operatorDeposit ? depositHoldUntil(now, found.slot.startsAt) : new Date(now.getTime() + found.listing.holdMinutes * 60_000),
             resolvedAt: free ? now : null,
           },
         });
@@ -451,6 +471,10 @@ export function bookingView(b: BookingFull) {
     slot: { startsAt: b.slot.startsAt, endsAt: b.slot.endsAt },
     snapshot: b.snapshot,
     payments: b.payments.map(paymentView),
+    pickupPoint: b.pickupPoint,
+    emergencyContact: b.emergencyContactName || b.emergencyContactPhone ? { name: b.emergencyContactName, phone: b.emergencyContactPhone } : null,
+    /** Deposits the operator recorded (Whish / OMT / cash), against what the listing asks for. */
+    deposit: { ...DepositsService.summary(b, b.listing.depositPercent), items: b.deposits.map(depositView) },
     cancelledAt: b.cancelledAt,
     createdAt: b.createdAt,
   };

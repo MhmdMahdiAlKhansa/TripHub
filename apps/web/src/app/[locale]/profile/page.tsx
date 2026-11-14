@@ -15,7 +15,7 @@ export default async function Profile({ params }: { params: Promise<{ locale: st
       <ProfilePanel
         locale={locale}
         labels={{
-          notifications: { title: t('notif.title'), empty: t('notif.empty'), markAll: t('notif.markAll'), generic: t('notif.generic'), kinds: { 'waitlist.offer': t('notif.waitlist.offer'), 'booking.request_approved': t('notif.booking.request_approved'), 'booking.request_declined': t('notif.booking.request_declined'), 'booking.completed': t('notif.booking.completed'), 'booking.cancelled_by_business': t('notif.booking.cancelled_by_business'), 'payment.verified': t('notif.payment.verified'), 'payment.verified_unallocated': t('notif.payment.verified_unallocated'), 'payment.rejected': t('notif.payment.rejected'), 'refund.approved': t('notif.refund.approved'), 'refund.paid': t('notif.refund.paid'), 'refund.rejected': t('notif.refund.rejected') } },
+          notifications: { title: t('notif.title'), empty: t('notif.empty'), markAll: t('notif.markAll'), generic: t('notif.generic'), kinds: { 'waitlist.offer': t('notif.waitlist.offer'), 'booking.request_approved': t('notif.booking.request_approved'), 'booking.request_declined': t('notif.booking.request_declined'), 'booking.completed': t('notif.booking.completed'), 'booking.cancelled_by_business': t('notif.booking.cancelled_by_business'), 'payment.verified': t('notif.payment.verified'), 'payment.verified_unallocated': t('notif.payment.verified_unallocated'), 'payment.rejected': t('notif.payment.rejected'), 'refund.approved': t('notif.refund.approved'), 'refund.paid': t('notif.refund.paid'), 'refund.rejected': t('notif.refund.rejected'), 'booking.reminder': t('notif.booking.reminder'), 'deposit.received': t('notif.deposit.received'), 'booking.confirmed': t('notif.booking.confirmed') } },
           waitlist: {
             title: t('wl.title'), empty: t('wl.empty'), position: t('wl.position'), seats: t('wl.seats'), accept: t('wl.accept'), leave: t('wl.leave'),
             expires: t('wl.expires'), acceptNote: t('wl.acceptNote'), error: t('wl.error'),
@@ -30,6 +30,7 @@ export default async function Profile({ params }: { params: Promise<{ locale: st
             ticket: t('mb.ticket'), ticketCode: t('mb.ticketCode'), calendar: t('mb.calendar'), refundNow: t('mb.refundNow'), policy: t('mb.policy'),
             policies: { FLEXIBLE: t('cancel.FLEXIBLE'), MODERATE: t('cancel.MODERATE'), STRICT: t('cancel.STRICT'), NON_REFUNDABLE: t('cancel.NON_REFUNDABLE') },
             payTitle: t('mb.payTitle'), payNote: t('mb.payNote'), payMethod: t('mb.payMethod'), payReference: t('mb.payReference'), paySubmit: t('mb.paySubmit'),
+            depositTitle: t('mb.depositTitle'), depositNote: t('mb.depositNote'), depositBy: t('mb.depositBy'), depositReceived: t('mb.depositReceived'), pickup: t('mb.pickup'),
             payStates: { awaiting_verification: t('mb.pay.awaiting_verification'), rejected: t('mb.pay.rejected'), verified: t('mb.pay.verified'), verified_refund_due: t('mb.pay.verified_refund_due') },
             reviewTitle: t('mb.reviewTitle'), rating: t('mb.rating'), comment: t('mb.comment'), reviewSubmit: t('mb.reviewSubmit'), reviewDone: t('mb.saved'),
             error: t('mb.error'), saved: t('mb.saved'),

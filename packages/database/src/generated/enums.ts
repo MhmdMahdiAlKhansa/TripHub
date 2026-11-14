@@ -136,6 +136,15 @@ export const PaymentMethod = {
 export type PaymentMethod = (typeof PaymentMethod)[keyof typeof PaymentMethod]
 
 
+export const DepositMethod = {
+  WHISH: 'WHISH',
+  OMT: 'OMT',
+  CASH: 'CASH'
+} as const
+
+export type DepositMethod = (typeof DepositMethod)[keyof typeof DepositMethod]
+
+
 export const PaymentStatus = {
   PROOF_SUBMITTED: 'PROOF_SUBMITTED',
   VERIFIED: 'VERIFIED',

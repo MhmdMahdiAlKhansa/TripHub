@@ -211,3 +211,9 @@ export type EmailOutbox = Prisma.EmailOutboxModel
  * One-time sign-in code emailed to the user (6 digits, 10 minutes, 5 tries). Only a hash is stored.
  */
 export type LoginCode = Prisma.LoginCodeModel
+/**
+ * Model Deposit
+ * A deposit the operator received from a participant (Whish, OMT or cash), recorded by the business.
+ * This is the operator's own bookkeeping; the platform never holds this money.
+ */
+export type Deposit = Prisma.DepositModel

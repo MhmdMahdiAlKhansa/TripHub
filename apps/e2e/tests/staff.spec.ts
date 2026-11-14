@@ -44,15 +44,17 @@ test('a finance staff member signs in with two-step verification and sees every 
   await page.waitForTimeout(31_000);
   await page.getByLabel('Authentication code').fill(totp.generate());
   await page.getByRole('button', { name: 'Sign in' }).click();
-  await expect(page).toHaveURL(/\/en\/profile/);
-
-  await page.getByRole('link', { name: 'Staff console' }).click();
-  for (const name of ['Staff console', 'Payment proofs awaiting verification', 'Refunds', 'Payouts', 'Subscription requests', 'Reviews']) {
-    await expect(page.getByRole('heading', { name }).first()).toBeVisible();
+  await expect(page).toHaveURL(/\/en\/admin/); // staff land on their own desk
+  await expect(page.getByRole('heading', { name: 'Finance desk' })).toBeVisible();
+  for (const tab of ['Payment proofs', 'Refunds', 'Payouts', 'Subscriptions']) {
+    await page.getByRole('tab', { name: tab }).click();
+    await expect(page.getByRole('tab', { name: tab })).toHaveAttribute('aria-selected', 'true');
   }
+  // A finance person does not see the verifier's or support's tools.
+  for (const other of ['Businesses to review', 'Featured picks', 'Email health']) await expect(page.getByRole('tab', { name: other })).toHaveCount(0);
   await page.emulateMedia({ reducedMotion: 'reduce' });
   const axe = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
-  expect(axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => v.id)).toEqual([]);
+  expect(axe.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => `${v.id}: ${v.nodes.map((n) => n.html.slice(0, 100)).join(' | ')}`)).toEqual([]);
 });
 
 test('an ordinary customer is told the staff area is not for them', async ({ page }) => {

@@ -1,4 +1,3 @@
-import { PageHero } from '../../../../../components/PageHero';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
 import { ListingManager } from '../../../../../components/ListingManager';
@@ -20,11 +19,11 @@ export default async function Listings({ params }: { params: Promise<{ locale: s
       <Link href={`/${locale}/business/${companyId}`} className="text-sm text-[var(--brand)] underline">
         {t('biz.title')}
       </Link>
-      <PageHero title={t('lst.title')} />
+      <h1 className="text-3xl font-bold">{t('lst.title')}</h1>
       <ListingManager
         companyId={companyId}
         labels={{
-          newListing: t('lst.new'), category: t('lst.category'), mode: t('lst.mode'), city: t('lst.city'), meeting: t('lst.meeting'),
+          newListing: t('lst.new'), category: t('lst.category'), mode: t('lst.mode'), city: t('lst.city'), meeting: t('lst.meeting'), pickups: t('lst.pickups'), depositPercent: t('lst.depositPercent'),
           titleEn: t('lst.titleEn'), descEn: t('lst.descEn'), titleAr: t('lst.titleAr'), descAr: t('lst.descAr'), create: t('lst.create'),
           none: t('lst.none'), publish: t('lst.publish'), pause: t('lst.pause'), rates: t('lst.rates'), adult: t('lst.adult'), child: t('lst.child'),
           saveRates: t('lst.saveRates'), freeNote: t('lst.freeNote'), addSlot: t('lst.addSlot'), when: t('lst.when'), capacity: t('lst.capacity'),

@@ -48,7 +48,13 @@ export class LocalDiskStorage implements ObjectStorage {
 
 export const defaultStorage = (): ObjectStorage => {
   if (process.env.NODE_ENV === 'production') {
-    throw new Error('No production object storage is configured. Local disk storage is for development only.');
+    // A persistent disk (for example a Railway volume) is acceptable for a single-instance demo deployment when
+    // named explicitly; it is NOT replicated and NOT shared between instances, so it is not a production object store.
+    if (process.env.STORAGE_DIR) {
+      console.warn(`[storage] using local disk at ${process.env.STORAGE_DIR} in production: single instance only, no replication`);
+      return new LocalDiskStorage(process.env.STORAGE_DIR);
+    }
+    throw new Error('No production object storage is configured. Set STORAGE_DIR to a persistent volume for a single-instance deployment.');
   }
   return new LocalDiskStorage(process.env.STORAGE_DIR ?? path.resolve(process.cwd(), '../../.data/uploads'));
 };

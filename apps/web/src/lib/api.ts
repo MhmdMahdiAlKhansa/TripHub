@@ -23,6 +23,8 @@ export interface PublicListing {
   bookable: boolean;
   city: string | null;
   meetingPoint: string | null;
+  pickupPoints?: string[];
+  depositPercent?: number;
   latitude: number | null;
   longitude: number | null;
   featured: boolean;

@@ -10,6 +10,8 @@ interface Listing {
   city: string | null;
   cancellationPolicy: string;
   meetingPoint: string | null;
+  pickupPoints: string[];
+  depositPercent: number;
   latitude: number | null;
   longitude: number | null;
   images: Array<{ id: string; url: string; alt: string | null }>;
@@ -17,7 +19,7 @@ interface Listing {
 }
 
 export interface ListingLabels {
-  newListing: string; category: string; mode: string; city: string; meeting: string; titleEn: string; descEn: string; titleAr: string; descAr: string;
+  newListing: string; category: string; mode: string; city: string; meeting: string; pickups: string; depositPercent: string; titleEn: string; descEn: string; titleAr: string; descAr: string;
   create: string; none: string; publish: string; pause: string; rates: string; adult: string; child: string; saveRates: string; freeNote: string;
   addSlot: string; when: string; capacity: string; addSlotCta: string; error: string; missing: string; saved: string; working: string;
   policy: string; policies: Record<string, string>;
@@ -80,6 +82,8 @@ export function ListingManager({ companyId, labels }: { companyId: string; label
       cancellationPolicy: s('policy') || undefined,
       city: s('city') || undefined,
       meetingPoint: s('meeting') || undefined,
+      pickupPoints: s('pickups').split('\n').map((x) => x.trim()).filter(Boolean),
+      depositPercent: Number(s('deposit') || 100),
       translations,
     });
     setBusy(false);
@@ -104,6 +108,8 @@ export function ListingManager({ companyId, labels }: { companyId: string; label
       await api('PATCH', `${base}/${id}`, {
         city: s('city') || null,
         meetingPoint: s('meeting') || null,
+        pickupPoints: s('pickups').split('\n').map((x) => x.trim()).filter(Boolean),
+        depositPercent: Number(s('deposit') || 100),
         latitude: s('lat') === '' || s('lng') === '' ? null : Number(s('lat')),
         longitude: s('lat') === '' || s('lng') === '' ? null : Number(s('lng')),
         cancellationPolicy: s('policy'),
@@ -195,6 +201,8 @@ export function ListingManager({ companyId, labels }: { companyId: string; label
           </label>
           <label>{labels.city}<input name="city" maxLength={80} className={field} /></label>
           <label>{labels.meeting}<input name="meeting" maxLength={200} className={field} /></label>
+          <label>{labels.pickups}<textarea name="pickups" rows={2} className={field} /></label>
+          <label>{labels.depositPercent}<input name="deposit" type="number" min={1} max={100} defaultValue={100} className={field} /></label>
         </div>
         <label className="block">{labels.titleEn}<input name="titleEn" required maxLength={120} className={field} /></label>
         <label className="block">{labels.descEn}<textarea name="descEn" required minLength={50} maxLength={4000} rows={4} className={field} /></label>
@@ -229,6 +237,8 @@ export function ListingManager({ companyId, labels }: { companyId: string; label
                   <div className="grid gap-2 sm:grid-cols-3">
                     <label>{labels.city}<input name="city" defaultValue={l.city ?? ''} maxLength={80} className={field} /></label>
                     <label>{labels.meeting}<input name="meeting" defaultValue={l.meetingPoint ?? ''} maxLength={200} className={field} /></label>
+                    <label>{labels.pickups}<textarea name="pickups" defaultValue={l.pickupPoints.join('\n')} rows={2} className={field} /></label>
+                    <label>{labels.depositPercent}<input name="deposit" type="number" min={1} max={100} defaultValue={l.depositPercent} className={field} /></label>
                     <label>{labels.policy}
                       <select name="policy" defaultValue={l.cancellationPolicy} className={field}>
                         {Object.entries(labels.policies).map(([k, v]) => (<option key={k} value={k}>{v}</option>))}
