@@ -48,7 +48,7 @@ test('each business role gets its own desk, tabs and colour, and the public site
   // The owner sees everything.
   await signIn(page, 'owner@demo.triphub.test', 'Demo-Password-123!');
   await page.goto('/en/business');
-  await page.getByRole('listitem').filter({ hasText: 'DEMO Cedar Guides' }).getByRole('link', { name: 'Open' }).click();
+  await page.getByRole('listitem').filter({ hasText: 'Cedar Trails Lebanon' }).getByRole('link', { name: 'Open' }).click();
   await expect(page.getByRole('heading', { name: 'Your business' })).toBeVisible();
   for (const tab of ['Bookings and check-in', 'Listings', 'Money', 'Insights and promotions', 'Team', 'Business profile']) await expect(page.getByRole('tab', { name: tab })).toBeVisible();
 });

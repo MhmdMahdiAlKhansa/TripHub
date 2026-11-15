@@ -1,6 +1,7 @@
 /**
- * Local demo data. Everything is labelled DEMO, uses the reserved `.test` TLD, and the script refuses
- * to run in production. No payment, email or provider is involved: listings are free to book.
+ * Demo data for a local machine or a demo deployment (DEMO_SEED=1). The operator "Cedar Trails Lebanon" is a
+ * fictional showcase business; the places and photographs are real; people are fictional Lebanese names; every
+ * account uses the reserved `.test` mail domain so nothing can reach a real inbox. Idempotent: safe to re-run.
  *
  *   corepack pnpm --filter @triphub/api seed
  */
@@ -9,6 +10,7 @@ import path from 'node:path';
 import { config } from 'dotenv';
 import { createPrismaClient } from '@triphub/database';
 import { encryptSecret, hashPassword } from './auth/crypto';
+import { seedParticipants } from './seed-participants';
 import { seedPlaces } from './seed-places';
 
 config({ path: path.resolve(__dirname, '../../../.env') });
@@ -35,33 +37,38 @@ async function main() {
       update: {},
     });
 
-  const owner = await user('owner@demo.triphub.test', 'DEMO Owner');
-  const customer = await user('customer@demo.triphub.test', 'DEMO Traveller');
+  const owner = await user('owner@demo.triphub.test', 'Nadim Khoury');
+  const customer = await user('customer@demo.triphub.test', 'Maya Haddad');
+  await db.user.updateMany({ where: { email: { in: ['owner@demo.triphub.test', 'customer@demo.triphub.test'] }, displayName: { startsWith: 'DEMO' } }, data: {} });
+  await db.user.update({ where: { email: 'owner@demo.triphub.test' }, data: { displayName: 'Nadim Khoury' } });
+  await db.user.update({ where: { email: 'customer@demo.triphub.test' }, data: { displayName: 'Maya Haddad' } });
 
   // Platform admin: staff accounts require two-step sign-in, so this one has an authenticator secret set up.
   await db.user.upsert({
     where: { email: 'admin@demo.triphub.test' },
-    create: { email: 'admin@demo.triphub.test', displayName: 'DEMO Admin', passwordHash: hash, emailVerifiedAt: now, platformRole: 'ADMIN', mfaSecretEnc: encryptSecret(DEMO_ADMIN_TOTP), mfaEnabledAt: now },
-    update: { platformRole: 'ADMIN', mfaSecretEnc: encryptSecret(DEMO_ADMIN_TOTP), mfaEnabledAt: now, mfaLastStep: null },
+    create: { email: 'admin@demo.triphub.test', displayName: 'Lina Saab', passwordHash: hash, emailVerifiedAt: now, platformRole: 'ADMIN', mfaSecretEnc: encryptSecret(DEMO_ADMIN_TOTP), mfaEnabledAt: now },
+    update: { displayName: 'Lina Saab', platformRole: 'ADMIN', mfaSecretEnc: encryptSecret(DEMO_ADMIN_TOTP), mfaEnabledAt: now, mfaLastStep: null },
   });
 
   const company =
     (await db.company.findUnique({ where: { slug: 'demo-cedar-guides' } })) ??
     (await db.company.create({
       data: {
-        name: 'DEMO Cedar Guides',
+        name: 'Cedar Trails Lebanon',
         slug: 'demo-cedar-guides',
         status: 'APPROVED',
         approvedAt: now,
         submittedAt: now,
-        description: 'DEMO data: guided hikes in the Qadisha Valley.',
+        description: 'Small-group hikes and day trips across Lebanon: the Cedars, the Qadisha Valley, Byblos, Baalbek and the south. Pickups from Hamra and Jounieh. Deposits by Whish, OMT or cash.',
         contactEmail: 'hello@demo.triphub.test',
-        phone: '+961 3 000 000',
-        city: 'Bsharri',
-        categories: ['hiking'],
+        phone: '+961 3 612 480',
+        city: 'Beirut',
+        categories: ['hiking', 'tours', 'historical'],
         languages: ['en', 'ar'],
       },
     }));
+  // Older seeds named this operator "DEMO Cedar Guides"; bring it in line without changing its id or slug.
+  await db.company.update({ where: { id: company.id }, data: { name: 'Cedar Trails Lebanon', city: 'Beirut', phone: '+961 3 612 480', categories: ['hiking', 'tours', 'historical'], description: 'Small-group hikes and day trips across Lebanon: the Cedars, the Qadisha Valley, Byblos, Baalbek and the south. Pickups from Hamra and Jounieh. Deposits by Whish, OMT or cash.' } });
   await db.membership.upsert({
     where: { companyId_userId: { companyId: company.id, userId: owner.id } },
     create: { companyId: company.id, userId: owner.id, role: 'OWNER' },
@@ -69,50 +76,36 @@ async function main() {
   });
   await db.subscription.upsert({
     where: { companyId: company.id },
-    create: {
-      companyId: company.id,
-      planCode: 'TRIAL',
-      status: 'TRIALING',
-      trialStartedAt: now,
-      trialEndsAt: new Date(now.getTime() + 30 * day),
-      trialConsentBy: owner.id,
-      commissionBps: 1000,
-    },
-    update: {},
+    // The showcase operator is on a paid plan (no listing cap, no trial expiry), as a real customer would be.
+    create: { companyId: company.id, planCode: 'PRO', status: 'ACTIVE', currentPeriodEnd: new Date(now.getTime() + 365 * day), commissionBps: 1000 },
+    update: { planCode: 'PRO', status: 'ACTIVE', currentPeriodEnd: new Date(now.getTime() + 365 * day) },
   });
 
-  const items = [
-    { en: 'DEMO Cedar Forest Walk', ar: 'تجريبي: جولة غابة الأرز', city: 'Bsharri', days: 5 },
-    { en: 'DEMO Qadisha Valley Day Hike', ar: 'تجريبي: رحلة وادي قاديشا', city: 'Bsharri', days: 9 },
-  ];
-  for (const it of items) {
-    const exists = await db.listingTranslation.findFirst({ where: { title: it.en, listing: { companyId: company.id } } });
-    if (exists) continue;
-    const listing = await db.listing.create({
-      data: {
-        companyId: company.id,
-        category: 'hiking',
-        bookingMode: 'FIXED_DATE',
-        status: 'PUBLISHED',
-        publishedAt: now,
-        city: it.city,
-        meetingPoint: 'Village square',
-        attributes: { difficulty: 'moderate', distanceKm: 8, guideIncluded: true },
-        translations: {
-          create: [
-            { locale: 'en', title: it.en, summary: 'DEMO listing', description: 'DEMO data: a calm guided walk with time for photos and tea.' },
-            { locale: 'ar', title: it.ar, summary: 'بيانات تجريبية', description: 'بيانات تجريبية: جولة هادئة مع مرشد محلي.' },
-          ],
-        },
-        rates: { create: [{ kind: 'ADULT', amountMinor: 0n, currency: 'USD' }] },
-      },
-    });
-    await db.slot.create({ data: { listingId: listing.id, startsAt: new Date(now.getTime() + it.days * day), capacity: 12 } });
+  // Retire listings from earlier seeds (placeholder titles) and any leftover sample operator.
+  await db.listing.updateMany({ where: { status: { not: 'ARCHIVED' }, translations: { some: { locale: 'en', title: { startsWith: 'DEMO ' } } } }, data: { status: 'ARCHIVED' } });
+  // Automated tests share the development database and leave published listings behind ("Approved Co" businesses,
+  // gallery / load-test / e2e drafts). Hide them so the public site shows only the showcase operator.
+  const junk = await db.listing.updateMany({
+    where: {
+      status: { in: ['PUBLISHED', 'PAUSED'] },
+      OR: [
+        { company: { name: 'Approved Co' } },
+        { translations: { some: { locale: 'en', OR: [{ title: { startsWith: 'Gallery ' } }, { title: { startsWith: 'Load test ' } }, { title: { contains: 'E2E' } }] } } },
+      ],
+    },
+    data: { status: 'ARCHIVED', featuredAt: null },
+  });
+  if (junk.count) console.log(`  hid ${junk.count} leftover test listings`);
+  const leftover = await db.company.findUnique({ where: { slug: 'sample-lebanon-tours' } });
+  if (leftover) {
+    await db.listing.updateMany({ where: { companyId: leftover.id, status: { not: 'ARCHIVED' } }, data: { status: 'ARCHIVED', featuredAt: null } });
+    await db.company.update({ where: { id: leftover.id }, data: { status: 'SUSPENDED', name: 'Retired sample operator' } });
   }
 
-  await seedPlaces(db, owner.id, now);
+  await seedPlaces(db, company.id, owner.id, now);
+  await seedParticipants(db, company.id, hash, now);
 
-  console.log('Demo data ready.');
+  console.log('Demo data ready: operator "Cedar Trails Lebanon" with real places, photos and sample participants.');
   console.log(`  business owner: owner@demo.triphub.test   password: ${DEMO_PASSWORD}`);
   console.log(`  customer:       customer@demo.triphub.test password: ${DEMO_PASSWORD}`);
   console.log(`  platform admin: admin@demo.triphub.test    password: ${DEMO_PASSWORD}`);

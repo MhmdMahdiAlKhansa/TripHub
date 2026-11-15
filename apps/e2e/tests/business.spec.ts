@@ -8,9 +8,9 @@ test('a business owner signs in, sees plan and bookings, and creates a priced-fr
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page).toHaveURL(/\/en\/business/); // a business member lands in the business workspace
 
-  await page.getByRole('listitem').filter({ hasText: 'DEMO Cedar Guides' }).getByRole('link', { name: 'Open' }).click();
+  await page.getByRole('listitem').filter({ hasText: 'Cedar Trails Lebanon' }).getByRole('link', { name: 'Open' }).click();
   await expect(page.getByRole('heading', { name: 'Subscription' })).toBeVisible();
-  await expect(page.getByText('Free trial')).toBeVisible();
+  await expect(page.getByText(/PRO.*Active/)).toBeVisible(); // the showcase operator is on a paid plan
   await expect(page.getByRole('heading', { name: 'Bookings' })).toBeVisible();
   const dash = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();
   expect(dash.violations.filter((v) => v.impact === 'serious' || v.impact === 'critical').map((v) => `${v.id}: ${v.nodes.map((n) => n.html.slice(0, 100)).join(' | ')}`)).toEqual([]);

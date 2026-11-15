@@ -25,9 +25,9 @@ test('Arabic is right-to-left and English left-to-right', async ({ page }) => {
 
 test('a listing page shows dates, the booking form and the cancellation policy', async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce' });
-  await page.goto('/en/explore?q=DEMO');
-  await page.getByRole('link', { name: /DEMO Cedar Forest Walk/ }).first().click();
-  await expect(page.getByRole('heading', { level: 1, name: /DEMO Cedar Forest Walk/ })).toBeVisible();
+  await page.goto('/en/explore?q=Cedars+of+God');
+  await page.getByRole('link', { name: /Walk among the Cedars of God/ }).first().click();
+  await expect(page.getByRole('heading', { level: 1, name: /Walk among the Cedars of God/ })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Cancellation policy' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Book now' })).toBeVisible();
   const results = await new AxeBuilder({ page }).withTags(['wcag2a', 'wcag2aa']).analyze();

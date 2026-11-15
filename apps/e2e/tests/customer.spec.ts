@@ -21,8 +21,8 @@ test('sign in, book a free demo experience, see it in My bookings, cancel it, si
   await expect(page).toHaveURL(/\/en\/profile/);
   await expect(page.getByText(EMAIL)).toBeVisible();
 
-  await page.goto('/en/explore?q=DEMO+Cedar');
-  await page.getByRole('link', { name: /DEMO Cedar Forest Walk/ }).first().click();
+  await page.goto('/en/explore?q=Cedars+of+God');
+  await page.getByRole('link', { name: /Walk among the Cedars of God/ }).first().click();
   await page.getByLabel('Adult', { exact: true }).fill('1');
   await page.getByRole('button', { name: 'Book now' }).click();
   await expect(page.getByRole('status')).toContainText('Your booking is confirmed.');
@@ -44,8 +44,8 @@ test('sign in, book a free demo experience, see it in My bookings, cancel it, si
 });
 
 test('signed-out visitors are asked to sign in before booking, and no booking is made', async ({ page }) => {
-  await page.goto('/en/explore?q=DEMO+Cedar');
-  await page.getByRole('link', { name: /DEMO Cedar Forest Walk/ }).first().click();
+  await page.goto('/en/explore?q=Cedars+of+God');
+  await page.getByRole('link', { name: /Walk among the Cedars of God/ }).first().click();
   await page.getByLabel('Adult', { exact: true }).fill('1');
   await page.getByRole('button', { name: 'Book now' }).click();
   await expect(page.getByText('Sign in to book.')).toBeVisible();

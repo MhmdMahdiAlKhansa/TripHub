@@ -18,23 +18,25 @@ interface Place {
   ar: { title: string; summary: string; description: string };
   attributes: Record<string, unknown>;
   priceUsd: number;
+  pickupPoints?: string[];
+  depositPercent?: number;
   photos: Array<{ file: string; alt: string }>;
   featured?: boolean;
 }
 
-const SAMPLE_EN = ' Sample listing: the operator, price and dates are placeholders for testing.';
-const SAMPLE_AR = ' قائمة تجريبية: الجهة المنظمة والسعر والمواعيد أمثلة للاختبار.';
+const SAMPLE_EN = '';
+const SAMPLE_AR = '';
 
 const PLACES: Place[] = [
   {
-    category: 'hiking', city: 'Bsharri', meeting: 'Cedars of God visitor entrance', priceUsd: 20, featured: true,
+    category: 'hiking', city: 'Bsharri', meeting: 'Cedars of God visitor entrance', priceUsd: 0, featured: true, pickupPoints: ['Hamra, Beirut (Barbar)', 'Jounieh highway (Fouad Chehab stadium)'],
     en: { title: 'Walk among the Cedars of God', summary: 'An easy walk through one of the last groves of Lebanon cedar.', description: 'Walk through the Cedars of God above Bsharri, one of the few remaining groves of ancient Lebanon cedar and part of the UNESCO-listed Qadisha Valley and Forest of the Cedars of God. A slow, easy walk with time for photos, and a small chapel on the slope.' + SAMPLE_EN },
     ar: { title: 'جولة بين أرز الرب', summary: 'مشي سهل بين واحدة من آخر غابات أرز لبنان.', description: 'امشِ بين أرز الرب فوق بشري، إحدى الغابات القليلة المتبقية من الأرز اللبناني العتيق، وهي جزء من وادي قاديشا وغابة أرز الرب المدرجين على قائمة اليونسكو. مشي هادئ وسهل مع وقت للتصوير، وكنيسة صغيرة على المنحدر.' + SAMPLE_AR },
     attributes: { difficulty: 'easy', durationMinutes: 120, distanceKm: 3, guideIncluded: true },
     photos: [{ file: 'cedars-forest', alt: 'Ancient Lebanon cedar trees at the Cedars of God' }, { file: 'cedars-chapel', alt: 'A small chapel on the slopes of Mount Lebanon at the Cedars of God' }],
   },
   {
-    category: 'hiking', city: 'Bsharri', meeting: 'Bsharri village square', priceUsd: 35, featured: true,
+    category: 'hiking', city: 'Bsharri', meeting: 'Bsharri village square', priceUsd: 35, featured: true, depositPercent: 50, pickupPoints: ['Hamra, Beirut (Barbar)', 'Dora roundabout', 'Jounieh highway (Fouad Chehab stadium)'],
     en: { title: 'Qadisha Valley and Mar Elisha monastery hike', summary: 'A day in the Holy Valley, with its cliffs and cave monasteries.', description: 'Hike into the Qadisha (Kadisha) Valley, the Holy Valley, a deep gorge below Bsharri with terraced slopes and monasteries built into the rock, including Mar Elisha. A moderate day hike with a local guide on valley paths.' + SAMPLE_EN },
     ar: { title: 'رحلة وادي قاديشا ودير مار أليشع', summary: 'يوم في الوادي المقدس بين الجروف والأديرة المحفورة في الصخر.', description: 'ادخل وادي قاديشا، الوادي المقدس، وهو مضيق عميق تحت بشري بمنحدرات مدرّجة وأديرة مبنية في الصخر، منها دير مار أليشع. رحلة نهارية متوسطة الصعوبة مع مرشد محلي على دروب الوادي.' + SAMPLE_AR },
     attributes: { difficulty: 'moderate', durationMinutes: 300, distanceKm: 9, guideIncluded: true },
@@ -55,14 +57,14 @@ const PLACES: Place[] = [
     photos: [{ file: 'byblos-harbour', alt: 'The old harbour of Byblos' }],
   },
   {
-    category: 'historical', city: 'Baalbek', meeting: 'Baalbek archaeological site entrance', priceUsd: 30, featured: true,
+    category: 'historical', city: 'Baalbek', meeting: 'Baalbek archaeological site entrance', priceUsd: 30, featured: true, depositPercent: 50, pickupPoints: ['Hamra, Beirut (Barbar)', 'Dora roundabout', 'Chtaura'],
     en: { title: 'Baalbek Roman temples tour', summary: 'The giant Roman temples of Heliopolis in the Bekaa.', description: 'Tour the Roman temple complex of Baalbek, a UNESCO World Heritage site in the Bekaa Valley, including the well-preserved Temple of Bacchus and the huge columns of the Temple of Jupiter.' + SAMPLE_EN },
     ar: { title: 'جولة معابد بعلبك الرومانية', summary: 'معابد هيليوبوليس الرومانية الضخمة في البقاع.', description: 'جُل في مجمّع معابد بعلبك الرومانية، موقع التراث العالمي لليونسكو في وادي البقاع، ومنها معبد باخوس المحفوظ جيداً وأعمدة معبد جوبيتر الضخمة.' + SAMPLE_AR },
     attributes: { era: 'Roman' },
     photos: [{ file: 'baalbek-bacchus', alt: 'The Temple of Bacchus at Baalbek' }],
   },
   {
-    category: 'historical', city: 'Tyre', meeting: 'Al-Mina archaeological site gate', priceUsd: 20,
+    category: 'historical', city: 'Tyre', meeting: 'Al-Mina archaeological site gate', priceUsd: 20, depositPercent: 50, pickupPoints: ['Cola intersection, Beirut', 'Saida old port'],
     en: { title: 'Tyre Al-Mina archaeological site', summary: 'Ruins of the ancient Phoenician port city of Tyre.', description: 'Explore the Al-Mina area of Tyre (Sour), part of the UNESCO-listed ancient city that was an important Phoenician port, with Roman and Byzantine remains on the Mediterranean coast.' + SAMPLE_EN },
     ar: { title: 'موقع المينا الأثري في صور', summary: 'آثار مدينة صور الفينيقية القديمة.', description: 'استكشف منطقة المينا في صور، جزء من المدينة القديمة المدرجة على قائمة اليونسكو والتي كانت مرفأً فينيقياً مهماً، وفيها بقايا رومانية وبيزنطية على ساحل المتوسط.' + SAMPLE_AR },
     attributes: { era: 'Phoenician, Roman, Byzantine' },
@@ -105,24 +107,10 @@ const PLACES: Place[] = [
   },
 ];
 
-export async function seedPlaces(db: PrismaClient, ownerId: string, now: Date) {
+export async function seedPlaces(db: PrismaClient, companyId: string, ownerId: string, now: Date) {
   const day = 86_400_000;
   const storage = defaultStorage();
-  const company =
-    (await db.company.findUnique({ where: { slug: 'sample-lebanon-tours' } })) ??
-    (await db.company.create({
-      data: {
-        name: 'Sample Lebanon Tours', slug: 'sample-lebanon-tours', status: 'APPROVED', approvedAt: now, submittedAt: now,
-        description: 'Sample operator for local testing. The places and photographs are real; the operator, prices and dates are placeholders.',
-        contactEmail: 'sample@demo.triphub.test', phone: '+961 3 000 001', city: 'Beirut', categories: ['hiking', 'tours', 'historical'], languages: ['en', 'ar'],
-      },
-    }));
-  await db.membership.upsert({ where: { companyId_userId: { companyId: company.id, userId: ownerId } }, create: { companyId: company.id, userId: ownerId, role: 'OWNER' }, update: {} });
-  await db.subscription.upsert({
-    where: { companyId: company.id },
-    create: { companyId: company.id, planCode: 'TRIAL', status: 'TRIALING', trialStartedAt: now, trialEndsAt: new Date(now.getTime() + 30 * day), trialConsentBy: ownerId, commissionBps: 1000 },
-    update: {},
-  });
+  const company = { id: companyId };
 
   let created = 0;
   for (const [n, p] of PLACES.entries()) {
@@ -130,9 +118,10 @@ export async function seedPlaces(db: PrismaClient, ownerId: string, now: Date) {
     const listing = await db.listing.create({
       data: {
         companyId: company.id, category: p.category, bookingMode: 'FIXED_DATE', status: 'PUBLISHED', publishedAt: now, city: p.city, meetingPoint: p.meeting,
-        attributes: p.attributes as object, featuredAt: p.featured ? now : null,
+        attributes: p.attributes as object, featuredAt: p.featured ? now : null, pickupPoints: p.pickupPoints ?? [], depositPercent: p.depositPercent ?? 100,
         translations: { create: [{ locale: 'en', ...p.en }, { locale: 'ar', ...p.ar }] },
         rates: { create: [{ kind: 'ADULT', amountMinor: BigInt(p.priceUsd * 100), currency: 'USD' }, { kind: 'CHILD', amountMinor: BigInt(Math.round(p.priceUsd * 50)), currency: 'USD' }] },
+        holdMinutes: 15,
       },
     });
     for (const d of [4 + n, 11 + n, 18 + n, 25 + n]) await db.slot.create({ data: { listingId: listing.id, startsAt: new Date(now.getTime() + d * day + 8 * 3_600_000), capacity: 16 } });
@@ -145,5 +134,5 @@ export async function seedPlaces(db: PrismaClient, ownerId: string, now: Date) {
     }
     created++;
   }
-  console.log(`  real places: ${created} new listings (${PLACES.length} total) under "Sample Lebanon Tours"`);
+  console.log(`  real places: ${created} new listings (${PLACES.length} total) under "Cedar Trails Lebanon"`);
 }

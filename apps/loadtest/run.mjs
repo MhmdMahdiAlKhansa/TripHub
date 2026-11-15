@@ -35,13 +35,13 @@ async function req(method, path, { body, cookie, headers } = {}) {
 }
 
 // ------------------------------------------------------------------ read paths
-const list = await (await fetch(`${API}/public/listings?limit=1&q=DEMO`)).json();
+const list = await (await fetch(`${API}/public/listings?limit=1&q=Cedars`)).json();
 const listingId = list.listings?.[0]?.id;
-if (!listingId) throw new Error('Run `pnpm --filter @triphub/api seed` first (needs the DEMO listings).');
+if (!listingId) throw new Error('Run `pnpm --filter @triphub/api seed` first (needs the seeded listings).');
 
 console.log(`\nRead paths (${DURATION}s each)`);
 await run('API  GET /public/listings', `${API}/public/listings?limit=20`);
-await run('API  GET /public/listings?q=DEMO', `${API}/public/listings?q=DEMO&limit=20`);
+await run('API  GET /public/listings?q=Cedars', `${API}/public/listings?q=Cedars&limit=20`);
 await run('API  GET /public/listings (filters)', `${API}/public/listings?region=north&guests=2&mode=bookable&limit=20`);
 await run('API  GET /public/listings/:id', `${API}/public/listings/${listingId}`);
 await run('API  GET availability', `${API}/public/listings/${listingId}/availability`);
