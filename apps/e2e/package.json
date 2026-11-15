@@ -9,9 +9,9 @@
   },
   "devDependencies": {
     "@axe-core/playwright": "4.10.2",
-    "@playwright/test": "1.54.2",
+    "@playwright/test": "^1.65.1",
     "@types/node": "24.0.0",
-    "typescript": "5.9.3",
-    "otpauth": "^9.6.0"
+    "otpauth": "^9.6.0",
+    "typescript": "5.9.3"
   }
 }

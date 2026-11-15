@@ -76,7 +76,9 @@ export class AuthService {
    * The account stays marked UNVERIFIED (so invitations, code sign-in and notification emails still need a real check).
    */
   static simpleSignup() {
-    return process.env.SIMPLE_SIGNUP === '1' && process.env.NODE_ENV !== 'production';
+    // In production it is honoured only on a deployment explicitly marked as a demo (DEMO_SEED=1), for hosts that
+    // cannot send email (for example Railway's free plan blocks SMTP). A real launch must not set either flag.
+    return process.env.SIMPLE_SIGNUP === '1' && (process.env.NODE_ENV !== 'production' || process.env.DEMO_SEED === '1');
   }
 
   /** Business sign-up: the new account starts as the owner of a DRAFT business (nothing is public until staff verify it). */

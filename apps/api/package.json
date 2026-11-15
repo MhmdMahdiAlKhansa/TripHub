@@ -23,11 +23,11 @@
     "dotenv": "17.2.0",
     "ioredis": "^6.0.0",
     "jose": "6.0.12",
-    "nodemailer": "7.0.5",
+    "nodemailer": "^10.5.0",
     "otpauth": "^9.6.0",
     "reflect-metadata": "0.2.2",
     "rxjs": "7.8.2",
-    "sharp": "0.34.3",
+    "sharp": "^0.35.5",
     "zod": "4.6.7"
   },
   "devDependencies": {

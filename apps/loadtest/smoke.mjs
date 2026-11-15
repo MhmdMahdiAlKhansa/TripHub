@@ -1,0 +1,40 @@
+// End-to-end smoke test of the core flow against a deployed site (uses the seeded demo accounts).
+const W = process.argv[2];
+const jar = () => { let c = ''; return async (method, path, body, headers = {}) => {
+  const r = await fetch(W + '/api/v1' + path, { method, headers: { 'content-type': 'application/json', origin: W, ...(c ? { cookie: c } : {}), ...headers }, body: body ? JSON.stringify(body) : undefined });
+  const sc = r.headers.getSetCookie?.().find((x) => x.startsWith('th_session=') && !x.startsWith('th_session=;')); if (sc) c = sc.split(';')[0];
+  let j = {}; try { j = await r.json(); } catch {} return { s: r.status, j };
+}; };
+const ok = (name, cond, extra = '') => { console.log((cond ? 'PASS ' : 'FAIL ') + name + (extra ? '  ' + extra : '')); if (!cond) process.exitCode = 1; };
+const owner = jar(), cust = jar(), other = jar();
+const PW = 'Demo-Password-123!';
+ok('owner signs in', (await owner('POST', '/auth/login', { email: 'owner@demo.triphub.test', password: PW })).s === 200);
+ok('customer signs in', (await cust('POST', '/auth/login', { email: 'customer@demo.triphub.test', password: PW })).s === 200);
+ok('second customer signs in', (await other('POST', '/auth/login', { email: 'karim.nassar@demo.triphub.test', password: PW })).s === 200);
+const cid = (await owner('GET', '/companies')).j.companies.find((c) => c.slug === 'demo-cedar-guides').id;
+// A fresh paid trip with 1 seat, pickup points and a 50% deposit.
+const mk = await owner('POST', `/companies/${cid}/listings`, { category: 'hiking', bookingMode: 'FIXED_DATE', city: 'Bsharri', meetingPoint: 'Village square', pickupPoints: ['Hamra, Beirut', 'Jounieh highway'], depositPercent: 50, translations: { en: { title: `Smoke test hike ${Date.now()}`, description: 'A calm and carefully guided walk with plenty of time for photos and tea.' } } });
+ok('owner creates a trip', mk.s === 201);
+const lid = mk.j.listing.id;
+await owner('PUT', `/companies/${cid}/listings/${lid}/rates`, { rates: [{ kind: 'ADULT', amount: 3000, currency: 'USD' }] });
+ok('owner publishes a priced trip', (await owner('POST', `/companies/${cid}/listings/${lid}/publish`)).s === 200);
+const slot = await owner('POST', `/companies/${cid}/listings/${lid}/slots`, { startsAt: new Date(Date.now() + 3 * 3600_000).toISOString(), capacity: 1 });
+const sid = slot.j.slot.id;
+const key = () => 'smoke-' + Date.now() + '-' + Math.random().toString(36).slice(2, 10);
+const body = { listingId: lid, slotId: sid, lines: [{ kind: 'ADULT', qty: 1 }], pickupPoint: 'Hamra, Beirut', contactName: 'Maya Haddad', contactPhone: '+96170184522', emergencyContactName: 'Rami Haddad', emergencyContactPhone: '+96171390614' };
+ok('booking without a pickup point is refused', (await cust('POST', '/bookings', { ...body, pickupPoint: undefined }, { 'idempotency-key': key() })).s === 422);
+const b = await cust('POST', '/bookings', body, { 'idempotency-key': key() });
+ok('customer books: seat HELD for a $15 deposit', b.s === 201 && b.j.booking.status === 'HELD' && b.j.booking.deposit.requiredMinor === '1500', JSON.stringify(b.j.booking?.deposit ?? b.j).slice(0, 120));
+const full = await other('POST', '/bookings', { ...body, contactName: 'Karim Nassar' }, { 'idempotency-key': key() });
+ok('next customer is told the date is full', full.s === 409, full.j.code);
+ok('next customer joins the waitlist', (await other('POST', '/waitlist', { slotId: sid, seats: 1 })).s === 201);
+const dep = await owner('POST', `/companies/${cid}/bookings/${b.j.booking.id}/deposits`, { method: 'WHISH', amount: 1500, currency: 'USD', reference: 'WH-SMOKE-1' });
+ok('owner records the Whish deposit: seat CONFIRMED', dep.s === 201 && dep.j.confirmed === true);
+const list = (await owner('GET', `/companies/${cid}/bookings`)).j.bookings.find((x) => x.id === b.j.booking.id);
+ok('participant list shows phone, pickup and emergency contact', list?.pickupPoint === 'Hamra, Beirut' && list?.emergencyContactName === 'Rami Haddad');
+const code = (await cust('GET', `/bookings/${b.j.booking.id}/ticket`)).j.ticket?.code;
+const [c1, c2] = await Promise.all([owner('POST', `/companies/${cid}/check-in`, { code }), owner('POST', `/companies/${cid}/check-in`, { code })]);
+ok('ticket checks in exactly once, even when scanned twice at once', [c1.s, c2.s].sort().join() === '200,409', `${c1.s},${c2.s}`);
+ok('another business cannot see this booking', (await other('GET', `/companies/${cid}/bookings`)).s === 404);
+await owner('POST', `/companies/${cid}/listings/${lid}/archive`);
+console.log(process.exitCode ? 'SMOKE FAILED' : 'SMOKE OK');

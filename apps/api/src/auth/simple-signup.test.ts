@@ -49,7 +49,10 @@ describe('simple sign-up (local testing only)', () => {
     process.env.NODE_ENV = 'production';
     try {
       await h.http().post(`${A}/register`).send({ email: email(), password: PW }).expect(202);
-    } finally { process.env.NODE_ENV = prev; }
+      // ...unless the deployment is explicitly marked as a demo.
+      process.env.DEMO_SEED = '1';
+      await h.http().post(`${A}/register`).send({ email: email(), password: PW }).expect(201);
+    } finally { process.env.NODE_ENV = prev; delete process.env.DEMO_SEED; }
   });
 });
 
