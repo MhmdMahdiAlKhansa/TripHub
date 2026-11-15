@@ -113,8 +113,20 @@ export async function seedPlaces(db: PrismaClient, companyId: string, ownerId: s
   const company = { id: companyId };
 
   let created = 0;
+  let restored = 0;
   for (const [n, p] of PLACES.entries()) {
-    if (await db.listingTranslation.findFirst({ where: { title: p.en.title, listing: { companyId: company.id } } })) continue;
+    const existing = await db.listingTranslation.findFirst({ where: { title: p.en.title, listing: { companyId: company.id } }, select: { listingId: true } });
+    if (existing) {
+      // Self-heal: if the photo files are gone (new disk, fresh container) write them again under the same keys.
+      const imgs = await db.listingImage.findMany({ where: { listingId: existing.listingId, deletedAt: null }, orderBy: { position: 'asc' } });
+      for (const [pos, img] of imgs.entries()) {
+        const ph = p.photos[pos];
+        if (!ph || (await storage.get(img.storageKey).catch(() => null))) continue;
+        await storage.put(img.storageKey, await processImage(await readFile(path.resolve(__dirname, '../seed-photos', `${ph.file}.jpg`))));
+        restored++;
+      }
+      continue;
+    }
     const listing = await db.listing.create({
       data: {
         companyId: company.id, category: p.category, bookingMode: 'FIXED_DATE', status: 'PUBLISHED', publishedAt: now, city: p.city, meetingPoint: p.meeting,
@@ -134,5 +146,6 @@ export async function seedPlaces(db: PrismaClient, companyId: string, ownerId: s
     }
     created++;
   }
+  if (restored) console.log(`  restored ${restored} missing photo files`);
   console.log(`  real places: ${created} new listings (${PLACES.length} total) under "Cedar Trails Lebanon"`);
 }
