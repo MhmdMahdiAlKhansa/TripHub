@@ -107,7 +107,7 @@ export class RateLimitGuard implements CanActivate {
         }
         const url = process.env.REDIS_URL;
         if (!url || process.env.NODE_ENV === 'test') return new MemoryRateLimiter();
-        return new RedisRateLimiter(new Redis(url, { maxRetriesPerRequest: 1, enableOfflineQueue: false }));
+        return new RedisRateLimiter(new Redis(url, { maxRetriesPerRequest: 1, enableOfflineQueue: false, family: 0 }));
       },
     },
     { provide: APP_GUARD, useClass: RateLimitGuard },

@@ -10,6 +10,12 @@ const url = new URL(process.env.REDIS_URL ?? 'redis://localhost:6390');
 const connection = {
   host: url.hostname,
   port: Number(url.port || 6379),
+  // Hosted Redis needs the credentials from the URL (local development has none).
+  ...(url.username ? { username: decodeURIComponent(url.username) } : {}),
+  ...(url.password ? { password: decodeURIComponent(url.password) } : {}),
+  ...(url.protocol === 'rediss:' ? { tls: {} } : {}),
+  // Railway's private network is IPv6; 0 lets the client try both families.
+  family: 0,
   maxRetriesPerRequest: null as null,
 };
 

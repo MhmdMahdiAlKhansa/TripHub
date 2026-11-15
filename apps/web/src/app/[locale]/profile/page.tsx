@@ -30,7 +30,7 @@ export default async function Profile({ params }: { params: Promise<{ locale: st
             ticket: t('mb.ticket'), ticketCode: t('mb.ticketCode'), calendar: t('mb.calendar'), refundNow: t('mb.refundNow'), policy: t('mb.policy'),
             policies: { FLEXIBLE: t('cancel.FLEXIBLE'), MODERATE: t('cancel.MODERATE'), STRICT: t('cancel.STRICT'), NON_REFUNDABLE: t('cancel.NON_REFUNDABLE') },
             payTitle: t('mb.payTitle'), payNote: t('mb.payNote'), payMethod: t('mb.payMethod'), payReference: t('mb.payReference'), paySubmit: t('mb.paySubmit'),
-            depositTitle: t('mb.depositTitle'), depositNote: t('mb.depositNote'), depositBy: t('mb.depositBy'), depositReceived: t('mb.depositReceived'), pickup: t('mb.pickup'),
+            depositTitle: t('mb.depositTitle'), depositNote: t('mb.depositNote'), depositReceived: t('mb.depositReceived'), pickup: t('mb.pickup'),
             payStates: { awaiting_verification: t('mb.pay.awaiting_verification'), rejected: t('mb.pay.rejected'), verified: t('mb.pay.verified'), verified_refund_due: t('mb.pay.verified_refund_due') },
             reviewTitle: t('mb.reviewTitle'), rating: t('mb.rating'), comment: t('mb.comment'), reviewSubmit: t('mb.reviewSubmit'), reviewDone: t('mb.saved'),
             error: t('mb.error'), saved: t('mb.saved'),

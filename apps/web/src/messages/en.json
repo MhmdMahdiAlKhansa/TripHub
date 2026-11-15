@@ -630,7 +630,6 @@
   "biz.depositMet": "seat confirmed",
   "mb.depositTitle": "Deposit to pay the organiser",
   "mb.depositNote": "Pay by Whish, OMT or cash; the organiser records it and your seat is confirmed. Your seat is held until",
-  "mb.depositBy": "",
   "mb.depositReceived": "Recorded so far",
   "mb.pickup": "Pickup",
   "lst.pickups": "Pickup points (one per line)",
