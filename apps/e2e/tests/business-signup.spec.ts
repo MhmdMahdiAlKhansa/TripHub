@@ -32,3 +32,30 @@ test('a business signs up directly: one form creates the account and the busines
   await page.getByRole('tab', { name: 'Business profile' }).click();
   await expect(page.getByLabel('Business name')).toHaveValue('Jbeil Sea Kayak Club');
 });
+
+test('a new (unverified) business can draft a listing and is told clearly why it cannot publish yet', async ({ page, request }) => {
+  const email = `e2e-draft-${Date.now()}@example.test`;
+  const password = 'a-long-e2e-password-1';
+  await request.post('/api/v1/auth/register', { data: { email, password, businessName: 'Batroun Bike Tours' } });
+  const mails = ((await (await request.get('/api/v1/dev/mailbox')).json()) as { mails: Array<{ to: string; template: string; link: string }> }).mails;
+  await request.post('/api/v1/auth/verify-email', { data: { token: new URL(mails.find((m) => m.to === email && m.template === 'verify-email')!.link).searchParams.get('token') } });
+  await page.goto('/en/login');
+  await page.getByLabel('Email').fill(email);
+  await page.getByLabel('Password').fill(password);
+  await page.getByRole('button', { name: 'Sign in' }).click();
+  await expect(page).toHaveURL(/\/en\/business\/[0-9a-f-]{36}$/);
+  await page.getByRole('tab', { name: 'Listings' }).click();
+  await page.getByRole('link', { name: 'Manage listings' }).click();
+
+  // The page says up front that the business must be verified first.
+  await expect(page.getByRole('note')).toContainText('must be verified');
+  const title = `Batroun coast ride ${Date.now()}`;
+  const create = page.locator('form').filter({ has: page.getByRole('button', { name: 'Create draft' }) });
+  await create.getByLabel('Title (English)').fill(title);
+  await create.getByLabel(/Description \(English/).fill('An easy ride along the Batroun coast with a stop for lemonade in the old town.');
+  await page.getByRole('button', { name: 'Create draft' }).click();
+  await expect(page.getByRole('status').first()).toContainText('Draft created');
+  const card = page.getByRole('listitem').filter({ hasText: title }).first();
+  await card.getByRole('button', { name: 'Publish' }).click();
+  await expect(card.getByRole('alert')).toContainText('not verified yet');
+});

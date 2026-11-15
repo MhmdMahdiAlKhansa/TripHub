@@ -8,7 +8,9 @@ const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 const CATS = ['hiking', 'tours', 'restaurants', 'museums', 'workshops', 'historical'] as const;
 const MODES = ['DISCOVERY_ONLY', 'FIXED_DATE', 'TIME_SLOT', 'REQUEST_TO_BOOK'] as const;
 const POLICIES = ['FLEXIBLE', 'MODERATE', 'STRICT', 'NON_REFUNDABLE'] as const;
-const STATUSES = ['DRAFT', 'PUBLISHED', 'PAUSED', 'ARCHIVED'] as const;
+const STATUSES = ['DRAFT', 'PUBLISHED', 'PAUSED', 'ARCHIVED', 'CLOSED'] as const;
+const ERRORS = ["network", "validation_error", "company_not_verified", "subscription_required", "plan_limit_reached", "invalid_transition", "listing_archived", "listing_changed_concurrently", "cannot_change_booking_mode_while_published", "invalid_attributes", "booking_mode_not_supported_yet", "slot_in_past", "slot_exists", "capacity_below_reserved", "too_many_images", "file_too_large", "unsupported_image_type", "invalid_image", "price_needed", "no_file", "forbidden"] as const;
+const MISSING = ["translation", "city", "meetingPoint", "rates"] as const;
 
 export default async function Listings({ params }: { params: Promise<{ locale: string; companyId: string }> }) {
   const { locale, companyId } = await params;
@@ -21,6 +23,7 @@ export default async function Listings({ params }: { params: Promise<{ locale: s
       </Link>
       <h1 className="text-3xl font-bold">{t('lst.title')}</h1>
       <ListingManager
+        locale={locale}
         companyId={companyId}
         labels={{
           newListing: t('lst.new'), category: t('lst.category'), mode: t('lst.mode'), city: t('lst.city'), meeting: t('lst.meeting'), pickups: t('lst.pickups'), depositPercent: t('lst.depositPercent'),
@@ -35,6 +38,12 @@ export default async function Listings({ params }: { params: Promise<{ locale: s
           categories: Object.fromEntries(CATS.map((c) => [c, t(`category.${c}` as MessageKey)])),
           modes: Object.fromEntries(MODES.map((m) => [m, t(`lst.mode.${m}` as MessageKey)])),
           statuses: Object.fromEntries(STATUSES.map((s) => [s, t(`lst.status.${s}` as MessageKey)])),
+          currency: t('lst.currency'), dates: t('lst.dates'), noDates: t('lst.noDates'), seatsTaken: t('lst.seatsTaken'), closeDate: t('lst.closeDate'), reopenDate: t('lst.reopenDate'),
+          archive: t('lst.archive'), archiveConfirm: t('lst.archiveConfirm'), checklist: t('lst.checklist'), checkVerified: t('lst.checkVerified'), checkPrice: t('lst.checkPrice'),
+          checkDate: t('lst.checkDate'), checkPhoto: t('lst.checkPhoto'), checkPlan: t('lst.checkPlan'), openProfile: t('lst.openProfile'), publishedNote: t('lst.publishedNote'),
+          created: t('lst.created'), businessPage: t('biz.title'),
+          missingNames: Object.fromEntries(MISSING.map((m) => [m, t(`lst.missing.${m}` as MessageKey)])),
+          errors: Object.fromEntries(ERRORS.map((e) => [e, t(`lst.err.${e}` as MessageKey)])),
         }}
       />
     </div>

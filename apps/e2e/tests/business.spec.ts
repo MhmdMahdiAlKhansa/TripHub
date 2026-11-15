@@ -22,13 +22,22 @@ test('a business owner signs in, sees plan and bookings, and creates a priced-fr
   await create.getByLabel('Title (English)').fill(title);
   await create.getByLabel(/Description \(English/).fill('A calm and carefully guided walk with plenty of time for photos and tea along the valley.');
   await page.getByRole('button', { name: 'Create draft' }).click();
-  await expect(page.getByRole('status').first()).toContainText('Saved.');
+  await expect(page.getByRole('status').first()).toContainText('Draft created');
   await expect(page.getByText(title)).toBeVisible();
-  const card = page.getByRole('listitem').filter({ hasText: title });
+  const card = page.getByRole('listitem').filter({ hasText: title }).first();
+  // The new draft shows what is still needed before it can go live.
+  await expect(card.getByText('Before it can go live:')).toBeVisible();
+  await card.getByLabel('Adult').fill('25');
+  await card.getByRole('button', { name: 'Save prices' }).click();
+  await expect(card.getByRole('status')).toContainText('Saved.');
+  await expect(card.getByLabel('Adult')).toHaveValue('25.00'); // the saved price is shown back
+  await card.getByLabel('Date and time').fill('2030-06-01T08:00');
+  await card.getByRole('button', { name: 'Add date' }).click();
+  await expect(card.getByText(/0\/12 seats taken/)).toBeVisible();
   await card.getByText('Edit details').click();
   await card.getByLabel('City', { exact: true }).last().fill('Tannourine');
   await card.getByRole('button', { name: 'Save changes' }).click();
-  await expect(page.getByRole('status').first()).toContainText('Saved.');
+  await expect(card.getByRole('status')).toContainText('Saved.');
   const png = Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==', 'base64');
   await card.locator('input[type=file][name=photo]').setInputFiles({ name: 'trail.png', mimeType: 'image/png', buffer: png });
   await card.getByLabel('Describe the photo (for screen readers)').fill('A trail through cedar trees');
