@@ -13,7 +13,9 @@ RUN pnpm install --frozen-lockfile
 ARG APP=api
 ARG NEXT_PUBLIC_MAPTILER_KEY
 ARG SITE_URL
-ENV APP=$APP NODE_ENV=production NEXT_PUBLIC_MAPTILER_KEY=$NEXT_PUBLIC_MAPTILER_KEY SITE_URL=$SITE_URL
+# The web build bakes the API address into its /api rewrite, so it must be known at build time.
+ARG API_INTERNAL_URL
+ENV APP=$APP NODE_ENV=production NEXT_PUBLIC_MAPTILER_KEY=$NEXT_PUBLIC_MAPTILER_KEY SITE_URL=$SITE_URL API_INTERNAL_URL=$API_INTERNAL_URL
 RUN pnpm --filter @triphub/shared --filter @triphub/database --filter @triphub/ui run build \
   && if [ "$APP" = "web" ]; then pnpm --filter @triphub/web run build; else pnpm --filter @triphub/api --filter @triphub/worker run build; fi
 CMD ["sh", "infrastructure/docker/start.sh"]
