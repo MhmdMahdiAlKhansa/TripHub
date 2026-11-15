@@ -28,6 +28,9 @@ export default async function Register({ params }: { params: Promise<{ locale: s
         }}
       />
       <p>
+        <Link href={`/${locale}/for-business`} className="text-[var(--brand)] underline">{t('auth.businessLink')}</Link>
+      </p>
+      <p>
         {t('auth.haveAccount')}{' '}
         <Link href={`/${locale}/login`} className="text-[var(--brand)] underline">
           {t('auth.loginCta')}

@@ -11,7 +11,7 @@ export function SiteHeader({ locale, t }: { locale: Locale; t: T }) {
     { href: `/${locale}`, label: t('nav.home') },
     { href: `/${locale}/explore`, label: t('nav.explore') },
     { href: `/${locale}/saved`, label: t('nav.saved') },
-    { href: `/${locale}/business`, label: t('nav.businesses') },
+    { href: `/${locale}/for-business`, label: t('nav.businesses') },
   ];
   return (
     <HeaderShell>

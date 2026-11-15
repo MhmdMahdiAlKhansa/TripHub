@@ -20,9 +20,11 @@ export interface AuthLabels {
   code: string;
   codeHint: string;
   codeNeeded: string;
+  /** Business sign-up only: label of the business-name field. */
+  businessName?: string;
 }
 
-export function AuthForm({ mode, locale, labels }: { mode: 'login' | 'register'; locale: string; labels: AuthLabels }) {
+export function AuthForm({ mode, locale, labels, business = false }: { mode: 'login' | 'register'; locale: string; labels: AuthLabels; business?: boolean }) {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState(false);
@@ -34,6 +36,8 @@ export function AuthForm({ mode, locale, labels }: { mode: 'login' | 'register';
     const body: Record<string, string> = { email: String(form.get('email') ?? ''), password: String(form.get('password') ?? '') };
     const name = String(form.get('displayName') ?? '').trim();
     if (mode === 'register' && name) body.displayName = name;
+    const biz = String(form.get('businessName') ?? '').trim();
+    if (mode === 'register' && business && biz) body.businessName = biz;
     const code = String(form.get('code') ?? '').trim();
     if (mode === 'login' && code) body.code = code;
     setBusy(true);
@@ -78,6 +82,12 @@ export function AuthForm({ mode, locale, labels }: { mode: 'login' | 'register';
   const input = 'mt-1 block min-h-12 w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4';
   return (
     <form onSubmit={submit} className="max-w-md space-y-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-lg" noValidate>
+      {mode === 'register' && business ? (
+        <label className="block">
+          {labels.businessName}
+          <input name="businessName" required minLength={2} maxLength={120} autoComplete="organization" className={input} />
+        </label>
+      ) : null}
       {mode === 'register' ? (
         <label className="block">
           {labels.displayName}

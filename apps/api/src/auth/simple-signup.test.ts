@@ -52,3 +52,25 @@ describe('simple sign-up (local testing only)', () => {
     } finally { process.env.NODE_ENV = prev; }
   });
 });
+
+describe('business sign-up', () => {
+  it('creates the account as owner of a DRAFT business; after verifying, the owner sees it; an existing email gets nothing new', async () => {
+    process.env.SIMPLE_SIGNUP = '0';
+    const e = email();
+    await h.http().post(`${A}/register`).send({ email: e, password: PW, businessName: 'Qadisha Trails' }).expect(202);
+    const u = await h.db.user.findUniqueOrThrow({ where: { email: e } });
+    const m = await h.db.membership.findMany({ where: { userId: u.id }, include: { company: true } });
+    expect(m).toHaveLength(1);
+    expect(m[0]).toMatchObject({ role: 'OWNER', company: { name: 'Qadisha Trails', status: 'DRAFT' } });
+    expect(m[0]!.company.slug).toMatch(/^qadisha-trails-[a-z0-9]{1,6}$/);
+    await h.http().post(`${A}/verify-email`).send({ token: h.lastToken(e, 'verify-email') }).expect(200);
+    const login = await h.http().post(`${A}/login`).send({ email: e, password: PW }).expect(200);
+    const cookie = (login.headers['set-cookie'] as unknown as string[])[0]!.split(';')[0]!;
+    const mine = await h.http().get('/api/v1/companies').set('Cookie', cookie).expect(200);
+    expect(mine.body.companies).toMatchObject([{ name: 'Qadisha Trails', role: 'OWNER', status: 'DRAFT' }]);
+    // Same email again: same neutral answer, and no second business appears.
+    await h.http().post(`${A}/register`).send({ email: e, password: PW, businessName: 'Another One' }).expect(202);
+    expect(await h.db.membership.count({ where: { userId: u.id } })).toBe(1);
+    await h.http().post(`${A}/register`).send({ email: email(), password: PW, businessName: 'x' }).expect(400);
+  });
+});

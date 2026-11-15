@@ -30,7 +30,7 @@ const email = z.string().trim().toLowerCase().max(254).pipe(z.email());
 // NIST-style: length over composition rules.
 const password = z.string().min(10).max(128);
 
-const RegisterDto = z.object({ email, password, displayName: z.string().trim().min(1).max(80).optional() });
+const RegisterDto = z.object({ email, password, displayName: z.string().trim().min(1).max(80).optional(), businessName: z.string().trim().min(2).max(120).optional() });
 const code = z.string().trim().min(6).max(32);
 const LoginDto = z.object({ email, password: z.string().min(1).max(128), code: code.optional() });
 const CodeDto = z.object({ code });
@@ -96,12 +96,12 @@ export class AuthController {
   async register(@Body() body: unknown, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
     const dto = parse(RegisterDto, body);
     if (AuthService.simpleSignup()) {
-      const { token, user } = await this.auth.registerSimple(dto.email, dto.password, dto.displayName, requestCtx(req));
+      const { token, user } = await this.auth.registerSimple(dto.email, dto.password, dto.displayName, requestCtx(req), dto.businessName);
       setSessionCookie(res, token);
       res.status(201);
       return { signedIn: true, user: publicUser(user) };
     }
-    await this.auth.register(dto.email, dto.password, dto.displayName, requestCtx(req));
+    await this.auth.register(dto.email, dto.password, dto.displayName, requestCtx(req), dto.businessName);
     // Identical response whether or not the address already exists.
     return { status: 'verification_email_sent_if_new' };
   }
