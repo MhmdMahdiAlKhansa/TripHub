@@ -34,7 +34,7 @@ export function ExperienceCard({ listing: l, locale, t, fx = null }: { listing: 
                 <strong>{t('card.free')}</strong>
               ) : (
                 <>
-                  {t('card.from')} <strong>{formatMoney(price.amountMinor, price.currency, locale)}</strong> <span className="text-[var(--muted)]">/ {t('card.perPerson')}</span>
+                  {t('card.from')} <strong>{formatMoney(price.amountMinor, price.currency, locale)}</strong> <span className="text-[var(--muted)]">/ {l.priceUnit === 'night' ? t('card.perNight') : t('card.perPerson')}</span>
                   {fx && price.currency === 'USD' ? <span className="block text-xs text-[var(--muted)]">{lbpEstimate(price.amountMinor, fx, locale)} ({t('fx.estimate')})</span> : null}
                 </>
               )

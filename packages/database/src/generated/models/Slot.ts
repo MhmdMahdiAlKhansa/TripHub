@@ -44,6 +44,8 @@ export type SlotMinAggregateOutputType = {
   capacity: number | null
   reserved: number | null
   status: $Enums.SlotStatus | null
+  kind: $Enums.SlotKind | null
+  note: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -56,6 +58,8 @@ export type SlotMaxAggregateOutputType = {
   capacity: number | null
   reserved: number | null
   status: $Enums.SlotStatus | null
+  kind: $Enums.SlotKind | null
+  note: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -68,6 +72,8 @@ export type SlotCountAggregateOutputType = {
   capacity: number
   reserved: number
   status: number
+  kind: number
+  note: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -92,6 +98,8 @@ export type SlotMinAggregateInputType = {
   capacity?: true
   reserved?: true
   status?: true
+  kind?: true
+  note?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -104,6 +112,8 @@ export type SlotMaxAggregateInputType = {
   capacity?: true
   reserved?: true
   status?: true
+  kind?: true
+  note?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -116,6 +126,8 @@ export type SlotCountAggregateInputType = {
   capacity?: true
   reserved?: true
   status?: true
+  kind?: true
+  note?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -215,6 +227,8 @@ export type SlotGroupByOutputType = {
   capacity: number
   reserved: number
   status: $Enums.SlotStatus
+  kind: $Enums.SlotKind
+  note: string | null
   createdAt: Date
   updatedAt: Date
   _count: SlotCountAggregateOutputType | null
@@ -250,6 +264,8 @@ export type SlotWhereInput = {
   capacity?: Prisma.IntFilter<"Slot"> | number
   reserved?: Prisma.IntFilter<"Slot"> | number
   status?: Prisma.EnumSlotStatusFilter<"Slot"> | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFilter<"Slot"> | $Enums.SlotKind
+  note?: Prisma.StringNullableFilter<"Slot"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Slot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Slot"> | Date | string
   listing?: Prisma.XOR<Prisma.ListingScalarRelationFilter, Prisma.ListingWhereInput>
@@ -266,6 +282,8 @@ export type SlotOrderByWithRelationInput = {
   capacity?: Prisma.SortOrder
   reserved?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  note?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   listing?: Prisma.ListingOrderByWithRelationInput
@@ -276,7 +294,6 @@ export type SlotOrderByWithRelationInput = {
 
 export type SlotWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  listingId_startsAt?: Prisma.SlotListingIdStartsAtCompoundUniqueInput
   AND?: Prisma.SlotWhereInput | Prisma.SlotWhereInput[]
   OR?: Prisma.SlotWhereInput[]
   NOT?: Prisma.SlotWhereInput | Prisma.SlotWhereInput[]
@@ -286,13 +303,15 @@ export type SlotWhereUniqueInput = Prisma.AtLeast<{
   capacity?: Prisma.IntFilter<"Slot"> | number
   reserved?: Prisma.IntFilter<"Slot"> | number
   status?: Prisma.EnumSlotStatusFilter<"Slot"> | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFilter<"Slot"> | $Enums.SlotKind
+  note?: Prisma.StringNullableFilter<"Slot"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Slot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Slot"> | Date | string
   listing?: Prisma.XOR<Prisma.ListingScalarRelationFilter, Prisma.ListingWhereInput>
   bookings?: Prisma.BookingListRelationFilter
   holds?: Prisma.HoldListRelationFilter
   waitlist?: Prisma.WaitlistEntryListRelationFilter
-}, "id" | "listingId_startsAt">
+}, "id">
 
 export type SlotOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -302,6 +321,8 @@ export type SlotOrderByWithAggregationInput = {
   capacity?: Prisma.SortOrder
   reserved?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  note?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.SlotCountOrderByAggregateInput
@@ -322,6 +343,8 @@ export type SlotScalarWhereWithAggregatesInput = {
   capacity?: Prisma.IntWithAggregatesFilter<"Slot"> | number
   reserved?: Prisma.IntWithAggregatesFilter<"Slot"> | number
   status?: Prisma.EnumSlotStatusWithAggregatesFilter<"Slot"> | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindWithAggregatesFilter<"Slot"> | $Enums.SlotKind
+  note?: Prisma.StringNullableWithAggregatesFilter<"Slot"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Slot"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Slot"> | Date | string
 }
@@ -333,6 +356,8 @@ export type SlotCreateInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   listing: Prisma.ListingCreateNestedOneWithoutSlotsInput
@@ -349,6 +374,8 @@ export type SlotUncheckedCreateInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutSlotInput
@@ -363,6 +390,8 @@ export type SlotUpdateInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listing?: Prisma.ListingUpdateOneRequiredWithoutSlotsNestedInput
@@ -379,6 +408,8 @@ export type SlotUncheckedUpdateInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutSlotNestedInput
@@ -394,6 +425,8 @@ export type SlotCreateManyInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -405,6 +438,8 @@ export type SlotUpdateManyMutationInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -417,6 +452,8 @@ export type SlotUncheckedUpdateManyInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -431,11 +468,6 @@ export type SlotOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
 }
 
-export type SlotListingIdStartsAtCompoundUniqueInput = {
-  listingId: string
-  startsAt: Date | string
-}
-
 export type SlotCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   listingId?: Prisma.SortOrder
@@ -444,6 +476,8 @@ export type SlotCountOrderByAggregateInput = {
   capacity?: Prisma.SortOrder
   reserved?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  note?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -461,6 +495,8 @@ export type SlotMaxOrderByAggregateInput = {
   capacity?: Prisma.SortOrder
   reserved?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  note?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -473,6 +509,8 @@ export type SlotMinOrderByAggregateInput = {
   capacity?: Prisma.SortOrder
   reserved?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
+  note?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -533,6 +571,10 @@ export type EnumSlotStatusFieldUpdateOperationsInput = {
   set?: $Enums.SlotStatus
 }
 
+export type EnumSlotKindFieldUpdateOperationsInput = {
+  set?: $Enums.SlotKind
+}
+
 export type SlotCreateNestedOneWithoutBookingsInput = {
   create?: Prisma.XOR<Prisma.SlotCreateWithoutBookingsInput, Prisma.SlotUncheckedCreateWithoutBookingsInput>
   connectOrCreate?: Prisma.SlotCreateOrConnectWithoutBookingsInput
@@ -582,6 +624,8 @@ export type SlotCreateWithoutListingInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   bookings?: Prisma.BookingCreateNestedManyWithoutSlotInput
@@ -596,6 +640,8 @@ export type SlotUncheckedCreateWithoutListingInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutSlotInput
@@ -640,6 +686,8 @@ export type SlotScalarWhereInput = {
   capacity?: Prisma.IntFilter<"Slot"> | number
   reserved?: Prisma.IntFilter<"Slot"> | number
   status?: Prisma.EnumSlotStatusFilter<"Slot"> | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFilter<"Slot"> | $Enums.SlotKind
+  note?: Prisma.StringNullableFilter<"Slot"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Slot"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Slot"> | Date | string
 }
@@ -651,6 +699,8 @@ export type SlotCreateWithoutBookingsInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   listing: Prisma.ListingCreateNestedOneWithoutSlotsInput
@@ -666,6 +716,8 @@ export type SlotUncheckedCreateWithoutBookingsInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   holds?: Prisma.HoldUncheckedCreateNestedManyWithoutSlotInput
@@ -695,6 +747,8 @@ export type SlotUpdateWithoutBookingsInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listing?: Prisma.ListingUpdateOneRequiredWithoutSlotsNestedInput
@@ -710,6 +764,8 @@ export type SlotUncheckedUpdateWithoutBookingsInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   holds?: Prisma.HoldUncheckedUpdateManyWithoutSlotNestedInput
@@ -723,6 +779,8 @@ export type SlotCreateWithoutHoldsInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   listing: Prisma.ListingCreateNestedOneWithoutSlotsInput
@@ -738,6 +796,8 @@ export type SlotUncheckedCreateWithoutHoldsInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutSlotInput
@@ -767,6 +827,8 @@ export type SlotUpdateWithoutHoldsInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listing?: Prisma.ListingUpdateOneRequiredWithoutSlotsNestedInput
@@ -782,6 +844,8 @@ export type SlotUncheckedUpdateWithoutHoldsInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutSlotNestedInput
@@ -795,6 +859,8 @@ export type SlotCreateWithoutWaitlistInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   listing: Prisma.ListingCreateNestedOneWithoutSlotsInput
@@ -810,6 +876,8 @@ export type SlotUncheckedCreateWithoutWaitlistInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutSlotInput
@@ -839,6 +907,8 @@ export type SlotUpdateWithoutWaitlistInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   listing?: Prisma.ListingUpdateOneRequiredWithoutSlotsNestedInput
@@ -854,6 +924,8 @@ export type SlotUncheckedUpdateWithoutWaitlistInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutSlotNestedInput
@@ -867,6 +939,8 @@ export type SlotCreateManyListingInput = {
   capacity: number
   reserved?: number
   status?: $Enums.SlotStatus
+  kind?: $Enums.SlotKind
+  note?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -878,6 +952,8 @@ export type SlotUpdateWithoutListingInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bookings?: Prisma.BookingUpdateManyWithoutSlotNestedInput
@@ -892,6 +968,8 @@ export type SlotUncheckedUpdateWithoutListingInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutSlotNestedInput
@@ -906,6 +984,8 @@ export type SlotUncheckedUpdateManyWithoutListingInput = {
   capacity?: Prisma.IntFieldUpdateOperationsInput | number
   reserved?: Prisma.IntFieldUpdateOperationsInput | number
   status?: Prisma.EnumSlotStatusFieldUpdateOperationsInput | $Enums.SlotStatus
+  kind?: Prisma.EnumSlotKindFieldUpdateOperationsInput | $Enums.SlotKind
+  note?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -967,6 +1047,8 @@ export type SlotSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   capacity?: boolean
   reserved?: boolean
   status?: boolean
+  kind?: boolean
+  note?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
@@ -984,6 +1066,8 @@ export type SlotSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   capacity?: boolean
   reserved?: boolean
   status?: boolean
+  kind?: boolean
+  note?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
@@ -997,6 +1081,8 @@ export type SlotSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   capacity?: boolean
   reserved?: boolean
   status?: boolean
+  kind?: boolean
+  note?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
@@ -1010,11 +1096,13 @@ export type SlotSelectScalar = {
   capacity?: boolean
   reserved?: boolean
   status?: boolean
+  kind?: boolean
+  note?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type SlotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "listingId" | "startsAt" | "endsAt" | "capacity" | "reserved" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["slot"]>
+export type SlotOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "listingId" | "startsAt" | "endsAt" | "capacity" | "reserved" | "status" | "kind" | "note" | "createdAt" | "updatedAt", ExtArgs["result"]["slot"]>
 export type SlotInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   listing?: boolean | Prisma.ListingDefaultArgs<ExtArgs>
   bookings?: boolean | Prisma.Slot$bookingsArgs<ExtArgs>
@@ -1045,6 +1133,11 @@ export type $SlotPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     capacity: number
     reserved: number
     status: $Enums.SlotStatus
+    kind: $Enums.SlotKind
+    /**
+     * BLOCK slots: the host's private note (e.g. "family visit").
+     */
+    note: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["slot"]>
@@ -1481,6 +1574,8 @@ export interface SlotFieldRefs {
   readonly capacity: Prisma.FieldRef<"Slot", 'Int'>
   readonly reserved: Prisma.FieldRef<"Slot", 'Int'>
   readonly status: Prisma.FieldRef<"Slot", 'SlotStatus'>
+  readonly kind: Prisma.FieldRef<"Slot", 'SlotKind'>
+  readonly note: Prisma.FieldRef<"Slot", 'String'>
   readonly createdAt: Prisma.FieldRef<"Slot", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Slot", 'DateTime'>
 }

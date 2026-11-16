@@ -16,6 +16,7 @@ erDiagram
   SLOT ||--o{ BOOKING : "seats"
   SLOT ||--o{ HOLD : "temporary seats"
   SLOT ||--o{ WAITLIST_ENTRY : "FIFO queue"
+  COMPANY ||--o{ LISTING : "HOST kind: stays only"
   USER ||--o{ BOOKING : "customer"
   BOOKING ||--o| HOLD : "while awaiting deposit"
   BOOKING ||--o{ DEPOSIT : "Whish / OMT / cash"
@@ -36,6 +37,7 @@ erDiagram
     uuid id PK
     text slug UK
     enum status "DRAFT PENDING_REVIEW CHANGES_REQUESTED APPROVED REJECTED SUSPENDED"
+    enum kind "OPERATOR HOST"
     text city
     int commissionBps
   }
@@ -49,7 +51,7 @@ erDiagram
     uuid id PK
     uuid companyId FK
     enum category
-    enum bookingMode "DISCOVERY_ONLY FIXED_DATE TIME_SLOT REQUEST_TO_BOOK"
+    enum bookingMode "DISCOVERY_ONLY FIXED_DATE TIME_SLOT REQUEST_TO_BOOK NIGHTLY"
     enum status "DRAFT PUBLISHED PAUSED ARCHIVED"
     text meetingPoint
     text[] pickupPoints
@@ -64,6 +66,8 @@ erDiagram
     timestamptz startsAt
     int capacity
     int reserved "never above capacity (CHECK + row lock)"
+    enum kind "TRIP STAY BLOCK"
+    timestamptz endsAt "STAY/BLOCK: check-out; ranges never overlap (EXCLUDE gist)"
     enum status "OPEN CLOSED"
   }
   BOOKING {
@@ -113,6 +117,6 @@ erDiagram
   }
 ```
 
-Integrity rules enforced in the database, not only in code: `slot.reserved <= capacity`; append-only `audit_event`,
+Integrity rules enforced in the database, not only in code: `slot.reserved <= capacity`; no two live stays or blocks overlap on a property (exclusion constraint); append-only `audit_event`,
 `deposit`, `ledger_*`, `plan_price`, `invoice`; immutable `booking.snapshot`; at least one active OWNER per company;
 unique `(method, reference)` on platform payments; single-use tokens.

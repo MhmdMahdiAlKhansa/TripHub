@@ -162,6 +162,7 @@ export const CompanyScalarFieldEnum = {
   slug: 'slug',
   name: 'name',
   status: 'status',
+  kind: 'kind',
   description: 'description',
   contactEmail: 'contactEmail',
   phone: 'phone',
@@ -244,6 +245,8 @@ export const SlotScalarFieldEnum = {
   capacity: 'capacity',
   reserved: 'reserved',
   status: 'status',
+  kind: 'kind',
+  note: 'note',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

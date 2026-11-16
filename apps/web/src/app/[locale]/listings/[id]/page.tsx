@@ -7,6 +7,7 @@ import { Gallery } from '../../../../components/Gallery';
 import { ListingsMap } from '../../../../components/ListingsMap';
 import { mapConfig } from '../../../../lib/map';
 import { BookingWidget } from '../../../../components/BookingWidget';
+import { StayWidget } from '../../../../components/StayWidget';
 import { Parallax } from '../../../../components/Parallax';
 import { Reveal } from '../../../../components/Reveal';
 import { isLocale } from '../../../../i18n/locale';
@@ -42,12 +43,15 @@ export default async function ListingPage({ params }: { params: Promise<{ locale
   }
   const l = listingRes.data.listing;
 
-  const [avail, reviews, nearby, fx] = await Promise.all([
-    l.bookable ? apiGet<{ rates: Rate[]; slots: Slot[] }>(`/public/listings/${id}/availability`) : Promise.resolve(null),
+  const isStay = l.bookingMode === 'NIGHTLY';
+  const [avail, reviews, nearby, fx, staysNear] = await Promise.all([
+    l.bookable && !isStay ? apiGet<{ rates: Rate[]; slots: Slot[] }>(`/public/listings/${id}/availability`) : Promise.resolve(null),
     apiGet<ReviewSummary>(`/public/listings/${id}/reviews`),
     apiGet<{ listings: PublicListing[] }>(`/public/listings/${id}/nearby?locale=${locale}`),
     getFx(),
+    isStay ? Promise.resolve(null) : apiGet<{ listings: PublicListing[] }>(`/public/listings/${id}/stays-nearby?locale=${locale}`),
   ]);
+  const attrs = (l.attributes ?? {}) as { propertyType?: string; maxGuests?: number; bedrooms?: number; beds?: number; bathrooms?: number; amenities?: string[]; checkInTime?: string; checkOutTime?: string; minNights?: number; houseRules?: string };
   const dateFmt = new Intl.DateTimeFormat(locale === 'ar' ? 'ar-LB' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Beirut' });
   const cheapest = avail?.ok ? [...avail.data.rates].sort((a, b) => Number(a.amountMinor) - Number(b.amountMinor))[0] : undefined;
   const rated = reviews.ok && reviews.data.summary.count > 0 ? reviews.data.summary : null;
@@ -117,10 +121,33 @@ export default async function ListingPage({ params }: { params: Promise<{ locale
             </Reveal>
           ) : null}
 
+          {isStay ? (
+            <Reveal as="section" className="space-y-3">
+              <h2 className="text-2xl font-semibold">{t('stay.about')}</h2>
+              <ul className="flex flex-wrap gap-2 text-sm">
+                {attrs.propertyType ? <li className="rounded-full bg-[var(--surface-2)] px-3 py-1">{t(`stay.type.${attrs.propertyType}` as MessageKey)}</li> : null}
+                {attrs.maxGuests ? <li className="rounded-full bg-[var(--surface-2)] px-3 py-1">{t('stay.sleeps').replace('{n}', String(attrs.maxGuests))}</li> : null}
+                {attrs.bedrooms !== undefined ? <li className="rounded-full bg-[var(--surface-2)] px-3 py-1">{t('stay.bedrooms').replace('{n}', String(attrs.bedrooms))}</li> : null}
+                {attrs.beds ? <li className="rounded-full bg-[var(--surface-2)] px-3 py-1">{t('stay.beds').replace('{n}', String(attrs.beds))}</li> : null}
+                {attrs.bathrooms !== undefined ? <li className="rounded-full bg-[var(--surface-2)] px-3 py-1">{t('stay.bathrooms').replace('{n}', String(attrs.bathrooms))}</li> : null}
+              </ul>
+              {attrs.amenities?.length ? (
+                <div>
+                  <h3 className="font-semibold">{t('stay.amenities')}</h3>
+                  <ul className="mt-1 grid grid-cols-2 gap-1 text-sm sm:grid-cols-3">
+                    {attrs.amenities.map((a) => <li key={a}>✓ {t(`amenity.${a}` as MessageKey)}</li>)}
+                  </ul>
+                </div>
+              ) : null}
+              <p className="text-sm">{t('stay.timesLong').replace('{in}', attrs.checkInTime ?? '14:00').replace('{out}', attrs.checkOutTime ?? '11:00')}</p>
+              {attrs.houseRules ? <div><h3 className="font-semibold">{t('stay.houseRules')}</h3><p className="whitespace-pre-line text-sm">{attrs.houseRules}</p></div> : null}
+            </Reveal>
+          ) : null}
+
           {l.meetingPoint ? (
             <Reveal>
               <p>
-                <span className="font-semibold">{t('listing.meetingPoint')}: </span>
+                <span className="font-semibold">{isStay ? t('stay.where') : t('listing.meetingPoint')}: </span>
                 {l.meetingPoint}
               </p>
             </Reveal>
@@ -171,6 +198,11 @@ export default async function ListingPage({ params }: { params: Promise<{ locale
         {/* ---------------------------------------------------------------- booking card */}
         <aside aria-label={t('listing.bookingCard')} className="lg:sticky lg:top-24 lg:self-start">
           <div className="space-y-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-5 shadow-lg">
+            {isStay && l.fromPrice ? (
+              <p className="text-2xl font-bold">
+                {formatMoney(l.fromPrice.amountMinor, l.fromPrice.currency, locale)} <span className="text-sm font-medium text-[var(--muted)]">/ {t('card.perNight')}</span>
+              </p>
+            ) : null}
             {cheapest ? (
               <p className="text-2xl font-bold">
                 {cheapest.amountMinor === '0' ? (
@@ -184,7 +216,21 @@ export default async function ListingPage({ params }: { params: Promise<{ locale
                 )}
               </p>
             ) : null}
-            {!l.bookable ? (
+            {isStay ? (
+              <StayWidget
+                locale={locale}
+                listingId={id}
+                labels={{
+                  title: t('stay.book'), checkIn: t('stay.checkIn'), checkOut: t('stay.checkOut'), guests: t('stay.guests'), nights: t('stay.nights'), night: t('card.perNight'),
+                  weekendNights: t('stay.weekendNights'), cleaning: t('stay.cleaning'), total: t('book.total'), cta: t('stay.cta'), working: t('book.working'),
+                  needSignIn: t('book.needSignIn'), signIn: t('auth.loginCta'), taken: t('stay.taken'), noneTaken: t('stay.noneTaken'), unavailable: t('stay.unavailable'),
+                  available: t('stay.available'), minNights: t('stay.minNights'), maxGuests: t('stay.maxGuests'), times: t('stay.times'), reference: t('book.reference'),
+                  viewBookings: t('book.viewBookings'), depositHeld: t('stay.depositHeld'), confirmed: t('stay.confirmed'),
+                  emergencyName: t('book.emergencyName'), emergencyPhone: t('book.emergencyPhone'), contactPhone: t('stay.contactPhone'),
+                  errors: Object.fromEntries(['dates_unavailable', 'below_min_nights', 'too_many_guests', 'too_many_nights', 'check_in_in_past', 'check_out_before_check_in', 'too_far_ahead', 'invalid_guests', 'business_not_accepting_bookings', 'generic'].map((c) => [c, t(`stay.err.${c}` as MessageKey)])),
+                }}
+              />
+            ) : !l.bookable ? (
               <p className="text-[var(--muted)]">{t('listing.discoveryOnly')}</p>
             ) : !avail?.ok ? (
               <p className="text-[var(--muted)]">{t('listing.loadFailed')}</p>
@@ -219,6 +265,21 @@ export default async function ListingPage({ params }: { params: Promise<{ locale
           </div>
         </aside>
       </div>
+      {staysNear?.ok && staysNear.data.listings.length > 0 ? (
+        <section aria-labelledby="stays-near" className="space-y-4">
+          <Reveal>
+            <h2 id="stays-near" className="text-2xl font-semibold">{t('stay.nearTitle')}</h2>
+            <p className="text-[var(--muted)]">{t('stay.nearLead')}</p>
+          </Reveal>
+          <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {staysNear.data.listings.map((n) => (
+              <li key={n.id}>
+                <ExperienceCard listing={n} locale={locale} t={t} fx={fx} />
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
       {nearby.ok && nearby.data.listings.length > 0 ? (
         <section aria-labelledby="nearby" className="space-y-4">
           <Reveal>

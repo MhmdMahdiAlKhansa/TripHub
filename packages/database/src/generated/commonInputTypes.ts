@@ -257,6 +257,13 @@ export type EnumCompanyStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumCompanyStatusFilter<$PrismaModel> | $Enums.CompanyStatus
 }
 
+export type EnumCompanyKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.CompanyKind | Prisma.EnumCompanyKindFieldRefInput<$PrismaModel>
+  in?: $Enums.CompanyKind[] | Prisma.ListEnumCompanyKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CompanyKind[] | Prisma.ListEnumCompanyKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCompanyKindFilter<$PrismaModel> | $Enums.CompanyKind
+}
+
 export type DecimalNullableFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
@@ -300,6 +307,16 @@ export type EnumCompanyStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumCompanyStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumCompanyStatusFilter<$PrismaModel>
+}
+
+export type EnumCompanyKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CompanyKind | Prisma.EnumCompanyKindFieldRefInput<$PrismaModel>
+  in?: $Enums.CompanyKind[] | Prisma.ListEnumCompanyKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CompanyKind[] | Prisma.ListEnumCompanyKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCompanyKindWithAggregatesFilter<$PrismaModel> | $Enums.CompanyKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCompanyKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCompanyKindFilter<$PrismaModel>
 }
 
 export type DecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -464,6 +481,13 @@ export type EnumSlotStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumSlotStatusFilter<$PrismaModel> | $Enums.SlotStatus
 }
 
+export type EnumSlotKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.SlotKind | Prisma.EnumSlotKindFieldRefInput<$PrismaModel>
+  in?: $Enums.SlotKind[] | Prisma.ListEnumSlotKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SlotKind[] | Prisma.ListEnumSlotKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSlotKindFilter<$PrismaModel> | $Enums.SlotKind
+}
+
 export type EnumSlotStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.SlotStatus | Prisma.EnumSlotStatusFieldRefInput<$PrismaModel>
   in?: $Enums.SlotStatus[] | Prisma.ListEnumSlotStatusFieldRefInput<$PrismaModel>
@@ -472,6 +496,16 @@ export type EnumSlotStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSlotStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSlotStatusFilter<$PrismaModel>
+}
+
+export type EnumSlotKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SlotKind | Prisma.EnumSlotKindFieldRefInput<$PrismaModel>
+  in?: $Enums.SlotKind[] | Prisma.ListEnumSlotKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SlotKind[] | Prisma.ListEnumSlotKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSlotKindWithAggregatesFilter<$PrismaModel> | $Enums.SlotKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSlotKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSlotKindFilter<$PrismaModel>
 }
 
 export type EnumBookingStatusFilter<$PrismaModel = never> = {
@@ -1203,6 +1237,13 @@ export type NestedEnumCompanyStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumCompanyStatusFilter<$PrismaModel> | $Enums.CompanyStatus
 }
 
+export type NestedEnumCompanyKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.CompanyKind | Prisma.EnumCompanyKindFieldRefInput<$PrismaModel>
+  in?: $Enums.CompanyKind[] | Prisma.ListEnumCompanyKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CompanyKind[] | Prisma.ListEnumCompanyKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCompanyKindFilter<$PrismaModel> | $Enums.CompanyKind
+}
+
 export type NestedDecimalNullableFilter<$PrismaModel = never> = {
   equals?: runtime.Decimal | runtime.DecimalJsLike | number | string | Prisma.DecimalFieldRefInput<$PrismaModel> | null
   in?: runtime.Decimal[] | runtime.DecimalJsLike[] | number[] | string[] | Prisma.ListDecimalFieldRefInput<$PrismaModel> | null
@@ -1222,6 +1263,16 @@ export type NestedEnumCompanyStatusWithAggregatesFilter<$PrismaModel = never> = 
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumCompanyStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumCompanyStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumCompanyKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.CompanyKind | Prisma.EnumCompanyKindFieldRefInput<$PrismaModel>
+  in?: $Enums.CompanyKind[] | Prisma.ListEnumCompanyKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.CompanyKind[] | Prisma.ListEnumCompanyKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumCompanyKindWithAggregatesFilter<$PrismaModel> | $Enums.CompanyKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumCompanyKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumCompanyKindFilter<$PrismaModel>
 }
 
 export type NestedDecimalNullableWithAggregatesFilter<$PrismaModel = never> = {
@@ -1383,6 +1434,13 @@ export type NestedEnumSlotStatusFilter<$PrismaModel = never> = {
   not?: Prisma.NestedEnumSlotStatusFilter<$PrismaModel> | $Enums.SlotStatus
 }
 
+export type NestedEnumSlotKindFilter<$PrismaModel = never> = {
+  equals?: $Enums.SlotKind | Prisma.EnumSlotKindFieldRefInput<$PrismaModel>
+  in?: $Enums.SlotKind[] | Prisma.ListEnumSlotKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SlotKind[] | Prisma.ListEnumSlotKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSlotKindFilter<$PrismaModel> | $Enums.SlotKind
+}
+
 export type NestedEnumSlotStatusWithAggregatesFilter<$PrismaModel = never> = {
   equals?: $Enums.SlotStatus | Prisma.EnumSlotStatusFieldRefInput<$PrismaModel>
   in?: $Enums.SlotStatus[] | Prisma.ListEnumSlotStatusFieldRefInput<$PrismaModel>
@@ -1391,6 +1449,16 @@ export type NestedEnumSlotStatusWithAggregatesFilter<$PrismaModel = never> = {
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumSlotStatusFilter<$PrismaModel>
   _max?: Prisma.NestedEnumSlotStatusFilter<$PrismaModel>
+}
+
+export type NestedEnumSlotKindWithAggregatesFilter<$PrismaModel = never> = {
+  equals?: $Enums.SlotKind | Prisma.EnumSlotKindFieldRefInput<$PrismaModel>
+  in?: $Enums.SlotKind[] | Prisma.ListEnumSlotKindFieldRefInput<$PrismaModel>
+  notIn?: $Enums.SlotKind[] | Prisma.ListEnumSlotKindFieldRefInput<$PrismaModel>
+  not?: Prisma.NestedEnumSlotKindWithAggregatesFilter<$PrismaModel> | $Enums.SlotKind
+  _count?: Prisma.NestedIntFilter<$PrismaModel>
+  _min?: Prisma.NestedEnumSlotKindFilter<$PrismaModel>
+  _max?: Prisma.NestedEnumSlotKindFilter<$PrismaModel>
 }
 
 export type NestedEnumBookingStatusFilter<$PrismaModel = never> = {

@@ -17,6 +17,7 @@ tour operator or hiking club that sells trips on Instagram and counts seats in d
 | FR-8 | Check participants in at the door with an unforgeable ticket code, exactly once. | `tickets.service.ts` | `tickets.test.ts`, load test (60 scans) |
 | FR-9 | Two sides, several roles: customer; business owner / manager / booking staff / finance; platform support / verifier / finance / admin, each with its own desk. | `tenancy`, `admin`, web `BusinessDesk`, `AdminConsole` | `tenancy.test.ts`, `roles.spec.ts` |
 | FR-10 | One business can never read another's data. | `TenantGuard`, company-scoped queries | `tenancy.test.ts` (isolation), `business.spec.ts` |
+| FR-12 | Property hosts list chalets/guesthouses and sell nights: date-range booking, minimum nights, guest limit, nightly/weekend/cleaning prices, host blocks, never double-booked; trip pages suggest stays nearby. | `booking/stays.service.ts`, `packages/shared/src/stays.ts`, slot exclusion constraint | `stays.test.ts` (API + shared), `stays.spec.ts` |
 | FR-11 | English and Arabic (RTL) throughout. | `apps/web/src/messages`, `dir=rtl` | `i18n.test.ts`, `public.spec.ts` |
 
 Out of scope for version one (documented in `docs/PROGRESS.md` NOT DONE lists): platform-custody online payments (built, flagged off), AI features, SMS, payouts to banks.

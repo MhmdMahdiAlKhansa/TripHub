@@ -73,19 +73,19 @@ export function requestHash(input: CreateBookingInput): string {
 export const depositHoldUntil = (now: Date, startsAt: Date) => new Date(Math.min(now.getTime() + OPERATOR_DEPOSIT_HOURS * 3_600_000, startsAt.getTime()));
 
 const REF_ALPHABET = '0123456789ABCDEFGHJKMNPQRSTVWXYZ'; // Crockford base32: no I, L, O, U
-const newReference = () => {
+export const newReference = () => {
   const bytes = randomBytes(8);
   return 'TH-' + Array.from(bytes, (b) => REF_ALPHABET[b % 32]).join('');
 };
 
-const bookingInclude = {
+export const bookingInclude = {
   hold: true,
   deposits: { orderBy: { recordedAt: 'asc' } },
   listing: { select: { depositPercent: true, pickupPoints: true } },
   payments: { orderBy: { submittedAt: 'desc' } },
   slot: { select: { startsAt: true, endsAt: true } },
 } satisfies Prisma.BookingInclude;
-type BookingFull = Prisma.BookingGetPayload<{ include: typeof bookingInclude }>;
+export type BookingFull = Prisma.BookingGetPayload<{ include: typeof bookingInclude }>;
 
 @Injectable()
 export class BookingsService {
@@ -471,6 +471,8 @@ export function bookingView(b: BookingFull) {
     slot: { startsAt: b.slot.startsAt, endsAt: b.slot.endsAt },
     snapshot: b.snapshot,
     payments: b.payments.map(paymentView),
+    /** Stays only: the nights booked (null for trips). */
+    stay: ((b.snapshot as { stay?: unknown }).stay ?? null) as null | { checkIn: string; checkOut: string; nights: number; guests: number },
     pickupPoint: b.pickupPoint,
     emergencyContact: b.emergencyContactName || b.emergencyContactPhone ? { name: b.emergencyContactName, phone: b.emergencyContactPhone } : null,
     /** Deposits the operator recorded (Whish / OMT / cash), against what the listing asks for. */

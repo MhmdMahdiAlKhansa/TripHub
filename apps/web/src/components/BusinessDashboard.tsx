@@ -18,6 +18,7 @@ interface Booking {
   emergencyContactName: string | null;
   emergencyContactPhone: string | null;
   pickupPoint: string | null;
+  stay: null | { checkIn: string; checkOut: string; nights: number; guests: number };
   totalMinor: string;
   currency: string;
   deposit: { requiredMinor: string; receivedMinor: string; remainingMinor: string; depositMet: boolean; items: Array<{ id: string; method: string; amountMinor: string }> };
@@ -32,6 +33,7 @@ export interface BizLabels {
   refund: string; refundReason: string; refundSent: string; refundFail: string;
   checkIn: string; checkInCode: string; checkInCta: string; checkedIn: string; seats: string; error: string; working: string;
   statuses: Record<string, string>;
+  nights: string; guests: string;
   pickup: string; emergency: string; deposit: string; depositRequired: string; depositReceived: string; depositMethod: string; depositAmount: string; depositReference: string; depositRecord: string; depositMet: string;
 }
 
@@ -56,6 +58,7 @@ export function BusinessDashboard({ locale, companyId, labels, trialCommissionPc
   const [code, setCode] = useState('');
   const base = `/api/v1/companies/${companyId}`;
   const fmt = new Intl.DateTimeFormat(locale === 'ar' ? 'ar-LB' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Beirut' });
+  const stayDay = (d: string) => new Intl.DateTimeFormat(locale === 'ar' ? 'ar-LB' : 'en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${d}T12:00:00Z`));
 
   const money = (minor: string, currency: string) =>
     currency === 'USD' ? `$${(Number(minor) / 100).toFixed(2)}` : `${new Intl.NumberFormat(locale === 'ar' ? 'ar-LB' : 'en-US').format(Number(minor))} LBP`;
@@ -190,7 +193,7 @@ export function BusinessDashboard({ locale, companyId, labels, trialCommissionPc
                 <li key={b.id} className="space-y-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
                   <p className="font-semibold">{b.snapshot.listing?.title}</p>
                   <p className="text-sm text-[var(--muted)]">
-                    <span dir="ltr">{b.reference}</span> · {fmt.format(new Date(b.slot.startsAt))} · {b.quantity} {labels.seats}
+                    <span dir="ltr">{b.reference}</span> · {b.stay ? `${stayDay(b.stay.checkIn)} → ${stayDay(b.stay.checkOut)} · ${b.stay.nights} ${labels.nights} · ${b.stay.guests} ${labels.guests}` : `${fmt.format(new Date(b.slot.startsAt))} · ${b.quantity} ${labels.seats}`}
                   </p>
                   <p className="text-sm">
                     {b.contactName ?? ''} <span dir="ltr">{b.customerEmail}</span>

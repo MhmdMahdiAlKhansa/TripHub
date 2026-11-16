@@ -56,7 +56,7 @@ export default async function ForBusiness({ params }: { params: Promise<{ locale
             business
             locale={locale}
             labels={{
-              businessName: t('fb.businessName'),
+              businessName: t('fb.businessName'), kindLegend: t('fb.kindLegend'), kindOperator: t('fb.kindOperator'), kindHost: t('fb.kindHost'),
               email: t('auth.email'), password: t('auth.password'), passwordHint: t('auth.passwordHint'), displayName: t('auth.displayName'),
               cta: t('fb.cta'), working: t('auth.working'), errorGeneric: t('auth.errorGeneric'), errorTaken: t('auth.errorTaken'), errorInvalid: t('auth.errorInvalid'),
               errorTooMany: t('auth.errorTooMany'), errorValidation: t('auth.errorValidation'),

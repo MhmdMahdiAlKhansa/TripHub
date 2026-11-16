@@ -16,5 +16,9 @@ Photographs of real places on the home page, region cards and sample listings ar
 - **anjar-1**: Umayyad city of Anjar, March 2017 01.jpg by Bdx (CC BY-SA 4.0). https://commons.wikimedia.org/wiki/File:Umayyad_city_of_Anjar,_March_2017_01.jpg
 - **beirut-pigeon-rocks**: Pigeon Rocks of Beirut, Rock of Raouche, Beirut, Lebanon.jpg by Vyacheslav Argenberg (CC BY 4.0). https://commons.wikimedia.org/wiki/File:Pigeon_Rocks_of_Beirut,_Rock_of_Raouche,_Beirut,_Lebanon.jpg
 - **batroun-harbour**: Batroun Harbour.jpg by Heinz Hövel (CC BY-SA 3.0). https://commons.wikimedia.org/wiki/File:Batroun_Harbour.jpg
+- **stay-hasroun-village**: Hasroun village du Liban.JPG by Canaïma (CC BY-SA 4.0). https://commons.wikimedia.org/wiki/File:Hasroun_village_du_Liban.JPG
+- **stay-old-house**: Old Lebanese house (4043180072).jpg by Serge Melki from Indianapolis, USA (CC BY 2.0). https://commons.wikimedia.org/wiki/File:Old_Lebanese_house_(4043180072).jpg
+- **stay-douma-centre**: Douma, centre du village.JPG by Canaïma (CC BY-SA 4.0). https://commons.wikimedia.org/wiki/File:Douma,_centre_du_village.JPG
+- **stay-jezzine**: Jezzine 2.JPG by Freedom's Falcon (CC BY-SA 3.0). https://commons.wikimedia.org/wiki/File:Jezzine_2.JPG
 
 The hero background photo was supplied by the project owner; its source and licence have not been confirmed.

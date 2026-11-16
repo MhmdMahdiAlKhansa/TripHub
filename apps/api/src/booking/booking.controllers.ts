@@ -20,15 +20,16 @@ import {
 import { ApiTags } from '@nestjs/swagger';
 import { BOOKING_STATUSES, normalizePromoCode } from '@triphub/shared';
 import { PromoService } from '../marketing/promo.service';
-import type { Response } from 'express';
+import type { Request, Response } from 'express';
 import { z } from 'zod';
 import { CurrentUser, SessionGuard } from '../auth/auth.guards';
 import { RateLimit } from '../ratelimit/ratelimit';
 import { PermissionGuard, RequirePermission, TenantGuard, UUID_RE, type TenantRequest } from '../tenancy/tenancy.guards';
 import type { User } from '@triphub/database';
 import { AvailabilityService } from './availability.service';
-import { CancelDto, CreateBookingDto, IdempotencyKey, JoinWaitlistDto, DeclineDto, QuoteDto, RatesDto, RecordDepositDto, SlotDto, SlotPatchDto } from './booking.dto';
+import { CancelDto, CreateBookingDto, IdempotencyKey, JoinWaitlistDto, DeclineDto, QuoteDto, RatesDto, RecordDepositDto, SlotDto, SlotPatchDto, StayQuoteDto, CreateStayDto, StayBlockDto, StayCalendarQuery } from './booking.dto';
 import { DepositsService } from './deposits.service';
+import { StaysService } from './stays.service';
 import { WaitlistService } from './waitlist.service';
 import { BookingsService, bookingView, quoteOrThrow, toRateInputs } from './bookings.service';
 
@@ -315,5 +316,72 @@ export class CompanyBookingsController {
   async decline(@Req() req: TenantRequest, @Param('bookingId') bookingId: string, @Body() body: unknown) {
     const dto = parse(DeclineDto, body ?? {});
     return { booking: bookingView(await this.svc.decline(req.membership!.companyId, idOr404(bookingId), req.user!.id, dto.reason)) };
+  }
+}
+
+// ------------------------------------------------------------------ nightly stays
+
+@ApiTags('stays')
+@Controller({ path: 'public/listings/:id', version: '1' })
+export class PublicStaysController {
+  constructor(@Inject(StaysService) private readonly svc: StaysService) {}
+
+  /** Nights that are taken (booked or blocked) between two dates, plus the stay rules and nightly prices. */
+  @Get('stay-calendar')
+  async calendar(@Param('id') id: string, @Query() q: Record<string, string>) {
+    const dto = parse(StayCalendarQuery, q);
+    return this.svc.calendar(idOr404(id), dto.from, dto.to);
+  }
+
+  @Post('stay-quote')
+  @HttpCode(200)
+  @RateLimit({ limit: 60, windowSec: 60 })
+  async quote(@Param('id') id: string, @Body() body: unknown) {
+    return { quote: await this.svc.quote(idOr404(id), parse(StayQuoteDto, body)) };
+  }
+}
+
+@ApiTags('stays')
+@Controller({ path: 'stays', version: '1' })
+@UseGuards(SessionGuard)
+export class StaysController {
+  constructor(@Inject(StaysService) private readonly svc: StaysService) {}
+
+  @Post()
+  @RateLimit({ limit: 20, windowSec: 60 })
+  async book(@CurrentUser() user: User, @Body() body: unknown, @Req() req: Request, @Res({ passthrough: true }) res: Response) {
+    const key = parse(IdempotencyKey, req.headers['idempotency-key']);
+    const r = await this.svc.book(user.id, key, parse(CreateStayDto, body));
+    res.status(r.replay ? 200 : 201);
+    return { booking: bookingView(r.booking) };
+  }
+}
+
+@ApiTags('stays')
+@Controller({ path: 'companies/:companyId/listings/:listingId/stays', version: '1' })
+export class CompanyStaysController {
+  constructor(@Inject(StaysService) private readonly svc: StaysService) {}
+
+  @Get()
+  @UseGuards(SessionGuard, TenantGuard, PermissionGuard)
+  @RequirePermission('booking.view')
+  async calendar(@Req() req: TenantRequest, @Param('listingId') listingId: string) {
+    return { entries: await this.svc.hostCalendar(req.membership!.companyId, idOr404(listingId)) };
+  }
+
+  @Post('blocks')
+  @UseGuards(SessionGuard, TenantGuard, PermissionGuard)
+  @RequirePermission('listing.write')
+  async block(@Req() req: TenantRequest, @Param('listingId') listingId: string, @Body() body: unknown) {
+    const s = await this.svc.block(req.membership!.companyId, idOr404(listingId), req.user!.id, parse(StayBlockDto, body));
+    return { block: { id: s.id } };
+  }
+
+  @Delete('blocks/:slotId')
+  @HttpCode(204)
+  @UseGuards(SessionGuard, TenantGuard, PermissionGuard)
+  @RequirePermission('listing.write')
+  async unblock(@Req() req: TenantRequest, @Param('listingId') listingId: string, @Param('slotId') slotId: string) {
+    await this.svc.unblock(req.membership!.companyId, idOr404(listingId), idOr404(slotId), req.user!.id);
   }
 }

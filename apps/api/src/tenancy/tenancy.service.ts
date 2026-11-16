@@ -24,10 +24,10 @@ export class TenancyService {
     });
   }
 
-  async createCompany(user: User, name: string, slug: string) {
+  async createCompany(user: User, name: string, slug: string, kind: 'OPERATOR' | 'HOST' = 'OPERATOR') {
     try {
       const company = await this.db.$transaction(async (tx) => {
-        const c = await tx.company.create({ data: { name, slug } });
+        const c = await tx.company.create({ data: { name, slug, kind, ...(kind === 'HOST' ? { categories: ['stays'] } : {}) } });
         await tx.membership.create({ data: { companyId: c.id, userId: user.id, role: 'OWNER' } });
         return c;
       });

@@ -41,6 +41,8 @@ export const SEAT_HOLDING_STATUSES: readonly BookingStatus[] = ['HELD', 'CONFIRM
 
 export const RATE_KINDS = ['ADULT', 'CHILD', 'GROUP'] as const;
 export type RateKind = (typeof RATE_KINDS)[number];
+/** Every price-card kind: seat kinds plus the nightly stay kinds. */
+export const ALL_RATE_KINDS = ['ADULT', 'CHILD', 'GROUP', 'NIGHT', 'WEEKEND_NIGHT', 'CLEANING'] as const;
 
 export interface RateInput {
   kind: RateKind;

@@ -10,13 +10,14 @@ interface B {
   cancellation: { policy: string; refundIfCancelledNowMinor: string };
   holdExpiresAt: string | null;
   pickupPoint: string | null;
+  stay: null | { checkIn: string; checkOut: string; nights: number; guests: number };
   deposit: { requiredMinor: string; receivedMinor: string; remainingMinor: string; depositMet: boolean; items: Array<{ method: string; amountMinor: string }> };
 }
 export interface MyBookingsLabels {
   title: string; empty: string; cancel: string; cancelling: string; statuses: Record<string, string>;
   ticket: string; ticketCode: string; calendar: string; refundNow: string; policy: string; policies: Record<string, string>;
   payTitle: string; payNote: string; payMethod: string; payReference: string; paySubmit: string; payStates: Record<string, string>;
-  depositTitle: string; depositNote: string; depositReceived: string; pickup: string;
+  depositTitle: string; depositNote: string; depositReceived: string; pickup: string; nights: string; guests: string;
   reviewTitle: string; rating: string; comment: string; reviewSubmit: string; reviewDone: string; error: string; saved: string;
 }
 
@@ -34,6 +35,7 @@ export function MyBookings({ locale, labels }: { locale: string; labels: MyBooki
   const [msg, setMsg] = useState<string | null>(null);
   const [codes, setCodes] = useState<Record<string, string>>({});
   const fmt = new Intl.DateTimeFormat(locale === 'ar' ? 'ar-LB' : 'en-GB', { dateStyle: 'medium', timeStyle: 'short', timeZone: 'Asia/Beirut' });
+  const stayDay = (d: string) => new Intl.DateTimeFormat(locale === 'ar' ? 'ar-LB' : 'en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' }).format(new Date(`${d}T12:00:00Z`));
 
   async function load() {
     const r = await fetch('/api/v1/bookings', { credentials: 'same-origin' }).catch(() => null);
@@ -93,7 +95,7 @@ export function MyBookings({ locale, labels }: { locale: string; labels: MyBooki
               <li key={b.id} className="space-y-2 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-4">
                 <p className="font-semibold">{b.snapshot.listing?.title}</p>
                 <p className="text-sm text-[var(--muted)]">
-                  <span dir="ltr">{b.reference}</span> · {fmt.format(new Date(b.slot.startsAt))}
+                  <span dir="ltr">{b.reference}</span> · {b.stay ? `${stayDay(b.stay.checkIn)} → ${stayDay(b.stay.checkOut)} · ${b.stay.nights} ${labels.nights} · ${b.stay.guests} ${labels.guests}` : fmt.format(new Date(b.slot.startsAt))}
                 </p>
                 <p>{labels.statuses[b.status] ?? b.status}</p>
 

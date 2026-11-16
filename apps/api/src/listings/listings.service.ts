@@ -10,6 +10,7 @@ import { Prisma, type PrismaClient } from '@triphub/database';
 import {
   canTransitionListing,
   missingForPublish,
+  REGIONS,
   regionCities,
   searchTerms,
   type RegionSlug,
@@ -58,6 +59,11 @@ export class ListingsService {
   }
 
   async create(companyId: string, actorId: string, input: CreateListingInput): Promise<ListingFull> {
+    // Hosts list properties booked by the night; trip operators list everything else.
+    const company = await this.db.company.findUniqueOrThrow({ where: { id: companyId }, select: { kind: true } });
+    const isStay = input.category === 'stays';
+    if (company.kind === 'HOST' && (!isStay || input.bookingMode !== 'NIGHTLY')) throw new UnprocessableEntityException({ code: 'hosts_list_stays_only' });
+    if (company.kind === 'OPERATOR' && (isStay || input.bookingMode === 'NIGHTLY')) throw new UnprocessableEntityException({ code: 'operators_cannot_list_stays' });
     const attributes = this.checkAttributes(input.category, input.attributes);
     const listing = await this.db.listing.create({
       data: {
@@ -168,6 +174,7 @@ export class ListingsService {
         // Never advertise a price we cannot take, or a bookable listing with no price card.
         const rates = await this.db.listingRate.findMany({ where: { listingId } });
         if (rates.length === 0) throw new UnprocessableEntityException({ code: 'incomplete_listing', missing: ['rates'] });
+        if (l.bookingMode === 'NIGHTLY' && !rates.some((r) => r.kind === 'NIGHT')) throw new UnprocessableEntityException({ code: 'incomplete_listing', missing: ['rates'] });
         // Priced listings are fine without platform custody: the operator collects the deposit directly (see DepositsService).
       }
       const missing = missingForPublish({
@@ -269,6 +276,21 @@ export class ListingsService {
     return [...sameCity, ...rest];
   }
 
+  /** Stays near a trip (same city, or anywhere in the same region): "hike the valley, sleep in Bsharri". */
+  async staysNear(id: string, limit = 3) {
+    const base = await this.getPublic(id);
+    const city = (base.city ?? '').trim().toLowerCase();
+    const region = REGIONS.find((r) => (r.cities as readonly string[]).includes(city));
+    const cities = region ? [...region.cities] : city ? [city] : [];
+    if (cities.length === 0) return [];
+    return this.db.listing.findMany({
+      where: { ...this.publicWhere(), id: { not: id }, bookingMode: 'NIGHTLY', OR: cities.map((c) => ({ city: { equals: c, mode: 'insensitive' as const } })) },
+      include: { ...listingInclude, company: { select: { slug: true, name: true } } },
+      orderBy: [{ featuredAt: { sort: 'desc', nulls: 'last' } }, { publishedAt: 'desc' }],
+      take: limit,
+    });
+  }
+
   async getPublic(id: string) {
     const l = await this.db.listing.findFirst({
       where: { id, ...this.publicWhere() },
@@ -334,7 +356,9 @@ export function publicListing(l: WithCompany, locale: string) {
     images: l.images.map(imageUrl),
     featured: l.featuredAt !== null,
     // Cheapest real rate (integer minor units); null for discovery-only listings and ones without prices.
-    fromPrice: cheapest(l.rates),
+    // Stays show their nightly price; trips their cheapest per-person price.
+    fromPrice: l.bookingMode === 'NIGHTLY' ? cheapest(l.rates.filter((r) => r.kind === 'NIGHT')) : cheapest(l.rates.filter((r) => !['NIGHT', 'WEEKEND_NIGHT', 'CLEANING'].includes(r.kind))),
+    priceUnit: l.bookingMode === 'NIGHTLY' ? 'night' : 'person',
     city: l.city,
     address: l.address,
     latitude: num(l.latitude),

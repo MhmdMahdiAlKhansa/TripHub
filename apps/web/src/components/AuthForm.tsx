@@ -22,6 +22,9 @@ export interface AuthLabels {
   codeNeeded: string;
   /** Business sign-up only: label of the business-name field. */
   businessName?: string;
+  kindLegend?: string;
+  kindOperator?: string;
+  kindHost?: string;
 }
 
 export function AuthForm({ mode, locale, labels, business = false }: { mode: 'login' | 'register'; locale: string; labels: AuthLabels; business?: boolean }) {
@@ -38,6 +41,7 @@ export function AuthForm({ mode, locale, labels, business = false }: { mode: 'lo
     if (mode === 'register' && name) body.displayName = name;
     const biz = String(form.get('businessName') ?? '').trim();
     if (mode === 'register' && business && biz) body.businessName = biz;
+    if (mode === 'register' && business) body.businessKind = String(form.get('businessKind') ?? 'OPERATOR');
     const code = String(form.get('code') ?? '').trim();
     if (mode === 'login' && code) body.code = code;
     setBusy(true);
@@ -82,6 +86,13 @@ export function AuthForm({ mode, locale, labels, business = false }: { mode: 'lo
   const input = 'mt-1 block min-h-12 w-full rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4';
   return (
     <form onSubmit={submit} className="max-w-md space-y-4 rounded-3xl border border-[var(--border)] bg-[var(--surface)] p-6 shadow-lg" noValidate>
+      {mode === 'register' && business ? (
+        <fieldset className="space-y-2">
+          <legend className="font-semibold">{labels.kindLegend}</legend>
+          <label className="flex min-h-12 items-center gap-3 rounded-xl border border-[var(--border)] px-4"><input type="radio" name="businessKind" value="OPERATOR" defaultChecked />{labels.kindOperator}</label>
+          <label className="flex min-h-12 items-center gap-3 rounded-xl border border-[var(--border)] px-4"><input type="radio" name="businessKind" value="HOST" />{labels.kindHost}</label>
+        </fieldset>
+      ) : null}
       {mode === 'register' && business ? (
         <label className="block">
           {labels.businessName}

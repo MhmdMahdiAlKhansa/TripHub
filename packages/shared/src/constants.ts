@@ -21,7 +21,9 @@ export type DepositMethod = (typeof DEPOSIT_METHODS)[number];
 export const requiredDepositMinor = (totalMinor: bigint, depositPercent: number): bigint => (totalMinor * BigInt(depositPercent) + 99n) / 100n;
 export const DEFAULT_TIMEZONE = 'Asia/Beirut';
 
-export const CATEGORIES = ['hiking', 'tours', 'restaurants', 'museums', 'workshops', 'historical'] as const;
+export const CATEGORIES = ['hiking', 'tours', 'restaurants', 'museums', 'workshops', 'historical', 'stays'] as const;
+/** Categories a property host may list; trip operators may list every other category. */
+export const HOST_CATEGORIES = ['stays'] as const;
 export type Category = (typeof CATEGORIES)[number];
 export const COMPANY_LANGUAGES = ['en', 'ar', 'fr'] as const;
 export const SOCIAL_KEYS = ['instagram', 'facebook', 'x', 'youtube', 'tiktok', 'whatsapp'] as const;

@@ -45,6 +45,7 @@ export type CompanyMinAggregateOutputType = {
   slug: string | null
   name: string | null
   status: $Enums.CompanyStatus | null
+  kind: $Enums.CompanyKind | null
   description: string | null
   contactEmail: string | null
   phone: string | null
@@ -66,6 +67,7 @@ export type CompanyMaxAggregateOutputType = {
   slug: string | null
   name: string | null
   status: $Enums.CompanyStatus | null
+  kind: $Enums.CompanyKind | null
   description: string | null
   contactEmail: string | null
   phone: string | null
@@ -87,6 +89,7 @@ export type CompanyCountAggregateOutputType = {
   slug: number
   name: number
   status: number
+  kind: number
   description: number
   contactEmail: number
   phone: number
@@ -127,6 +130,7 @@ export type CompanyMinAggregateInputType = {
   slug?: true
   name?: true
   status?: true
+  kind?: true
   description?: true
   contactEmail?: true
   phone?: true
@@ -148,6 +152,7 @@ export type CompanyMaxAggregateInputType = {
   slug?: true
   name?: true
   status?: true
+  kind?: true
   description?: true
   contactEmail?: true
   phone?: true
@@ -169,6 +174,7 @@ export type CompanyCountAggregateInputType = {
   slug?: true
   name?: true
   status?: true
+  kind?: true
   description?: true
   contactEmail?: true
   phone?: true
@@ -280,6 +286,7 @@ export type CompanyGroupByOutputType = {
   slug: string
   name: string
   status: $Enums.CompanyStatus
+  kind: $Enums.CompanyKind
   description: string | null
   contactEmail: string | null
   phone: string | null
@@ -327,6 +334,7 @@ export type CompanyWhereInput = {
   slug?: Prisma.StringFilter<"Company"> | string
   name?: Prisma.StringFilter<"Company"> | string
   status?: Prisma.EnumCompanyStatusFilter<"Company"> | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFilter<"Company"> | $Enums.CompanyKind
   description?: Prisma.StringNullableFilter<"Company"> | string | null
   contactEmail?: Prisma.StringNullableFilter<"Company"> | string | null
   phone?: Prisma.StringNullableFilter<"Company"> | string | null
@@ -363,6 +371,7 @@ export type CompanyOrderByWithRelationInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   contactEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -402,6 +411,7 @@ export type CompanyWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.CompanyWhereInput | Prisma.CompanyWhereInput[]
   name?: Prisma.StringFilter<"Company"> | string
   status?: Prisma.EnumCompanyStatusFilter<"Company"> | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFilter<"Company"> | $Enums.CompanyKind
   description?: Prisma.StringNullableFilter<"Company"> | string | null
   contactEmail?: Prisma.StringNullableFilter<"Company"> | string | null
   phone?: Prisma.StringNullableFilter<"Company"> | string | null
@@ -438,6 +448,7 @@ export type CompanyOrderByWithAggregationInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   contactEmail?: Prisma.SortOrderInput | Prisma.SortOrder
   phone?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -470,6 +481,7 @@ export type CompanyScalarWhereWithAggregatesInput = {
   slug?: Prisma.StringWithAggregatesFilter<"Company"> | string
   name?: Prisma.StringWithAggregatesFilter<"Company"> | string
   status?: Prisma.EnumCompanyStatusWithAggregatesFilter<"Company"> | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindWithAggregatesFilter<"Company"> | $Enums.CompanyKind
   description?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   contactEmail?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
   phone?: Prisma.StringNullableWithAggregatesFilter<"Company"> | string | null
@@ -494,6 +506,7 @@ export type CompanyCreateInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -530,6 +543,7 @@ export type CompanyUncheckedCreateInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -566,6 +580,7 @@ export type CompanyUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -602,6 +617,7 @@ export type CompanyUncheckedUpdateInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -638,6 +654,7 @@ export type CompanyCreateManyInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -662,6 +679,7 @@ export type CompanyUpdateManyMutationInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -686,6 +704,7 @@ export type CompanyUncheckedUpdateManyInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -718,6 +737,7 @@ export type CompanyCountOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   description?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -749,6 +769,7 @@ export type CompanyMaxOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   description?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -770,6 +791,7 @@ export type CompanyMinOrderByAggregateInput = {
   slug?: Prisma.SortOrder
   name?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  kind?: Prisma.SortOrder
   description?: Prisma.SortOrder
   contactEmail?: Prisma.SortOrder
   phone?: Prisma.SortOrder
@@ -813,6 +835,10 @@ export type CompanyCreatelanguagesInput = {
 
 export type EnumCompanyStatusFieldUpdateOperationsInput = {
   set?: $Enums.CompanyStatus
+}
+
+export type EnumCompanyKindFieldUpdateOperationsInput = {
+  set?: $Enums.CompanyKind
 }
 
 export type NullableDecimalFieldUpdateOperationsInput = {
@@ -1008,6 +1034,7 @@ export type CompanyCreateWithoutReviewsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1043,6 +1070,7 @@ export type CompanyUncheckedCreateWithoutReviewsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1094,6 +1122,7 @@ export type CompanyUpdateWithoutReviewsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1129,6 +1158,7 @@ export type CompanyUncheckedUpdateWithoutReviewsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1164,6 +1194,7 @@ export type CompanyCreateWithoutListingsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1199,6 +1230,7 @@ export type CompanyUncheckedCreateWithoutListingsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1250,6 +1282,7 @@ export type CompanyUpdateWithoutListingsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1285,6 +1318,7 @@ export type CompanyUncheckedUpdateWithoutListingsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1320,6 +1354,7 @@ export type CompanyCreateWithoutBookingsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1355,6 +1390,7 @@ export type CompanyUncheckedCreateWithoutBookingsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1406,6 +1442,7 @@ export type CompanyUpdateWithoutBookingsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1441,6 +1478,7 @@ export type CompanyUncheckedUpdateWithoutBookingsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1476,6 +1514,7 @@ export type CompanyCreateWithoutLedgerAccountsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1511,6 +1550,7 @@ export type CompanyUncheckedCreateWithoutLedgerAccountsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1562,6 +1602,7 @@ export type CompanyUpdateWithoutLedgerAccountsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1597,6 +1638,7 @@ export type CompanyUncheckedUpdateWithoutLedgerAccountsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1632,6 +1674,7 @@ export type CompanyCreateWithoutMembershipsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1667,6 +1710,7 @@ export type CompanyUncheckedCreateWithoutMembershipsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1718,6 +1762,7 @@ export type CompanyUpdateWithoutMembershipsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1753,6 +1798,7 @@ export type CompanyUncheckedUpdateWithoutMembershipsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1788,6 +1834,7 @@ export type CompanyCreateWithoutInvitationsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1823,6 +1870,7 @@ export type CompanyUncheckedCreateWithoutInvitationsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1874,6 +1922,7 @@ export type CompanyUpdateWithoutInvitationsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1909,6 +1958,7 @@ export type CompanyUncheckedUpdateWithoutInvitationsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1944,6 +1994,7 @@ export type CompanyCreateWithoutSubscriptionInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -1979,6 +2030,7 @@ export type CompanyUncheckedCreateWithoutSubscriptionInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2030,6 +2082,7 @@ export type CompanyUpdateWithoutSubscriptionInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2065,6 +2118,7 @@ export type CompanyUncheckedUpdateWithoutSubscriptionInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2100,6 +2154,7 @@ export type CompanyCreateWithoutSubscriptionRequestsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2135,6 +2190,7 @@ export type CompanyUncheckedCreateWithoutSubscriptionRequestsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2186,6 +2242,7 @@ export type CompanyUpdateWithoutSubscriptionRequestsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2221,6 +2278,7 @@ export type CompanyUncheckedUpdateWithoutSubscriptionRequestsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2256,6 +2314,7 @@ export type CompanyCreateWithoutInvoicesInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2291,6 +2350,7 @@ export type CompanyUncheckedCreateWithoutInvoicesInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2342,6 +2402,7 @@ export type CompanyUpdateWithoutInvoicesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2377,6 +2438,7 @@ export type CompanyUncheckedUpdateWithoutInvoicesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2412,6 +2474,7 @@ export type CompanyCreateWithoutPayoutsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2447,6 +2510,7 @@ export type CompanyUncheckedCreateWithoutPayoutsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2498,6 +2562,7 @@ export type CompanyUpdateWithoutPayoutsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2533,6 +2598,7 @@ export type CompanyUncheckedUpdateWithoutPayoutsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2568,6 +2634,7 @@ export type CompanyCreateWithoutDocumentsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2603,6 +2670,7 @@ export type CompanyUncheckedCreateWithoutDocumentsInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2654,6 +2722,7 @@ export type CompanyUpdateWithoutDocumentsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2689,6 +2758,7 @@ export type CompanyUncheckedUpdateWithoutDocumentsInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2724,6 +2794,7 @@ export type CompanyCreateWithoutPromoCodesInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2759,6 +2830,7 @@ export type CompanyUncheckedCreateWithoutPromoCodesInput = {
   slug: string
   name: string
   status?: $Enums.CompanyStatus
+  kind?: $Enums.CompanyKind
   description?: string | null
   contactEmail?: string | null
   phone?: string | null
@@ -2810,6 +2882,7 @@ export type CompanyUpdateWithoutPromoCodesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -2845,6 +2918,7 @@ export type CompanyUncheckedUpdateWithoutPromoCodesInput = {
   slug?: Prisma.StringFieldUpdateOperationsInput | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumCompanyStatusFieldUpdateOperationsInput | $Enums.CompanyStatus
+  kind?: Prisma.EnumCompanyKindFieldUpdateOperationsInput | $Enums.CompanyKind
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   contactEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   phone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -3001,6 +3075,7 @@ export type CompanySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   slug?: boolean
   name?: boolean
   status?: boolean
+  kind?: boolean
   description?: boolean
   contactEmail?: boolean
   phone?: boolean
@@ -3038,6 +3113,7 @@ export type CompanySelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   slug?: boolean
   name?: boolean
   status?: boolean
+  kind?: boolean
   description?: boolean
   contactEmail?: boolean
   phone?: boolean
@@ -3062,6 +3138,7 @@ export type CompanySelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   slug?: boolean
   name?: boolean
   status?: boolean
+  kind?: boolean
   description?: boolean
   contactEmail?: boolean
   phone?: boolean
@@ -3086,6 +3163,7 @@ export type CompanySelectScalar = {
   slug?: boolean
   name?: boolean
   status?: boolean
+  kind?: boolean
   description?: boolean
   contactEmail?: boolean
   phone?: boolean
@@ -3105,7 +3183,7 @@ export type CompanySelectScalar = {
   updatedAt?: boolean
 }
 
-export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "status" | "description" | "contactEmail" | "phone" | "website" | "city" | "address" | "latitude" | "longitude" | "socials" | "categories" | "languages" | "onboardingStep" | "submittedAt" | "approvedAt" | "commissionBps" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
+export type CompanyOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "slug" | "name" | "status" | "kind" | "description" | "contactEmail" | "phone" | "website" | "city" | "address" | "latitude" | "longitude" | "socials" | "categories" | "languages" | "onboardingStep" | "submittedAt" | "approvedAt" | "commissionBps" | "createdAt" | "updatedAt", ExtArgs["result"]["company"]>
 export type CompanyInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   memberships?: boolean | Prisma.Company$membershipsArgs<ExtArgs>
   invitations?: boolean | Prisma.Company$invitationsArgs<ExtArgs>
@@ -3145,6 +3223,7 @@ export type $CompanyPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     slug: string
     name: string
     status: $Enums.CompanyStatus
+    kind: $Enums.CompanyKind
     description: string | null
     contactEmail: string | null
     phone: string | null
@@ -3604,6 +3683,7 @@ export interface CompanyFieldRefs {
   readonly slug: Prisma.FieldRef<"Company", 'String'>
   readonly name: Prisma.FieldRef<"Company", 'String'>
   readonly status: Prisma.FieldRef<"Company", 'CompanyStatus'>
+  readonly kind: Prisma.FieldRef<"Company", 'CompanyKind'>
   readonly description: Prisma.FieldRef<"Company", 'String'>
   readonly contactEmail: Prisma.FieldRef<"Company", 'String'>
   readonly phone: Prisma.FieldRef<"Company", 'String'>

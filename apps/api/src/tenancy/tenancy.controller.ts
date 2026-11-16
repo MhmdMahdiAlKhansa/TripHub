@@ -38,6 +38,7 @@ const CreateCompanyDto = z.object({
     .min(3)
     .max(50)
     .regex(/^[a-z0-9]+(-[a-z0-9]+)*$/),
+  kind: z.enum(['OPERATOR', 'HOST']).optional(),
 });
 const InviteDto = z.object({ email: z.string().trim().toLowerCase().max(254).pipe(z.email()), role });
 const RoleDto = z.object({ role });
@@ -67,8 +68,8 @@ export class TenancyController {
   @UseGuards(SessionGuard)
   async create(@CurrentUser() user: User, @Body() body: unknown) {
     const dto = parse(CreateCompanyDto, body);
-    const c = await this.svc.createCompany(user, dto.name, dto.slug);
-    return { company: { id: c.id, slug: c.slug, name: c.name, status: c.status } };
+    const c = await this.svc.createCompany(user, dto.name, dto.slug, dto.kind);
+    return { company: { id: c.id, slug: c.slug, name: c.name, status: c.status, kind: c.kind } };
   }
 
   @Get('companies')
@@ -81,6 +82,7 @@ export class TenancyController {
         slug: m.company.slug,
         name: m.company.name,
         status: m.company.status,
+        kind: m.company.kind,
         role: m.role,
       })),
     };
@@ -108,7 +110,7 @@ export class TenancyController {
   @RequirePermission('company.view')
   async get(@Req() req: TenantRequest) {
     const c = await this.svc.getCompany(req.membership!.companyId);
-    return { company: { id: c.id, slug: c.slug, name: c.name, status: c.status }, role: req.membership!.role };
+    return { company: { id: c.id, slug: c.slug, name: c.name, status: c.status, kind: c.kind }, role: req.membership!.role };
   }
 
   @Get('companies/:companyId/members')

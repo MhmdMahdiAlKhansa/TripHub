@@ -142,6 +142,13 @@ export class PublicListingsController {
     return { listings: rows.map((l) => publicListing(l, locale === 'ar' ? 'ar' : 'en')) };
   }
 
+  @Get(':id/stays-nearby')
+  @RateLimit({ limit: 120, windowSec: 60 })
+  async staysNearby(@Param('id') id: string, @Query('locale') locale = 'en') {
+    const rows = await this.svc.staysNear(idOr404(id));
+    return { listings: rows.map((l) => publicListing(l, locale === 'ar' ? 'ar' : 'en')) };
+  }
+
   @Get(':id')
   @RateLimit({ limit: 120, windowSec: 60 })
   async get(@Param('id') id: string, @Query('locale') locale = 'en') {

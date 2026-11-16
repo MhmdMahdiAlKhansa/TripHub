@@ -1,4 +1,5 @@
-import { ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
+import {
+  UnprocessableEntityException, ConflictException, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { expireDueHolds, Prisma, type PrismaClient } from '@triphub/database';
 import type { z } from 'zod';
 import { PRISMA } from '../database/database.module';
@@ -25,6 +26,11 @@ export class AvailabilityService {
   async setRates(companyId: string, listingId: string, actorId: string, input: z.infer<typeof RatesDto>) {
     const listing = await this.editableListing(companyId, listingId);
     if (listing.bookingMode === 'DISCOVERY_ONLY') throw new ConflictException({ code: 'listing_not_bookable' });
+    // Stays are priced per night; trips per person or group. A price card never mixes the two.
+    const stay = listing.bookingMode === 'NIGHTLY';
+    const stayKinds = ['NIGHT', 'WEEKEND_NIGHT', 'CLEANING'];
+    if (input.rates.some((r) => stayKinds.includes(r.kind) !== stay)) throw new UnprocessableEntityException({ code: stay ? 'stay_rates_only' : 'trip_rates_only' });
+    if (stay && !input.rates.some((r) => r.kind === 'NIGHT')) throw new UnprocessableEntityException({ code: 'night_rate_required' });
     await this.db.$transaction([
       this.db.listingRate.deleteMany({ where: { listingId } }),
       this.db.listingRate.createMany({
@@ -50,6 +56,7 @@ export class AvailabilityService {
   async createSlot(companyId: string, listingId: string, actorId: string, input: z.infer<typeof SlotDto>) {
     const listing = await this.editableListing(companyId, listingId);
     if (listing.bookingMode === 'DISCOVERY_ONLY') throw new ConflictException({ code: 'listing_not_bookable' });
+    if (listing.bookingMode === 'NIGHTLY') throw new ConflictException({ code: 'stays_use_calendar' });
     if (input.startsAt.getTime() <= Date.now()) throw new ConflictException({ code: 'slot_in_past' });
     try {
       const slot = await this.db.slot.create({
@@ -68,12 +75,12 @@ export class AvailabilityService {
   async listSlots(companyId: string, listingId: string) {
     const l = await this.db.listing.findFirst({ where: { id: listingId, companyId }, select: { id: true } });
     if (!l) throw new NotFoundException();
-    return this.db.slot.findMany({ where: { listingId }, orderBy: { startsAt: 'asc' } });
+    return this.db.slot.findMany({ where: { listingId, kind: 'TRIP' }, orderBy: { startsAt: 'asc' } });
   }
 
   async updateSlot(companyId: string, listingId: string, slotId: string, actorId: string, input: z.infer<typeof SlotPatchDto>) {
     await this.editableListing(companyId, listingId);
-    const exists = await this.db.slot.findFirst({ where: { id: slotId, listingId }, select: { id: true } });
+    const exists = await this.db.slot.findFirst({ where: { id: slotId, listingId, kind: 'TRIP' }, select: { id: true } });
     if (!exists) throw new NotFoundException();
 
     // Capacity can never drop below what is already reserved: the guard is part of the UPDATE itself.
@@ -95,7 +102,7 @@ export class AvailabilityService {
   /** Bookable, published listing of a verified company, or 404. */
   async publicBookableListing(listingId: string) {
     const l = await this.db.listing.findFirst({
-      where: { id: listingId, status: 'PUBLISHED', company: { status: 'APPROVED' }, bookingMode: { not: 'DISCOVERY_ONLY' } },
+      where: { id: listingId, status: 'PUBLISHED', company: { status: 'APPROVED' }, bookingMode: { notIn: ['DISCOVERY_ONLY', 'NIGHTLY'] } },
       include: { rates: true },
     });
     if (!l) throw new NotFoundException();

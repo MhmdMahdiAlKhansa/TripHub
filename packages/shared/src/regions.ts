@@ -9,7 +9,7 @@ export const REGIONS = [
   { slug: 'jbeil', cities: ['jbeil', 'byblos', 'amchit', 'جبيل', 'عمشيت'] },
   { slug: 'bekaa', cities: ['bekaa', 'baalbek', 'zahle', 'anjar', 'البقاع', 'بعلبك', 'زحلة', 'عنجر'] },
   { slug: 'akkar', cities: ['akkar', 'halba', 'عكار', 'حلبا'] },
-  { slug: 'north', cities: ['bsharri', 'bcharre', 'tannourine', 'ehden', 'tripoli', 'batroun', 'بشري', 'تنورين', 'إهدن', 'طرابلس', 'البترون'] },
+  { slug: 'north', cities: ['bsharri', 'bcharre', 'tannourine', 'ehden', 'tripoli', 'batroun', 'hasroun', 'douma', 'حصرون', 'دوما', 'بشري', 'تنورين', 'إهدن', 'طرابلس', 'البترون'] },
   { slug: 'south', cities: ['tyre', 'sour', 'saida', 'sidon', 'jezzine', 'nabatieh', 'صور', 'صيدا', 'جزين', 'النبطية'] },
 ] as const;
 export type RegionSlug = (typeof REGIONS)[number]['slug'];

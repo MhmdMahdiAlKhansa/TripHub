@@ -120,6 +120,7 @@ model Company {
   slug      String        @unique
   name      String
   status    CompanyStatus @default(DRAFT)
+  kind      CompanyKind   @default(OPERATOR)
 
   description  String?
   contactEmail String?
@@ -184,6 +185,8 @@ enum BookingMode {
   FIXED_DATE
   TIME_SLOT
   REQUEST_TO_BOOK
+  /// Stays: booked by the night, check-in to check-out.
+  NIGHTLY
 }
 
 /// Unified discovery/bookable offering. Booking data (pricing, availability) attaches in the booking slice.
@@ -234,6 +237,10 @@ enum RateKind {
   ADULT
   CHILD
   GROUP
+  /// Stays: price per night, optional Friday/Saturday night price, one-off cleaning fee.
+  NIGHT
+  WEEKEND_NIGHT
+  CLEANING
 }
 
 /// Price card entry. Money is integer minor units (USD cents; LBP whole units).
@@ -258,6 +265,20 @@ enum SlotStatus {
   CLOSED
 }
 
+/// TRIP: a dated departure with seats. STAY: one booking's night range on a property (capacity 1).
+/// BLOCK: dates the host closed. STAY (while reserved) and BLOCK ranges can never overlap on a listing.
+enum SlotKind {
+  TRIP
+  STAY
+  BLOCK
+}
+
+/// What a business sells: trips with seats, or nights at a property.
+enum CompanyKind {
+  OPERATOR
+  HOST
+}
+
 /// A dated/timed occurrence with capacity. `reserved` counts confirmed seats PLUS seats under active holds.
 model Slot {
   id        String     @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -267,6 +288,9 @@ model Slot {
   capacity  Int
   reserved  Int        @default(0)
   status    SlotStatus @default(OPEN)
+  kind      SlotKind   @default(TRIP)
+  /// BLOCK slots: the host's private note (e.g. "family visit").
+  note      String?
   createdAt DateTime   @default(now()) @db.Timestamptz(6)
   updatedAt DateTime   @updatedAt @db.Timestamptz(6)
 
@@ -275,7 +299,8 @@ model Slot {
   holds    Hold[]
   waitlist WaitlistEntry[]
 
-  @@unique([listingId, startsAt])
+  /// One trip departure per listing and start time (partial unique index, trips only: see migration 20261116100200).
+  @@index([listingId, startsAt])
   @@index([startsAt])
   @@map("slot")
 }

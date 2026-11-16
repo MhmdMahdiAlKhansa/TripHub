@@ -18,6 +18,7 @@
     "@nestjs/platform-express": "11.2.8",
     "@nestjs/swagger": "11.4.8",
     "@node-rs/argon2": "2.2.2",
+    "@node-rs/argon2-wasm32-wasi": "2.2.2",
     "@triphub/database": "workspace:*",
     "@triphub/shared": "workspace:*",
     "dotenv": "17.2.0",

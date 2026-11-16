@@ -82,29 +82,29 @@ export class AuthService {
   }
 
   /** Business sign-up: the new account starts as the owner of a DRAFT business (nothing is public until staff verify it). */
-  private async createOwnedBusiness(userId: string, name: string) {
+  private async createOwnedBusiness(userId: string, name: string, kind: 'OPERATOR' | 'HOST' = 'OPERATOR') {
     const base = name.toLowerCase().normalize('NFKD').replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'business';
     const slug = `${base}-${newToken().replace(/[^a-z0-9]/gi, '').slice(0, 6).toLowerCase()}`;
     const company = await this.db.$transaction(async (tx) => {
-      const c = await tx.company.create({ data: { name, slug } });
+      const c = await tx.company.create({ data: { name, slug, kind, ...(kind === 'HOST' ? { categories: ['stays'] } : {}) } });
       await tx.membership.create({ data: { companyId: c.id, userId, role: 'OWNER' } });
       return c;
     });
-    await this.db.auditEvent.create({ data: { action: 'company.created', actorId: userId, companyId: company.id, entityType: 'company', entityId: company.id, meta: { via: 'business_signup' } } });
+    await this.db.auditEvent.create({ data: { action: 'company.created', actorId: userId, companyId: company.id, entityType: 'company', entityId: company.id, meta: { via: 'business_signup', kind } } });
     return company;
   }
 
-  async registerSimple(email: string, password: string, displayName: string | undefined, ctx: RequestCtx, businessName?: string): Promise<{ token: string; user: User }> {
+  async registerSimple(email: string, password: string, displayName: string | undefined, ctx: RequestCtx, businessName?: string, businessKind: 'OPERATOR' | 'HOST' = 'OPERATOR'): Promise<{ token: string; user: User }> {
     const passwordHash = await hashPassword(password);
     if (await this.db.user.findUnique({ where: { email } })) throw new ConflictException({ code: 'email_taken', message: 'This email is already registered.' });
     const user = await this.db.user.create({ data: { email, passwordHash, displayName } });
     await this.audit('auth.register', ctx, user.id, { simple: true });
-    if (businessName) await this.createOwnedBusiness(user.id, businessName);
+    if (businessName) await this.createOwnedBusiness(user.id, businessName, businessKind);
     return this.createSession(user, false, ctx, 'auth.login');
   }
 
   /** Always resolves the same way whether or not the email exists (no account enumeration). */
-  async register(email: string, password: string, displayName: string | undefined, ctx: RequestCtx, businessName?: string) {
+  async register(email: string, password: string, displayName: string | undefined, ctx: RequestCtx, businessName?: string, businessKind: 'OPERATOR' | 'HOST' = 'OPERATOR') {
     const passwordHash = await hashPassword(password);
     const existing = await this.db.user.findUnique({ where: { email } });
     if (existing) {
@@ -114,7 +114,7 @@ export class AuthService {
     const user = await this.db.user.create({ data: { email, passwordHash, displayName } });
     const token = await this.issueToken(user.id, 'EMAIL_VERIFY', VERIFY_TOKEN_HOURS * 3_600_000);
     await this.audit('auth.register', ctx, user.id);
-    if (businessName) await this.createOwnedBusiness(user.id, businessName);
+    if (businessName) await this.createOwnedBusiness(user.id, businessName, businessKind);
     await this.mailer.send({ to: email, template: 'verify-email', token });
   }
 

@@ -3360,6 +3360,7 @@ export const CompanyScalarFieldEnum = {
   slug: 'slug',
   name: 'name',
   status: 'status',
+  kind: 'kind',
   description: 'description',
   contactEmail: 'contactEmail',
   phone: 'phone',
@@ -3442,6 +3443,8 @@ export const SlotScalarFieldEnum = {
   capacity: 'capacity',
   reserved: 'reserved',
   status: 'status',
+  kind: 'kind',
+  note: 'note',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -4072,6 +4075,20 @@ export type ListEnumCompanyStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'CompanyKind'
+ */
+export type EnumCompanyKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompanyKind'>
+    
+
+
+/**
+ * Reference to a field of type 'CompanyKind[]'
+ */
+export type ListEnumCompanyKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'CompanyKind[]'>
+    
+
+
+/**
  * Reference to a field of type 'Decimal'
  */
 export type DecimalFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Decimal'>
@@ -4194,6 +4211,20 @@ export type EnumSlotStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$Prism
  * Reference to a field of type 'SlotStatus[]'
  */
 export type ListEnumSlotStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SlotStatus[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SlotKind'
+ */
+export type EnumSlotKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SlotKind'>
+    
+
+
+/**
+ * Reference to a field of type 'SlotKind[]'
+ */
+export type ListEnumSlotKindFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SlotKind[]'>
     
 
 

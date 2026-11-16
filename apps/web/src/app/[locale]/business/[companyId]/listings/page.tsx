@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
-import { ListingManager } from '../../../../../components/ListingManager';
+import { ListingsWorkspace } from '../../../../../components/ListingsWorkspace';
 import { isLocale } from '../../../../../i18n/locale';
 import { createT, type MessageKey } from '../../../../../i18n/messages';
 
@@ -21,11 +21,14 @@ export default async function Listings({ params }: { params: Promise<{ locale: s
       <Link href={`/${locale}/business/${companyId}`} className="text-sm text-[var(--brand)] underline">
         {t('biz.title')}
       </Link>
-      <h1 className="text-3xl font-bold">{t('lst.title')}</h1>
-      <ListingManager
+      <ListingsWorkspace
         locale={locale}
         companyId={companyId}
-        labels={{
+        hostTitle={t('prop.title')}
+        tripTitle={t('lst.title')}
+        working={t('auth.working')}
+        propertyLabels={propertyLabels(t)}
+        listingLabels={{
           newListing: t('lst.new'), category: t('lst.category'), mode: t('lst.mode'), city: t('lst.city'), meeting: t('lst.meeting'), pickups: t('lst.pickups'), depositPercent: t('lst.depositPercent'),
           titleEn: t('lst.titleEn'), descEn: t('lst.descEn'), titleAr: t('lst.titleAr'), descAr: t('lst.descAr'), create: t('lst.create'),
           none: t('lst.none'), publish: t('lst.publish'), pause: t('lst.pause'), rates: t('lst.rates'), adult: t('lst.adult'), child: t('lst.child'),
@@ -48,4 +51,31 @@ export default async function Listings({ params }: { params: Promise<{ locale: s
       />
     </div>
   );
+}
+
+const AMENITIES = ['wifi', 'parking', 'heating', 'fireplace', 'air_conditioning', 'kitchen', 'bbq', 'garden', 'pool', 'mountain_view', 'sea_view', 'hot_water_24h', 'generator', 'pets_allowed', 'breakfast', 'hiking_trail_access'] as const;
+const TYPES = ['chalet', 'guesthouse', 'cabin', 'villa', 'apartment', 'room', 'campsite'] as const;
+const PROP_ERRORS = [...ERRORS, 'night_rate_required', 'stay_rates_only', 'dates_unavailable', 'check_in_in_past', 'check_out_before_check_in', 'hosts_list_stays_only'] as const;
+
+function propertyLabels(t: ReturnType<typeof createT>) {
+  const k = (key: string) => t(key as MessageKey);
+  return {
+    newProperty: k('prop.new'), create: k('prop.create'), working: k('auth.working'), none: k('prop.none'), saved: k('lst.saved'), created: k('prop.created'), error: k('lst.error'), missing: k('lst.missing'),
+    title: k('prop.name'), description: k('prop.description'), titleAr: k('prop.nameAr'), descriptionAr: k('prop.descriptionAr'), type: k('prop.type'),
+    types: Object.fromEntries(TYPES.map((x) => [x, k(`stay.type.${x}`)])), city: k('lst.city'), where: k('prop.where'), whereHint: k('prop.whereHint'),
+    maxGuests: k('prop.maxGuests'), bedrooms: k('prop.bedrooms'), beds: k('prop.beds'), bathrooms: k('prop.bathrooms'), amenities: k('stay.amenities'),
+    amenityNames: Object.fromEntries(AMENITIES.map((x) => [x, k(`amenity.${x}`)])), checkInTime: k('prop.checkInTime'), checkOutTime: k('prop.checkOutTime'),
+    minNights: k('prop.minNights'), houseRules: k('stay.houseRules'), depositPercent: k('lst.depositPercent'), policy: k('lst.policy'),
+    policies: Object.fromEntries(POLICIES.map((p) => [p, k(`cancel.${p}`)])), publish: k('lst.publish'), pause: k('lst.pause'), archive: k('lst.archive'),
+    archiveConfirm: k('lst.archiveConfirm'), publishedNote: k('lst.publishedNote'), edit: k('lst.edit'), saveEdit: k('lst.saveEdit'),
+    statuses: Object.fromEntries(STATUSES.map((s) => [s, k(`lst.status.${s}`)])), prices: k('prop.prices'), night: k('prop.night'), weekendNight: k('prop.weekendNight'),
+    cleaning: k('stay.cleaning'), currency: k('lst.currency'), savePrices: k('lst.saveRates'), pricesNote: k('prop.pricesNote'), calendar: k('prop.calendar'),
+    calendarEmpty: k('prop.calendarEmpty'), stay: k('prop.stay'), blocked: k('prop.blocked'), guests: k('stay.guests'), nights: k('stay.nights'), block: k('prop.block'),
+    blockFrom: k('prop.blockFrom'), blockTo: k('prop.blockTo'), blockNote: k('prop.blockNote'), unblock: k('prop.unblock'), photos: k('lst.photos'), addPhoto: k('lst.addPhoto'),
+    photoAlt: k('lst.photoAlt'), removePhoto: k('lst.removePhoto'), photoNote: k('lst.photoNote'), checklist: k('lst.checklist'), checkVerified: k('lst.checkVerified'),
+    checkPlan: k('lst.checkPlan'), checkPrice: k('prop.checkPrice'), checkPhoto: k('lst.checkPhoto'), openProfile: k('lst.openProfile'),
+    missingNames: { ...Object.fromEntries(MISSING.map((m) => [m, k(`lst.missing.${m}`)])), meetingPoint: k('prop.where'), rates: k('prop.night') },
+    errors: Object.fromEntries(PROP_ERRORS.map((e) => [e, k(`lst.err.${e}`)])),
+    bookingStatuses: Object.fromEntries(['HELD', 'CONFIRMED', 'COMPLETED', 'CANCELLED', 'EXPIRED'].map((s) => [s, k(`status.${s}`)])),
+  };
 }

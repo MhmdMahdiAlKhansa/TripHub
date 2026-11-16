@@ -82,7 +82,8 @@ export const BookingMode = {
   DISCOVERY_ONLY: 'DISCOVERY_ONLY',
   FIXED_DATE: 'FIXED_DATE',
   TIME_SLOT: 'TIME_SLOT',
-  REQUEST_TO_BOOK: 'REQUEST_TO_BOOK'
+  REQUEST_TO_BOOK: 'REQUEST_TO_BOOK',
+  NIGHTLY: 'NIGHTLY'
 } as const
 
 export type BookingMode = (typeof BookingMode)[keyof typeof BookingMode]
@@ -91,7 +92,10 @@ export type BookingMode = (typeof BookingMode)[keyof typeof BookingMode]
 export const RateKind = {
   ADULT: 'ADULT',
   CHILD: 'CHILD',
-  GROUP: 'GROUP'
+  GROUP: 'GROUP',
+  NIGHT: 'NIGHT',
+  WEEKEND_NIGHT: 'WEEKEND_NIGHT',
+  CLEANING: 'CLEANING'
 } as const
 
 export type RateKind = (typeof RateKind)[keyof typeof RateKind]
@@ -103,6 +107,23 @@ export const SlotStatus = {
 } as const
 
 export type SlotStatus = (typeof SlotStatus)[keyof typeof SlotStatus]
+
+
+export const SlotKind = {
+  TRIP: 'TRIP',
+  STAY: 'STAY',
+  BLOCK: 'BLOCK'
+} as const
+
+export type SlotKind = (typeof SlotKind)[keyof typeof SlotKind]
+
+
+export const CompanyKind = {
+  OPERATOR: 'OPERATOR',
+  HOST: 'HOST'
+} as const
+
+export type CompanyKind = (typeof CompanyKind)[keyof typeof CompanyKind]
 
 
 export const BookingStatus = {

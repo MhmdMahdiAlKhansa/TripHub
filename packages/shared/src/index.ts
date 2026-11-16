@@ -9,3 +9,4 @@ export * from './search';
 export * from './cancellation';
 export * from './promo';
 export * from './regions';
+export * from './stays';

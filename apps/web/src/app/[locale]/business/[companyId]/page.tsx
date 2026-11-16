@@ -58,7 +58,7 @@ export default async function BusinessHome({ params }: { params: Promise<{ local
           refund: t('biz.refund'), refundReason: t('biz.refundReason'), refundSent: t('biz.refundSent'), refundFail: t('biz.refundFail'),
           declineReason: t('biz.declineReason'), checkIn: t('biz.checkIn'), checkInCode: t('biz.checkInCode'), checkInCta: t('biz.checkInCta'),
           checkedIn: t('biz.checkedIn'), seats: t('biz.seats'), error: t('biz.error'), working: t('biz.working'),
-          pickup: t('biz.pickup'), emergency: t('biz.emergency'), deposit: t('biz.deposit'), depositRequired: t('biz.depositRequired'), depositReceived: t('biz.depositReceived'),
+          nights: t('stay.nights'), guests: t('stay.guests'), pickup: t('biz.pickup'), emergency: t('biz.emergency'), deposit: t('biz.deposit'), depositRequired: t('biz.depositRequired'), depositReceived: t('biz.depositReceived'),
           depositMethod: t('biz.depositMethod'), depositAmount: t('biz.depositAmount'), depositReference: t('biz.depositReference'), depositRecord: t('biz.depositRecord'), depositMet: t('biz.depositMet'),
           statuses: {
             REQUESTED: t('status.REQUESTED'), DECLINED: t('status.DECLINED'), HELD: t('status.HELD'), CONFIRMED: t('status.CONFIRMED'),
@@ -91,6 +91,7 @@ export default async function BusinessHome({ params }: { params: Promise<{ local
   const listingsNode = (
     <div className="space-y-3">
       <p className="text-[var(--muted)]">{t('bdesk.listingsNote')}</p>
+      <p className="text-sm text-[var(--muted)]">{t('bdesk.listingsNoteHost')}</p>
       <Link href={`/${locale}/business/${companyId}/listings`} className="inline-flex min-h-12 items-center rounded-full bg-[var(--brand)] px-6 font-semibold text-[var(--on-brand)]">
         {t('lst.link')}
       </Link>
@@ -104,6 +105,8 @@ export default async function BusinessHome({ params }: { params: Promise<{ local
       noRole={t('bdesk.noRole')}
       working={t('auth.working')}
       desks={{ OWNER: d('owner', '#d9722b'), MANAGER: d('manager', '#8e4fb8'), BOOKING_STAFF: d('staff', '#1c8f82'), FINANCE: d('finance', '#2c8f6a') }}
+      hostDesks={{ OWNER: d('hostOwner', '#b4622d'), MANAGER: d('hostManager', '#8e4fb8'), BOOKING_STAFF: d('hostStaff', '#1c8f82'), FINANCE: d('finance', '#2c8f6a') }}
+      hostTabLabels={{ bookings: t('bdesk.tab.stays'), listings: t('bdesk.tab.properties') }}
       tabLabels={{ bookings: t('bdesk.tab.bookings'), listings: t('bdesk.tab.listings'), money: t('bdesk.tab.money'), insights: t('bdesk.tab.insights'), team: t('bdesk.tab.team'), profile: t('bdesk.tab.profile') }}
       slots={{
         bookings: businessDashboardNode,

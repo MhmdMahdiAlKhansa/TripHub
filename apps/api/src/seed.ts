@@ -10,6 +10,7 @@ import path from 'node:path';
 import { config } from 'dotenv';
 import { createPrismaClient } from '@triphub/database';
 import { encryptSecret, hashPassword } from './auth/crypto';
+import { seedHosts } from './seed-hosts';
 import { seedParticipants } from './seed-participants';
 import { seedPlaces } from './seed-places';
 
@@ -104,10 +105,12 @@ async function main() {
 
   await seedPlaces(db, company.id, owner.id, now);
   await seedParticipants(db, company.id, hash, now);
+  await seedHosts(db, hash, now);
 
   console.log('Demo data ready: operator "Cedar Trails Lebanon" with real places, photos and sample participants.');
   console.log(`  business owner: owner@demo.triphub.test   password: ${DEMO_PASSWORD}`);
   console.log(`  customer:       customer@demo.triphub.test password: ${DEMO_PASSWORD}`);
+  console.log(`  property host:  host@demo.triphub.test     password: ${DEMO_PASSWORD}`);
   console.log(`  platform admin: admin@demo.triphub.test    password: ${DEMO_PASSWORD}`);
   console.log(`  admin 2-step code: add this key to an authenticator app (Google Authenticator, etc.): ${DEMO_ADMIN_TOTP}`);
   console.log('  (demo only; never use these credentials outside a local machine)');

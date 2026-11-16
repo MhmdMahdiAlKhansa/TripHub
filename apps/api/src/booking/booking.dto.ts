@@ -1,4 +1,4 @@
-import { DEPOSIT_METHODS, RATE_KINDS } from '@triphub/shared';
+import { ALL_RATE_KINDS, DATE_RE, DEPOSIT_METHODS, RATE_KINDS } from '@triphub/shared';
 import { z } from 'zod';
 
 const amount = z
@@ -11,7 +11,7 @@ export const RatesDto = z
       .array(
         z
           .object({
-            kind: z.enum(RATE_KINDS),
+            kind: z.enum(ALL_RATE_KINDS),
             amount,
             currency: z.enum(['USD', 'LBP']),
             groupSize: z.number().int().min(1).max(50).optional(),
@@ -95,3 +95,20 @@ export const CancelDto = z.object({ reason: z.string().trim().max(500).optional(
 export const JoinWaitlistDto = z.object({ slotId: z.uuid(), seats: z.number().int().min(1).max(20) }).strict();
 
 export const DeclineDto = z.object({ reason: z.string().trim().min(5).max(500) }).strict();
+
+const day = z.string().regex(DATE_RE, 'use YYYY-MM-DD');
+export const StayQuoteDto = z.object({ checkIn: day, checkOut: day, guests: z.number().int().min(1).max(50) }).strict();
+export const CreateStayDto = z
+  .object({
+    listingId: z.uuid(),
+    checkIn: day,
+    checkOut: day,
+    guests: z.number().int().min(1).max(50),
+    contactName: z.string().trim().min(2).max(80).optional(),
+    contactPhone: z.string().trim().regex(/^\+?[0-9 ()-]{7,20}$/).optional(),
+    emergencyContactName: z.string().trim().min(2).max(80).optional(),
+    emergencyContactPhone: z.string().trim().regex(/^\+?[0-9 ()-]{7,20}$/).optional(),
+  })
+  .strict();
+export const StayBlockDto = z.object({ from: day, to: day, note: z.string().trim().max(200).optional() }).strict();
+export const StayCalendarQuery = z.object({ from: day, to: day });

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { AMENITIES, PROPERTY_TYPES, TIME_RE } from './stays';
 import type { Category } from './constants';
 
 // ---------------------------------------------------------------- lifecycle
@@ -17,7 +18,7 @@ export const LISTING_TRANSITIONS: Record<ListingStatus, readonly ListingStatus[]
 export const canTransitionListing = (from: ListingStatus, to: ListingStatus): boolean =>
   LISTING_TRANSITIONS[from]?.includes(to) ?? false;
 
-export const BOOKING_MODES = ['DISCOVERY_ONLY', 'FIXED_DATE', 'TIME_SLOT', 'REQUEST_TO_BOOK'] as const;
+export const BOOKING_MODES = ['DISCOVERY_ONLY', 'FIXED_DATE', 'TIME_SLOT', 'REQUEST_TO_BOOK', 'NIGHTLY'] as const;
 export type BookingMode = (typeof BOOKING_MODES)[number];
 
 // ---------------------------------------------------------------- category-specific attributes
@@ -79,7 +80,28 @@ export const ATTRIBUTE_SCHEMAS: Record<Category, z.ZodType<Record<string, unknow
     })
     .partial()
     .strict(),
+  stays: z
+    .object({
+      propertyType: z.enum(PROPERTY_TYPES),
+      maxGuests: z.number().int().min(1).max(50),
+      bedrooms: z.number().int().min(0).max(30),
+      beds: z.number().int().min(1).max(60),
+      bathrooms: z.number().int().min(0).max(20),
+      amenities: z.array(z.enum(AMENITIES)).max(AMENITIES.length),
+      checkInTime: z.string().regex(TIME_RE),
+      checkOutTime: z.string().regex(TIME_RE),
+      minNights: z.number().int().min(1).max(30),
+      houseRules: str(1000),
+    })
+    .partial()
+    .strict(),
 };
+
+/** Stay settings with defaults, read from a listing's attributes. */
+export function stayRulesOf(attributes: unknown) {
+  const a = (attributes ?? {}) as Partial<{ maxGuests: number; minNights: number; checkInTime: string; checkOutTime: string }>;
+  return { maxGuests: a.maxGuests ?? 2, minNights: a.minNights ?? 1, checkInTime: a.checkInTime ?? '14:00', checkOutTime: a.checkOutTime ?? '11:00' };
+}
 
 export function validateAttributes(category: Category, attributes: unknown) {
   return ATTRIBUTE_SCHEMAS[category].safeParse(attributes);

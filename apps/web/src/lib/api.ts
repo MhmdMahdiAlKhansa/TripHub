@@ -30,6 +30,9 @@ export interface PublicListing {
   featured: boolean;
   cancellationPolicy: string;
   fromPrice: { amountMinor: string; currency: string } | null;
+  /** 'night' for stays, 'person' for trips. */
+  priceUnit?: 'night' | 'person';
+  attributes?: Record<string, unknown>;
   images: Array<{ id: string; url: string; alt: string | null }>;
   title: string | null;
   summary: string | null;
